@@ -1,0 +1,18 @@
+# Xem dữ liệu DB
+php scripts/show_data.php
+
+# Sửa cấu hình thiệp
+php scripts/update_config.php
+
+# Xóa toàn bộ lời chúc / RSVP
+php scripts/delete_rsvp.php
+
+# Quản lý khách mời
+php scripts/manage_guests.php
+
+# Khởi động server
+php artisan serve
+# link web index.html?invite={}&type=1 
+# link web index.html?invite={}&type=2
+# link cấu hình /admin/config
+# link xem xác nhận /admin/rsvp
