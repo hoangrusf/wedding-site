@@ -23,4 +23,7 @@ RUN chmod -R 775 database storage bootstrap/cache
 RUN php artisan key:generate
 RUN php artisan migrate --force
 
+ENV APP_ENV=production
+ENV LOG_CHANNEL=stderr
+
 CMD php artisan serve --host=0.0.0.0 --port=10000
