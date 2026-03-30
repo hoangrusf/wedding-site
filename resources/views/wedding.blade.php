@@ -435,7 +435,14 @@
   </button>
 
   <audio id="bg-music" loop preload="auto">
-    <source src="{{ $config->background_music_url ?? 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' }}" type="audio/mpeg" />
+    @php
+      $musicUrl = $config->background_music_url ?? null;
+      if ($musicUrl && !str_starts_with($musicUrl, 'http://') && !str_starts_with($musicUrl, 'https://')) {
+          $musicUrl = asset('bg-music/' . $musicUrl);
+      }
+      $musicUrl = $musicUrl ?? 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
+    @endphp
+    <source src="{{ $musicUrl }}" type="audio/mpeg" />
   </audio>
 
   <!-- Toast Notification -->
