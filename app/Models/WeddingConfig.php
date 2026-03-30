@@ -24,6 +24,8 @@ class WeddingConfig extends Model
         'bride_map_iframe_url',
         'bank_account_info',
         'hero_image_url',
+        'groom_image_url',
+        'bride_image_url',
         'background_music_url',
     ];
 

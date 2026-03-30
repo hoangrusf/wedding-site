@@ -20,6 +20,22 @@
   <link rel="stylesheet" href="{{ asset('css/wedding.css') }}" />
 </head>
 <body>
+  @php
+    $resolveUrl = fn($value, $folder) => ($value && !str_starts_with($value, 'http://') && !str_starts_with($value, 'https://'))
+        ? asset($folder . '/' . $value)
+        : $value;
+
+    $heroImageUrl  = $resolveUrl($config->hero_image_url,  'hero_image_url');
+    $groomImageUrl = $resolveUrl($config->groom_image_url ?? null, 'groom_image_url');
+    $brideImageUrl = $resolveUrl($config->bride_image_url ?? null, 'bride_image_url');
+
+    if (!empty($bankInfo['groom']['qr_url'])) {
+        $bankInfo['groom']['qr_url'] = $resolveUrl($bankInfo['groom']['qr_url'], 'groom_qr_url');
+    }
+    if (!empty($bankInfo['bride']['qr_url'])) {
+        $bankInfo['bride']['qr_url'] = $resolveUrl($bankInfo['bride']['qr_url'], 'bride_qr_url');
+    }
+  @endphp
   <!-- CANVAS - Hiệu ứng hoa anh đào rơi -->
   <canvas id="petals-canvas"></canvas>
 
@@ -90,7 +106,7 @@
     </nav>
 
     <!-- HERO SECTION -->
-    <section id="hero" class="hero-section" @if($config->hero_image_url) style="background-image: url('{{ $config->hero_image_url }}')" @endif>
+    <section id="hero" class="hero-section" @if($heroImageUrl) style="background-image: url('{{ $heroImageUrl }}')" @endif>
       <div class="hero-overlay"></div>
       <div class="hero-content" data-aos="fade-up" data-aos-duration="1200">
         <p class="hero-subtitle">We're Getting Married</p>
@@ -138,7 +154,7 @@
         <!-- Nhà Trai -->
         <div class="family-card groom-family" data-aos="fade-right" data-aos-delay="200">
           <div class="family-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 22V12h6v10"/></svg>
           </div>
           <h3>Nhà Trai</h3>
           @if(count($groomParentsParts) >= 2)
@@ -156,7 +172,7 @@
         <!-- Nhà Gái -->
         <div class="family-card bride-family" data-aos="fade-left" data-aos-delay="200">
           <div class="family-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 1c1 1.5 2 3 2 4.5a2 2 0 0 1-4 0C10 4 11 2.5 12 1z" fill="currentColor" opacity="0.15"/></svg>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 22V12h6v10"/><path d="M12 3c0 0 2-2 4-1" stroke-dasharray="2 2" opacity="0.5"/><circle cx="18" cy="5" r="1.5" fill="currentColor" opacity="0.3"/></svg>
           </div>
           <h3>Nhà Gái</h3>
           @if(count($brideParentsParts) >= 2)
@@ -373,7 +389,11 @@
         <!-- Chú rể -->
         <div class="gift-card" data-aos="fade-right" data-aos-delay="200">
           <div class="gift-avatar">
-            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            @if(!empty($groomImageUrl))
+              <img src="{{ $groomImageUrl }}" alt="{{ $config->groom_name }}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;" />
+            @else
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            @endif
           </div>
           <h3>Chú Rể</h3>
           <p class="gift-bank">Ngân hàng: <strong>{{ $bankInfo['groom']['bank_name'] }}</strong></p>
@@ -396,7 +416,11 @@
         <!-- Cô dâu -->
         <div class="gift-card" data-aos="fade-left" data-aos-delay="200">
           <div class="gift-avatar">
-            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 1c1 1.5 2 3 2 4.5a2 2 0 0 1-4 0C10 4 11 2.5 12 1z" fill="currentColor" opacity="0.15"/></svg>
+            @if(!empty($brideImageUrl))
+              <img src="{{ $brideImageUrl }}" alt="{{ $config->bride_name }}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;" />
+            @else
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 1c1 1.5 2 3 2 4.5a2 2 0 0 1-4 0C10 4 11 2.5 12 1z" fill="currentColor" opacity="0.15"/></svg>
+            @endif
           </div>
           <h3>Cô Dâu</h3>
           <p class="gift-bank">Ngân hàng: <strong>{{ $bankInfo['bride']['bank_name'] }}</strong></p>

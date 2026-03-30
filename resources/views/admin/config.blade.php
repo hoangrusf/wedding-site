@@ -222,12 +222,20 @@
           @error('wedding_date')<p class="error-msg">{{ $message }}</p>@enderror
         </div>
         <div class="form-group">
-          <label>Ảnh nền hero <span class="field-hint">URL ảnh</span></label>
-          <input type="text" name="hero_image_url" value="{{ old('hero_image_url', $config->hero_image_url) }}" placeholder="https://..." />
+          <label>Ảnh nền hero <span class="field-hint">URL hoặc tên file trong hero_image_url/</span></label>
+          <input type="text" name="hero_image_url" value="{{ old('hero_image_url', $config->hero_image_url) }}" placeholder="ten_anh.jpg hoặc https://..." />
         </div>
         <div class="form-group">
-          <label>Nhạc nền <span class="field-hint">URL file .mp3</span></label>
-          <input type="text" name="background_music_url" value="{{ old('background_music_url', $config->background_music_url) }}" placeholder="https://..." />
+          <label>Nhạc nền <span class="field-hint">URL hoặc tên file trong bg-music/</span></label>
+          <input type="text" name="background_music_url" value="{{ old('background_music_url', $config->background_music_url) }}" placeholder="ten_file.mp3 hoặc https://..." />
+        </div>
+        <div class="form-group">
+          <label>Ảnh chú rể <span class="field-hint">URL hoặc tên file trong groom_image_url/</span></label>
+          <input type="text" name="groom_image_url" value="{{ old('groom_image_url', $config->groom_image_url) }}" placeholder="ten_anh.jpg hoặc https://..." />
+        </div>
+        <div class="form-group">
+          <label>Ảnh cô dâu <span class="field-hint">URL hoặc tên file trong bride_image_url/</span></label>
+          <input type="text" name="bride_image_url" value="{{ old('bride_image_url', $config->bride_image_url) }}" placeholder="ten_anh.jpg hoặc https://..." />
         </div>
       </div>
     </div>
@@ -318,8 +326,8 @@
           <input type="text" name="groom_account_name" value="{{ old('groom_account_name', $bankInfo['groom']['account_name'] ?? '') }}" placeholder="NGUYEN VAN A" />
         </div>
         <div class="form-group full">
-          <label>Ảnh QR tùy chỉnh <span class="field-hint">URL ảnh QR — nếu để trống sẽ tự sinh từ VietQR</span></label>
-          <input type="text" name="groom_qr_url" value="{{ old('groom_qr_url', $bankInfo['groom']['qr_url'] ?? '') }}" placeholder="https://..." />
+          <label>Ảnh QR tùy chỉnh <span class="field-hint">URL hoặc tên file trong groom_qr_url/ — để trống sẽ tự sinh từ VietQR</span></label>
+          <input type="text" name="groom_qr_url" value="{{ old('groom_qr_url', $bankInfo['groom']['qr_url'] ?? '') }}" placeholder="qr_chure.jpg hoặc https://..." />
         </div>
 
         <hr class="venue-divider" />
@@ -338,8 +346,8 @@
           <input type="text" name="bride_account_name" value="{{ old('bride_account_name', $bankInfo['bride']['account_name'] ?? '') }}" placeholder="TRAN THI B" />
         </div>
         <div class="form-group full">
-          <label>Ảnh QR tùy chỉnh <span class="field-hint">URL ảnh QR — nếu để trống sẽ tự sinh từ VietQR</span></label>
-          <input type="text" name="bride_qr_url" value="{{ old('bride_qr_url', $bankInfo['bride']['qr_url'] ?? '') }}" placeholder="https://..." />
+          <label>Ảnh QR tùy chỉnh <span class="field-hint">URL hoặc tên file trong bride_qr_url/ — để trống sẽ tự sinh từ VietQR</span></label>
+          <input type="text" name="bride_qr_url" value="{{ old('bride_qr_url', $bankInfo['bride']['qr_url'] ?? '') }}" placeholder="qr_codau.jpg hoặc https://..." />
         </div>
 
       </div>
