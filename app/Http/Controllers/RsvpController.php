@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GalleryPhoto;
 use App\Models\Guest;
 use App\Models\Rsvp;
 use App\Models\WeddingConfig;
@@ -47,6 +48,8 @@ class RsvpController extends Controller
 
         $bankInfo = json_decode($config->bank_account_info, true) ?? [];
 
+        $galleryPhotos = GalleryPhoto::orderBy('sort_order')->orderBy('id')->get();
+
         return view('wedding', [
             'config'      => $config,
             'guest'       => $guest,
@@ -55,6 +58,7 @@ class RsvpController extends Controller
             'wishes'      => $wishes,
             'bankInfo'    => $bankInfo,
             'venue'       => $venue,
+            'galleryPhotos' => $galleryPhotos,
         ]);
     }
 
@@ -254,5 +258,83 @@ class RsvpController extends Controller
         ]);
 
         return back()->with('success', 'Đã lưu cấu hình thành công!');
+    }
+
+    /**
+     * Trang quản lý album ảnh cưới.
+     * URL: GET /admin/gallery
+     */
+    public function adminGallery(Request $request)
+    {
+        if (!$request->session()->get('admin_auth')) {
+            return view('admin.login');
+        }
+
+        $photos = GalleryPhoto::orderBy('sort_order')->orderBy('id')->get();
+
+        return view('admin.gallery', compact('photos'));
+    }
+
+    /**
+     * Thêm ảnh vào album.
+     * URL: POST /admin/gallery
+     */
+    public function storeGalleryPhoto(Request $request)
+    {
+        if (!$request->session()->get('admin_auth')) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'image_url'  => ['required', 'string', 'max:2000'],
+            'alt_text'   => ['nullable', 'string', 'max:255'],
+            'layout'     => ['required', 'in:normal,tall,wide'],
+            'sort_order' => ['nullable', 'integer', 'min:0'],
+        ]);
+
+        $validated['sort_order'] = $validated['sort_order'] ?? 0;
+
+        GalleryPhoto::create($validated);
+
+        return back()->with('success', 'Đã thêm ảnh thành công!');
+    }
+
+    /**
+     * Cập nhật ảnh trong album.
+     * URL: PUT /admin/gallery/{photo}
+     */
+    public function updateGalleryPhoto(Request $request, GalleryPhoto $photo)
+    {
+        if (!$request->session()->get('admin_auth')) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'image_url'  => ['required', 'string', 'max:2000'],
+            'alt_text'   => ['nullable', 'string', 'max:255'],
+            'layout'     => ['required', 'in:normal,tall,wide'],
+            'sort_order' => ['nullable', 'integer', 'min:0'],
+        ]);
+
+        $validated['sort_order'] = $validated['sort_order'] ?? 0;
+
+        $photo->update($validated);
+
+        return back()->with('success', 'Đã cập nhật ảnh thành công!');
+    }
+
+    /**
+     * Xóa ảnh khỏi album.
+     * URL: DELETE /admin/gallery/{photo}
+     */
+    public function deleteGalleryPhoto(Request $request, GalleryPhoto $photo)
+    {
+        if (!$request->session()->get('admin_auth')) {
+            abort(403);
+        }
+
+        $photo->delete();
+
+        return back()->with('success', 'Đã xóa ảnh thành công!');
     }
 }

@@ -196,32 +196,23 @@
         <h2 class="section-title">Album Ảnh Cưới</h2>
         <div class="section-divider">✦</div>
       </div>
+      @if($galleryPhotos->count() > 0)
       <div class="gallery-grid" data-aos="fade-up" data-aos-delay="200">
-        <div class="gallery-item g-span-1" data-aos="zoom-in" data-aos-delay="100">
-          <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80" alt="Ảnh cưới 1" loading="lazy" />
-        </div>
-        <div class="gallery-item g-span-1 g-tall" data-aos="zoom-in" data-aos-delay="150">
-          <img src="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=600&q=80" alt="Ảnh cưới 2" loading="lazy" />
-        </div>
-        <div class="gallery-item g-span-1" data-aos="zoom-in" data-aos-delay="200">
-          <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=600&q=80" alt="Ảnh cưới 3" loading="lazy" />
-        </div>
-        <div class="gallery-item g-wide" data-aos="zoom-in" data-aos-delay="250">
-          <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=600&q=80" alt="Ảnh cưới 4" loading="lazy" />
-        </div>
-        <div class="gallery-item g-span-1" data-aos="zoom-in" data-aos-delay="300">
-          <img src="https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=600&q=80" alt="Ảnh cưới 5" loading="lazy" />
-        </div>
-        <div class="gallery-item g-span-1" data-aos="zoom-in" data-aos-delay="350">
-          <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&q=80" alt="Ảnh cưới 6" loading="lazy" />
-        </div>
-        <div class="gallery-item g-span-1" data-aos="zoom-in" data-aos-delay="400">
-          <img src="https://images.unsplash.com/photo-1544078751-58fee2d8a03b?w=600&q=80" alt="Ảnh cưới 7" loading="lazy" />
-        </div>
-        <div class="gallery-item g-wide" data-aos="zoom-in" data-aos-delay="450">
-          <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&q=80" alt="Ảnh cưới 8" loading="lazy" />
-        </div>
+        @foreach($galleryPhotos as $i => $photo)
+          @php
+            $imgSrc = $resolveUrl($photo->image_url, 'gallery');
+            $layoutClass = match($photo->layout) {
+              'tall' => 'g-span-1 g-tall',
+              'wide' => 'g-wide',
+              default => 'g-span-1',
+            };
+          @endphp
+          <div class="gallery-item {{ $layoutClass }}" data-aos="zoom-in" data-aos-delay="{{ 100 + $i * 50 }}">
+            <img src="{{ $imgSrc }}" alt="{{ $photo->alt_text ?? 'Ảnh cưới ' . ($i + 1) }}" loading="lazy" />
+          </div>
+        @endforeach
       </div>
+      @endif
     </section>
 
     <!-- Lightbox Overlay -->

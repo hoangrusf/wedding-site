@@ -16,3 +16,4 @@ php artisan serve
 # link web index.html?invite={}&type=2
 # link cấu hình /admin/config
 # link xem xác nhận /admin/rsvp
+# link cấu hình album ảnh /admin/gallery 

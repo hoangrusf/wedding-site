@@ -233,6 +233,7 @@
   </div>
   <div class="header-actions" style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;">
     <a href="{{ route('admin.config') }}" style="padding:0.4rem 1rem;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:6px;font-size:0.82rem;text-decoration:none;">⚙️ Cấu hình thiệp</a>
+    <a href="{{ route('admin.gallery') }}" style="padding:0.4rem 1rem;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:6px;font-size:0.82rem;text-decoration:none;">🖼️ Album ảnh</a>
     <form method="POST" action="{{ route('admin.logout') }}">
       @csrf
       <button type="submit" class="btn-logout">Đăng xuất</button>
