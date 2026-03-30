@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="csrf-token" content="{{ csrf_token() }}" />
-  <title>Thiệp Cưới - {{ $config->groom_name }} & {{ $config->bride_name }}</title>
+  <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>" />
+  <title>Thiệp Cưới - <?php echo e($config->groom_name); ?> & <?php echo e($config->bride_name); ?></title>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,10 +17,10 @@
   <!-- AOS - Animate On Scroll -->
   <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
 
-  <link rel="stylesheet" href="{{ asset('css/wedding.css') }}" />
+  <link rel="stylesheet" href="<?php echo e(asset('css/wedding.css')); ?>" />
 </head>
 <body>
-  @php
+  <?php
     $resolveUrl = fn($value, $folder) => ($value && !str_starts_with($value, 'http://') && !str_starts_with($value, 'https://'))
         ? asset($folder . '/' . $value)
         : $value;
@@ -35,7 +35,7 @@
     if (!empty($bankInfo['bride']['qr_url'])) {
         $bankInfo['bride']['qr_url'] = $resolveUrl($bankInfo['bride']['qr_url'], 'bride_qr_url');
     }
-  @endphp
+  ?>
   <!-- CANVAS - Hiệu ứng hoa anh đào rơi -->
   <canvas id="petals-canvas"></canvas>
 
@@ -51,38 +51,38 @@
 
           <p class="card-subtitle">Wedding Invitation</p>
           <p class="card-label">TRÂN TRỌNG KÍNH MỜI</p>
-          <p class="card-guest-name" id="invite-name">{{ $displayName }}</p>
+          <p class="card-guest-name" id="invite-name"><?php echo e($displayName); ?></p>
           <p class="card-label-small" id="card-label-ceremony">
-            @if($type == 2)
+            <?php if($type == 2): ?>
               đến dự lễ vu quy của chúng tôi
-            @else
+            <?php else: ?>
               đến dự lễ thành hôn của chúng tôi
-            @endif
+            <?php endif; ?>
           </p>
 
           <div class="card-divider-line"></div>
 
           <h1 class="card-title" id="card-title-ceremony">
-            @if($type == 2)
+            <?php if($type == 2): ?>
               Lễ Vu Quy
-            @else
+            <?php else: ?>
               Lễ Thành Hôn
-            @endif
+            <?php endif; ?>
           </h1>
 
           <div class="card-couple-names">
-            @if($type == 2)
-              <span class="bride-name">{{ $config->bride_name }}</span>
+            <?php if($type == 2): ?>
+              <span class="bride-name"><?php echo e($config->bride_name); ?></span>
               <span class="amp">&amp;</span>
-              <span class="groom-name">{{ $config->groom_name }}</span>
-            @else
-              <span class="groom-name">{{ $config->groom_name }}</span>
+              <span class="groom-name"><?php echo e($config->groom_name); ?></span>
+            <?php else: ?>
+              <span class="groom-name"><?php echo e($config->groom_name); ?></span>
               <span class="amp">&amp;</span>
-              <span class="bride-name">{{ $config->bride_name }}</span>
-            @endif
+              <span class="bride-name"><?php echo e($config->bride_name); ?></span>
+            <?php endif; ?>
           </div>
 
-          <p class="card-date">{{ $config->wedding_date->format('d') }} &bull; {{ $config->wedding_date->format('m') }} &bull; {{ $config->wedding_date->format('Y') }}</p>
+          <p class="card-date"><?php echo e($config->wedding_date->format('d')); ?> &bull; <?php echo e($config->wedding_date->format('m')); ?> &bull; <?php echo e($config->wedding_date->format('Y')); ?></p>
 
           <div class="card-ornament">
             <svg viewBox="0 0 120 16" class="ornament-svg"><line x1="0" y1="8" x2="40" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.3"/><circle cx="60" cy="8" r="2.5" fill="currentColor" opacity="0.25"/><line x1="80" y1="8" x2="120" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.3"/></svg>
@@ -112,22 +112,22 @@
     </nav>
 
     <!-- HERO SECTION -->
-    <section id="hero" class="hero-section" @if($heroImageUrl) style="background-image: url('{{ $heroImageUrl }}')" @endif>
+    <section id="hero" class="hero-section" <?php if($heroImageUrl): ?> style="background-image: url('<?php echo e($heroImageUrl); ?>')" <?php endif; ?>>
       <div class="hero-overlay"></div>
       <div class="hero-content" data-aos="fade-up" data-aos-duration="1200">
         <p class="hero-subtitle">We're Getting Married</p>
         <h1 class="hero-names">
-          @if($type == 2)
-            <span class="hero-bride">{{ $config->bride_name }}</span>
+          <?php if($type == 2): ?>
+            <span class="hero-bride"><?php echo e($config->bride_name); ?></span>
             <span class="hero-amp">&amp;</span>
-            <span class="hero-groom">{{ $config->groom_name }}</span>
-          @else
-            <span class="hero-groom">{{ $config->groom_name }}</span>
+            <span class="hero-groom"><?php echo e($config->groom_name); ?></span>
+          <?php else: ?>
+            <span class="hero-groom"><?php echo e($config->groom_name); ?></span>
             <span class="hero-amp">&amp;</span>
-            <span class="hero-bride">{{ $config->bride_name }}</span>
-          @endif
+            <span class="hero-bride"><?php echo e($config->bride_name); ?></span>
+          <?php endif; ?>
         </h1>
-        <p class="hero-date">{{ $config->wedding_date->format('d') }} . {{ $config->wedding_date->format('m') }} . {{ $config->wedding_date->format('Y') }}</p>
+        <p class="hero-date"><?php echo e($config->wedding_date->format('d')); ?> . <?php echo e($config->wedding_date->format('m')); ?> . <?php echo e($config->wedding_date->format('Y')); ?></p>
         <p class="hero-quote">"Yêu là cùng nhau bước qua mọi mùa, dù nắng hay mưa"</p>
 
         <!-- Đồng hồ đếm ngược -->
@@ -159,27 +159,27 @@
         <div class="section-divider">❧</div>
       </div>
       <div class="family-grid">
-        @php
+        <?php
           $groomParentsParts = explode(' & ', $config->groom_parents);
           $brideParentsParts = explode(' & ', $config->bride_parents);
-        @endphp
-        @if($type == 2)
+        ?>
+        <?php if($type == 2): ?>
         <!-- Nhà Gái (hiển thị trước khi type=2) -->
         <div class="family-card bride-family" data-aos="fade-right" data-aos-delay="200">
           <div class="family-icon">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 22V12h6v10"/><path d="M12 3c0 0 2-2 4-1" stroke-dasharray="2 2" opacity="0.5"/><circle cx="18" cy="5" r="1.5" fill="currentColor" opacity="0.3"/></svg>
           </div>
           <h3>Nhà Gái</h3>
-          @if(count($brideParentsParts) >= 2)
-            <p class="parent-name"><strong>Ông:</strong> {{ $brideParentsParts[0] }}</p>
-            <p class="parent-name"><strong>Bà:</strong> {{ $brideParentsParts[1] }}</p>
-          @else
-            <p class="parent-name">{{ $config->bride_parents }}</p>
-          @endif
-          <p class="family-address">{{ $config->event_address }}</p>
+          <?php if(count($brideParentsParts) >= 2): ?>
+            <p class="parent-name"><strong>Ông:</strong> <?php echo e($brideParentsParts[0]); ?></p>
+            <p class="parent-name"><strong>Bà:</strong> <?php echo e($brideParentsParts[1]); ?></p>
+          <?php else: ?>
+            <p class="parent-name"><?php echo e($config->bride_parents); ?></p>
+          <?php endif; ?>
+          <p class="family-address"><?php echo e($config->event_address); ?></p>
           <div class="family-child">
             <p id="family-bride-ceremony">Trân trọng mời bạn đến dự lễ vu quy của con gái chúng tôi</p>
-            <p class="child-name">{{ $config->bride_name }}</p>
+            <p class="child-name"><?php echo e($config->bride_name); ?></p>
           </div>
         </div>
         <!-- Nhà Trai -->
@@ -188,35 +188,35 @@
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 22V12h6v10"/></svg>
           </div>
           <h3>Nhà Trai</h3>
-          @if(count($groomParentsParts) >= 2)
-            <p class="parent-name"><strong>Ông:</strong> {{ $groomParentsParts[0] }}</p>
-            <p class="parent-name"><strong>Bà:</strong> {{ $groomParentsParts[1] }}</p>
-          @else
-            <p class="parent-name">{{ $config->groom_parents }}</p>
-          @endif
-          <p class="family-address">{{ $config->event_address }}</p>
+          <?php if(count($groomParentsParts) >= 2): ?>
+            <p class="parent-name"><strong>Ông:</strong> <?php echo e($groomParentsParts[0]); ?></p>
+            <p class="parent-name"><strong>Bà:</strong> <?php echo e($groomParentsParts[1]); ?></p>
+          <?php else: ?>
+            <p class="parent-name"><?php echo e($config->groom_parents); ?></p>
+          <?php endif; ?>
+          <p class="family-address"><?php echo e($config->event_address); ?></p>
           <div class="family-child">
             <p id="family-groom-ceremony">Trân trọng mời bạn đến dự lễ thành hôn của con trai chúng tôi</p>
-            <p class="child-name">{{ $config->groom_name }}</p>
+            <p class="child-name"><?php echo e($config->groom_name); ?></p>
           </div>
         </div>
-        @else
+        <?php else: ?>
         <!-- Nhà Trai (type=1, mặc định) -->
         <div class="family-card groom-family" data-aos="fade-right" data-aos-delay="200">
           <div class="family-icon">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 22V12h6v10"/></svg>
           </div>
           <h3>Nhà Trai</h3>
-          @if(count($groomParentsParts) >= 2)
-            <p class="parent-name"><strong>Ông:</strong> {{ $groomParentsParts[0] }}</p>
-            <p class="parent-name"><strong>Bà:</strong> {{ $groomParentsParts[1] }}</p>
-          @else
-            <p class="parent-name">{{ $config->groom_parents }}</p>
-          @endif
-          <p class="family-address">{{ $config->event_address }}</p>
+          <?php if(count($groomParentsParts) >= 2): ?>
+            <p class="parent-name"><strong>Ông:</strong> <?php echo e($groomParentsParts[0]); ?></p>
+            <p class="parent-name"><strong>Bà:</strong> <?php echo e($groomParentsParts[1]); ?></p>
+          <?php else: ?>
+            <p class="parent-name"><?php echo e($config->groom_parents); ?></p>
+          <?php endif; ?>
+          <p class="family-address"><?php echo e($config->event_address); ?></p>
           <div class="family-child">
             <p id="family-groom-ceremony">Trân trọng mời bạn đến dự lễ thành hôn của con trai chúng tôi</p>
-            <p class="child-name">{{ $config->groom_name }}</p>
+            <p class="child-name"><?php echo e($config->groom_name); ?></p>
           </div>
         </div>
         <!-- Nhà Gái -->
@@ -225,19 +225,19 @@
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 22V12h6v10"/><path d="M12 3c0 0 2-2 4-1" stroke-dasharray="2 2" opacity="0.5"/><circle cx="18" cy="5" r="1.5" fill="currentColor" opacity="0.3"/></svg>
           </div>
           <h3>Nhà Gái</h3>
-          @if(count($brideParentsParts) >= 2)
-            <p class="parent-name"><strong>Ông:</strong> {{ $brideParentsParts[0] }}</p>
-            <p class="parent-name"><strong>Bà:</strong> {{ $brideParentsParts[1] }}</p>
-          @else
-            <p class="parent-name">{{ $config->bride_parents }}</p>
-          @endif
-          <p class="family-address">{{ $config->event_address }}</p>
+          <?php if(count($brideParentsParts) >= 2): ?>
+            <p class="parent-name"><strong>Ông:</strong> <?php echo e($brideParentsParts[0]); ?></p>
+            <p class="parent-name"><strong>Bà:</strong> <?php echo e($brideParentsParts[1]); ?></p>
+          <?php else: ?>
+            <p class="parent-name"><?php echo e($config->bride_parents); ?></p>
+          <?php endif; ?>
+          <p class="family-address"><?php echo e($config->event_address); ?></p>
           <div class="family-child">
             <p id="family-bride-ceremony">Trân trọng mời bạn đến dự lễ vu quy của con gái chúng tôi</p>
-            <p class="child-name">{{ $config->bride_name }}</p>
+            <p class="child-name"><?php echo e($config->bride_name); ?></p>
           </div>
         </div>
-        @endif
+        <?php endif; ?>
       </div>
     </section>
 
@@ -247,23 +247,23 @@
         <h2 class="section-title">Album Ảnh Cưới</h2>
         <div class="section-divider">✦</div>
       </div>
-      @if($galleryPhotos->count() > 0)
+      <?php if($galleryPhotos->count() > 0): ?>
       <div class="gallery-grid" data-aos="fade-up" data-aos-delay="200">
-        @foreach($galleryPhotos as $i => $photo)
-          @php
+        <?php $__currentLoopData = $galleryPhotos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $i => $photo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+          <?php
             $imgSrc = $resolveUrl($photo->image_url, 'gallery');
             $layoutClass = match($photo->layout) {
               'tall' => 'g-span-1 g-tall',
               'wide' => 'g-wide',
               default => 'g-span-1',
             };
-          @endphp
-          <div class="gallery-item {{ $layoutClass }}" data-aos="zoom-in" data-aos-delay="{{ 100 + $i * 50 }}">
-            <img src="{{ $imgSrc }}" alt="{{ $photo->alt_text ?? 'Ảnh cưới ' . ($i + 1) }}" loading="lazy" />
+          ?>
+          <div class="gallery-item <?php echo e($layoutClass); ?>" data-aos="zoom-in" data-aos-delay="<?php echo e(100 + $i * 50); ?>">
+            <img src="<?php echo e($imgSrc); ?>" alt="<?php echo e($photo->alt_text ?? 'Ảnh cưới ' . ($i + 1)); ?>" loading="lazy" />
           </div>
-        @endforeach
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
       </div>
-      @endif
+      <?php endif; ?>
     </section>
 
     <!-- Lightbox Overlay -->
@@ -316,10 +316,10 @@
         <div class="venue-icon">
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v4M12 14v4M16 14v4"/></svg>
         </div>
-        <h3 class="venue-name">{{ $venue['location'] }}</h3>
-        <p class="venue-address">{{ $venue['address'] }}</p>
+        <h3 class="venue-name"><?php echo e($venue['location']); ?></h3>
+        <p class="venue-address"><?php echo e($venue['address']); ?></p>
         <a
-          href="{{ !empty($venue['map_url']) ? $venue['map_url'] : 'https://maps.google.com/?q=' . rawurlencode(($venue['location'] ?? '') . ' ' . ($venue['address'] ?? '')) }}"
+          href="<?php echo e(!empty($venue['map_url']) ? $venue['map_url'] : 'https://maps.google.com/?q=' . rawurlencode(($venue['location'] ?? '') . ' ' . ($venue['address'] ?? ''))); ?>"
           target="_blank"
           rel="noopener noreferrer"
           class="btn-direction"
@@ -328,10 +328,10 @@
         </a>
       </div>
 
-      @if($venue['map_iframe'])
+      <?php if($venue['map_iframe']): ?>
       <div class="event-map" data-aos="fade-up" data-aos-delay="500">
         <iframe
-          src="{{ $venue['map_iframe'] }}"
+          src="<?php echo e($venue['map_iframe']); ?>"
           width="100%"
           height="350"
           style="border:0; border-radius: 12px;"
@@ -341,7 +341,7 @@
           title="Bản đồ"
         ></iframe>
       </div>
-      @endif
+      <?php endif; ?>
     </section>
 
     <!-- RSVP - Xác nhận tham dự -->
@@ -353,9 +353,9 @@
       </div>
 
       <form id="rsvp-form" class="rsvp-form" data-aos="fade-up" data-aos-delay="200" novalidate>
-        @if($guest)
-          <input type="hidden" name="guest_id" value="{{ $guest->id }}" />
-        @endif
+        <?php if($guest): ?>
+          <input type="hidden" name="guest_id" value="<?php echo e($guest->id); ?>" />
+        <?php endif; ?>
         <div class="form-group">
           <label for="rsvp-name">Họ và Tên <span class="required">*</span></label>
           <input type="text" id="rsvp-name" name="guest_name" placeholder="Nhập họ và tên..." required maxlength="100" />
@@ -409,12 +409,12 @@
       <div id="wishes-wall" class="wishes-wall" data-aos="fade-up" data-aos-delay="300">
         <h3>Lời Chúc Từ Khách Mời</h3>
         <div id="wishes-list" class="wishes-list">
-          @foreach($wishes as $wish)
+          <?php $__currentLoopData = $wishes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $wish): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
           <div class="wish-card">
-            <p class="wish-text">"{{ $wish->wishes_message }}"</p>
-            <p class="wish-author">— {{ $wish->guest_name }}</p>
+            <p class="wish-text">"<?php echo e($wish->wishes_message); ?>"</p>
+            <p class="wish-author">— <?php echo e($wish->guest_name); ?></p>
           </div>
-          @endforeach
+          <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
       </div>
     </section>
@@ -428,119 +428,119 @@
       </div>
 
       <div class="gift-grid">
-        @if($type == 2)
+        <?php if($type == 2): ?>
 
-        @if(isset($bankInfo['bride']))
+        <?php if(isset($bankInfo['bride'])): ?>
         <!-- Cô dâu (hiển thị trước khi type=2) -->
         <div class="gift-card" data-aos="fade-right" data-aos-delay="200">
           <div class="gift-avatar">
-            @if(!empty($brideImageUrl))
-              <img src="{{ $brideImageUrl }}" alt="{{ $config->bride_name }}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;" />
-            @else
+            <?php if(!empty($brideImageUrl)): ?>
+              <img src="<?php echo e($brideImageUrl); ?>" alt="<?php echo e($config->bride_name); ?>" style="width:90px;height:90px;border-radius:50%;object-fit:cover;" />
+            <?php else: ?>
               <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 1c1 1.5 2 3 2 4.5a2 2 0 0 1-4 0C10 4 11 2.5 12 1z" fill="currentColor" opacity="0.15"/></svg>
-            @endif
+            <?php endif; ?>
           </div>
           <h3>Cô Dâu</h3>
-          <p class="gift-bank">Ngân hàng: <strong>{{ $bankInfo['bride']['bank_name'] }}</strong></p>
-          <p class="gift-account">STK: <strong id="stk-bride">{{ $bankInfo['bride']['account_no'] }}</strong></p>
-          <p class="gift-holder">Chủ TK: <strong>{{ $bankInfo['bride']['account_name'] }}</strong></p>
+          <p class="gift-bank">Ngân hàng: <strong><?php echo e($bankInfo['bride']['bank_name']); ?></strong></p>
+          <p class="gift-account">STK: <strong id="stk-bride"><?php echo e($bankInfo['bride']['account_no']); ?></strong></p>
+          <p class="gift-holder">Chủ TK: <strong><?php echo e($bankInfo['bride']['account_name']); ?></strong></p>
           <button class="btn-copy" data-target="stk-bride" aria-label="Copy số tài khoản cô dâu">
             Copy STK
           </button>
           <div class="gift-qr">
-            @if(!empty($bankInfo['bride']['qr_url']))
-              <img src="{{ $bankInfo['bride']['qr_url'] }}" alt="QR Cô Dâu" loading="lazy" />
-            @else
-              <img src="https://img.vietqr.io/image/{{ $bankInfo['bride']['bank_name'] === 'MB Bank' ? 'MB' : $bankInfo['bride']['bank_name'] }}-{{ $bankInfo['bride']['account_no'] }}-compact.png?amount=0&addInfo=MungCuoi{{ Str::of($config->bride_name)->ascii()->replace(' ', '') }}" alt="QR Cô Dâu" loading="lazy" />
-            @endif
+            <?php if(!empty($bankInfo['bride']['qr_url'])): ?>
+              <img src="<?php echo e($bankInfo['bride']['qr_url']); ?>" alt="QR Cô Dâu" loading="lazy" />
+            <?php else: ?>
+              <img src="https://img.vietqr.io/image/<?php echo e($bankInfo['bride']['bank_name'] === 'MB Bank' ? 'MB' : $bankInfo['bride']['bank_name']); ?>-<?php echo e($bankInfo['bride']['account_no']); ?>-compact.png?amount=0&addInfo=MungCuoi<?php echo e(Str::of($config->bride_name)->ascii()->replace(' ', '')); ?>" alt="QR Cô Dâu" loading="lazy" />
+            <?php endif; ?>
           </div>
         </div>
-        @endif
+        <?php endif; ?>
 
-        @if(isset($bankInfo['groom']))
+        <?php if(isset($bankInfo['groom'])): ?>
         <!-- Chú rể -->
         <div class="gift-card" data-aos="fade-left" data-aos-delay="200">
           <div class="gift-avatar">
-            @if(!empty($groomImageUrl))
-              <img src="{{ $groomImageUrl }}" alt="{{ $config->groom_name }}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;" />
-            @else
+            <?php if(!empty($groomImageUrl)): ?>
+              <img src="<?php echo e($groomImageUrl); ?>" alt="<?php echo e($config->groom_name); ?>" style="width:90px;height:90px;border-radius:50%;object-fit:cover;" />
+            <?php else: ?>
               <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            @endif
+            <?php endif; ?>
           </div>
           <h3>Chú Rể</h3>
-          <p class="gift-bank">Ngân hàng: <strong>{{ $bankInfo['groom']['bank_name'] }}</strong></p>
-          <p class="gift-account">STK: <strong id="stk-groom">{{ $bankInfo['groom']['account_no'] }}</strong></p>
-          <p class="gift-holder">Chủ TK: <strong>{{ $bankInfo['groom']['account_name'] }}</strong></p>
+          <p class="gift-bank">Ngân hàng: <strong><?php echo e($bankInfo['groom']['bank_name']); ?></strong></p>
+          <p class="gift-account">STK: <strong id="stk-groom"><?php echo e($bankInfo['groom']['account_no']); ?></strong></p>
+          <p class="gift-holder">Chủ TK: <strong><?php echo e($bankInfo['groom']['account_name']); ?></strong></p>
           <button class="btn-copy" data-target="stk-groom" aria-label="Copy số tài khoản chú rể">
             Copy STK
           </button>
           <div class="gift-qr">
-            @if(!empty($bankInfo['groom']['qr_url']))
-              <img src="{{ $bankInfo['groom']['qr_url'] }}" alt="QR Chú Rể" loading="lazy" />
-            @else
-              <img src="https://img.vietqr.io/image/{{ $bankInfo['groom']['bank_name'] === 'Vietcombank' ? 'VCB' : $bankInfo['groom']['bank_name'] }}-{{ $bankInfo['groom']['account_no'] }}-compact.png?amount=0&addInfo=MungCuoi{{ Str::of($config->groom_name)->ascii()->replace(' ', '') }}" alt="QR Chú Rể" loading="lazy" />
-            @endif
+            <?php if(!empty($bankInfo['groom']['qr_url'])): ?>
+              <img src="<?php echo e($bankInfo['groom']['qr_url']); ?>" alt="QR Chú Rể" loading="lazy" />
+            <?php else: ?>
+              <img src="https://img.vietqr.io/image/<?php echo e($bankInfo['groom']['bank_name'] === 'Vietcombank' ? 'VCB' : $bankInfo['groom']['bank_name']); ?>-<?php echo e($bankInfo['groom']['account_no']); ?>-compact.png?amount=0&addInfo=MungCuoi<?php echo e(Str::of($config->groom_name)->ascii()->replace(' ', '')); ?>" alt="QR Chú Rể" loading="lazy" />
+            <?php endif; ?>
           </div>
         </div>
-        @endif
+        <?php endif; ?>
 
-        @else
+        <?php else: ?>
 
-        @if(isset($bankInfo['groom']))
+        <?php if(isset($bankInfo['groom'])): ?>
         <!-- Chú rể (type=1, mặc định) -->
         <div class="gift-card" data-aos="fade-right" data-aos-delay="200">
           <div class="gift-avatar">
-            @if(!empty($groomImageUrl))
-              <img src="{{ $groomImageUrl }}" alt="{{ $config->groom_name }}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;" />
-            @else
+            <?php if(!empty($groomImageUrl)): ?>
+              <img src="<?php echo e($groomImageUrl); ?>" alt="<?php echo e($config->groom_name); ?>" style="width:90px;height:90px;border-radius:50%;object-fit:cover;" />
+            <?php else: ?>
               <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            @endif
+            <?php endif; ?>
           </div>
           <h3>Chú Rể</h3>
-          <p class="gift-bank">Ngân hàng: <strong>{{ $bankInfo['groom']['bank_name'] }}</strong></p>
-          <p class="gift-account">STK: <strong id="stk-groom">{{ $bankInfo['groom']['account_no'] }}</strong></p>
-          <p class="gift-holder">Chủ TK: <strong>{{ $bankInfo['groom']['account_name'] }}</strong></p>
+          <p class="gift-bank">Ngân hàng: <strong><?php echo e($bankInfo['groom']['bank_name']); ?></strong></p>
+          <p class="gift-account">STK: <strong id="stk-groom"><?php echo e($bankInfo['groom']['account_no']); ?></strong></p>
+          <p class="gift-holder">Chủ TK: <strong><?php echo e($bankInfo['groom']['account_name']); ?></strong></p>
           <button class="btn-copy" data-target="stk-groom" aria-label="Copy số tài khoản chú rể">
             Copy STK
           </button>
           <div class="gift-qr">
-            @if(!empty($bankInfo['groom']['qr_url']))
-              <img src="{{ $bankInfo['groom']['qr_url'] }}" alt="QR Chú Rể" loading="lazy" />
-            @else
-              <img src="https://img.vietqr.io/image/{{ $bankInfo['groom']['bank_name'] === 'Vietcombank' ? 'VCB' : $bankInfo['groom']['bank_name'] }}-{{ $bankInfo['groom']['account_no'] }}-compact.png?amount=0&addInfo=MungCuoi{{ Str::of($config->groom_name)->ascii()->replace(' ', '') }}" alt="QR Chú Rể" loading="lazy" />
-            @endif
+            <?php if(!empty($bankInfo['groom']['qr_url'])): ?>
+              <img src="<?php echo e($bankInfo['groom']['qr_url']); ?>" alt="QR Chú Rể" loading="lazy" />
+            <?php else: ?>
+              <img src="https://img.vietqr.io/image/<?php echo e($bankInfo['groom']['bank_name'] === 'Vietcombank' ? 'VCB' : $bankInfo['groom']['bank_name']); ?>-<?php echo e($bankInfo['groom']['account_no']); ?>-compact.png?amount=0&addInfo=MungCuoi<?php echo e(Str::of($config->groom_name)->ascii()->replace(' ', '')); ?>" alt="QR Chú Rể" loading="lazy" />
+            <?php endif; ?>
           </div>
         </div>
-        @endif
+        <?php endif; ?>
 
-        @if(isset($bankInfo['bride']))
+        <?php if(isset($bankInfo['bride'])): ?>
         <!-- Cô dâu -->
-        <div class="gift-card" data-aos="fade-left" data-aos-delay="200"> {{-- type=1 --}}
+        <div class="gift-card" data-aos="fade-left" data-aos-delay="200"> 
           <div class="gift-avatar">
-            @if(!empty($brideImageUrl))
-              <img src="{{ $brideImageUrl }}" alt="{{ $config->bride_name }}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;" />
-            @else
+            <?php if(!empty($brideImageUrl)): ?>
+              <img src="<?php echo e($brideImageUrl); ?>" alt="<?php echo e($config->bride_name); ?>" style="width:90px;height:90px;border-radius:50%;object-fit:cover;" />
+            <?php else: ?>
               <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 1c1 1.5 2 3 2 4.5a2 2 0 0 1-4 0C10 4 11 2.5 12 1z" fill="currentColor" opacity="0.15"/></svg>
-            @endif
+            <?php endif; ?>
           </div>
           <h3>Cô Dâu</h3>
-          <p class="gift-bank">Ngân hàng: <strong>{{ $bankInfo['bride']['bank_name'] }}</strong></p>
-          <p class="gift-account">STK: <strong id="stk-bride">{{ $bankInfo['bride']['account_no'] }}</strong></p>
-          <p class="gift-holder">Chủ TK: <strong>{{ $bankInfo['bride']['account_name'] }}</strong></p>
+          <p class="gift-bank">Ngân hàng: <strong><?php echo e($bankInfo['bride']['bank_name']); ?></strong></p>
+          <p class="gift-account">STK: <strong id="stk-bride"><?php echo e($bankInfo['bride']['account_no']); ?></strong></p>
+          <p class="gift-holder">Chủ TK: <strong><?php echo e($bankInfo['bride']['account_name']); ?></strong></p>
           <button class="btn-copy" data-target="stk-bride" aria-label="Copy số tài khoản cô dâu">
             Copy STK
           </button>
           <div class="gift-qr">
-            @if(!empty($bankInfo['bride']['qr_url']))
-              <img src="{{ $bankInfo['bride']['qr_url'] }}" alt="QR Cô Dâu" loading="lazy" />
-            @else
-              <img src="https://img.vietqr.io/image/{{ $bankInfo['bride']['bank_name'] === 'MB Bank' ? 'MB' : $bankInfo['bride']['bank_name'] }}-{{ $bankInfo['bride']['account_no'] }}-compact.png?amount=0&addInfo=MungCuoi{{ Str::of($config->bride_name)->ascii()->replace(' ', '') }}" alt="QR Cô Dâu" loading="lazy" />
-            @endif
+            <?php if(!empty($bankInfo['bride']['qr_url'])): ?>
+              <img src="<?php echo e($bankInfo['bride']['qr_url']); ?>" alt="QR Cô Dâu" loading="lazy" />
+            <?php else: ?>
+              <img src="https://img.vietqr.io/image/<?php echo e($bankInfo['bride']['bank_name'] === 'MB Bank' ? 'MB' : $bankInfo['bride']['bank_name']); ?>-<?php echo e($bankInfo['bride']['account_no']); ?>-compact.png?amount=0&addInfo=MungCuoi<?php echo e(Str::of($config->bride_name)->ascii()->replace(' ', '')); ?>" alt="QR Cô Dâu" loading="lazy" />
+            <?php endif; ?>
           </div>
         </div>
-        @endif
+        <?php endif; ?>
 
-        @endif {{-- end type check --}}
+        <?php endif; ?> 
       </div>
     </section>
 
@@ -548,13 +548,15 @@
     <footer class="footer" data-aos="fade-up">
       <div class="footer-hearts">♡</div>
       <p class="footer-names">
-        @if($type == 2)
-          {{ $config->bride_name }} ♡ {{ $config->groom_name }}
-        @else
-          {{ $config->groom_name }} ♡ {{ $config->bride_name }}
-        @endif
+        <?php if($type == 2): ?>
+          <?php echo e($config->bride_name); ?> ♡ <?php echo e($config->groom_name); ?>
+
+        <?php else: ?>
+          <?php echo e($config->groom_name); ?> ♡ <?php echo e($config->bride_name); ?>
+
+        <?php endif; ?>
       </p>
-      <p class="footer-date">{{ $config->wedding_date->format('d') }} . {{ $config->wedding_date->format('m') }} . {{ $config->wedding_date->format('Y') }}</p>
+      <p class="footer-date"><?php echo e($config->wedding_date->format('d')); ?> . <?php echo e($config->wedding_date->format('m')); ?> . <?php echo e($config->wedding_date->format('Y')); ?></p>
       <p class="footer-thanks">Sự hiện diện của bạn là niềm vinh hạnh của chúng tôi!
 Trong khoảnh khắc ý nghĩa này, sự có mặt của bạn như một món quà quý giá, góp phần làm cho ngày hôm nay trở nên trọn vẹn và ấm áp hơn bao giờ hết.
 
@@ -573,14 +575,14 @@ Sự đồng hành của bạn không chỉ là niềm vui, mà còn là nguồn
   </button>
 
   <audio id="bg-music" loop preload="auto">
-    @php
+    <?php
       $musicUrl = $config->background_music_url ?? null;
       if ($musicUrl && !str_starts_with($musicUrl, 'http://') && !str_starts_with($musicUrl, 'https://')) {
           $musicUrl = asset('bg-music/' . $musicUrl);
       }
       $musicUrl = $musicUrl ?? 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
-    @endphp
-    <source src="{{ $musicUrl }}" type="audio/mpeg" />
+    ?>
+    <source src="<?php echo e($musicUrl); ?>" type="audio/mpeg" />
   </audio>
 
   <!-- Toast Notification -->
@@ -592,14 +594,15 @@ Sự đồng hành của bạn không chỉ là niềm vui, mà còn là nguồn
   <!-- Truyền dữ liệu từ server sang JS -->
   <script>
     window.weddingData = {
-      weddingDate: '{{ $config->wedding_date->toIso8601String() }}',
-      guestId: {{ $guest ? $guest->id : 'null' }},
-      displayName: @json($displayName),
-      type: {{ $type }},
-      rsvpUrl: '{{ route('rsvp.store') }}',
-      csrfToken: '{{ csrf_token() }}'
+      weddingDate: '<?php echo e($config->wedding_date->toIso8601String()); ?>',
+      guestId: <?php echo e($guest ? $guest->id : 'null'); ?>,
+      displayName: <?php echo json_encode($displayName, 15, 512) ?>,
+      type: <?php echo e($type); ?>,
+      rsvpUrl: '<?php echo e(route('rsvp.store')); ?>',
+      csrfToken: '<?php echo e(csrf_token()); ?>'
     };
   </script>
-  <script src="{{ asset('js/wedding.js') }}"></script>
+  <script src="<?php echo e(asset('js/wedding.js')); ?>"></script>
 </body>
 </html>
+<?php /**PATH D:\New folder\resources\views/wedding.blade.php ENDPATH**/ ?>

@@ -1242,8 +1242,8 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 72px;
-  height: 72px;
+  width: 90px;
+  height: 90px;
   margin: 0 auto 14px;
   border-radius: 50%;
   background: linear-gradient(135deg, rgba(185, 141, 116, 0.08), rgba(201, 169, 110, 0.1));
@@ -1509,6 +1509,15 @@ button {
     width: 40px;
     margin: 0 10px;
   }
+
+  .attending-options {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .attending-option {
+    min-width: unset;
+    width: 100%;
+  }
 }
 
 @media (max-width: 420px) {
@@ -1533,4 +1542,13 @@ button {
 
   .rsvp-form { padding: 22px 16px; }
   .gift-card { padding: 28px 18px; }
+
+  .attending-options {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .attending-option {
+    min-width: unset;
+    width: 100%;
+  }
 }
