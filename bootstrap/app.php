@@ -12,6 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->trustProxies(at: '*');
+        // Đăng ký middleware chặn spam theo IP cho route RSVP
+        $middleware->alias([
+            'throttle.perip' => \App\Http\Middleware\ThrottlePerIp::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
