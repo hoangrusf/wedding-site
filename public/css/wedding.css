@@ -977,6 +977,224 @@ button {
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(139, 101, 80, 0.1);
 }
+
+/* ==========================================================
+   EVENT CALENDAR - Lịch Tháng 5
+   ========================================================== */
+.event-calendar {
+  max-width: 600px;
+  margin: 0 auto 48px;
+}
+
+.calendar-card {
+  background: var(--glass-bg-strong);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px 28px;
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
+}
+.calendar-card::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 130px;
+  height: 130px;
+  background: radial-gradient(circle, rgba(212, 160, 167, 0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.calendar-card::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  left: -30px;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(201, 169, 110, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Header */
+.calendar-header {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(185, 141, 116, 0.12);
+  position: relative;
+}
+.calendar-header-deco {
+  margin-bottom: 6px;
+}
+.calendar-heart-deco {
+  color: var(--color-rose);
+  opacity: 0.35;
+  animation: heartFloat 3s ease-in-out infinite;
+}
+@keyframes heartFloat {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.35; }
+  50% { transform: translateY(-3px) scale(1.1); opacity: 0.5; }
+}
+.calendar-month {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--color-primary-dark);
+  letter-spacing: 0.5px;
+}
+.calendar-year {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  margin-left: 8px;
+  font-weight: 400;
+}
+
+/* Body */
+.calendar-body {
+  position: relative;
+  z-index: 1;
+}
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  margin-bottom: 6px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(185, 141, 116, 0.08);
+}
+.calendar-weekdays span {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 6px 0;
+}
+
+/* Days Grid */
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  row-gap: 6px;
+}
+
+.day-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  cursor: default;
+}
+
+.day-number {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--color-text);
+  line-height: 1;
+  position: relative;
+  z-index: 2;
+}
+
+/* Heart highlight days - hand-drawn stroke style */
+.day-highlight {
+  padding-top: 2px;
+}
+.day-highlight .day-number {
+  color: var(--color-primary-dark);
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+
+.heart-stroke {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 52px;
+  height: 50px;
+  transform: translate(-50%, -52%);
+  color: var(--color-rose);
+  z-index: 0;
+  opacity: 0.8;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  filter: drop-shadow(0 1px 2px rgba(212, 160, 167, 0.2));
+}
+.heart-stroke path {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: drawHeart 1.5s ease forwards;
+}
+.day-highlight:hover .heart-stroke {
+  transform: translate(-50%, -52%) scale(1.08);
+  opacity: 1;
+}
+
+/* Main event day (24) - thicker, bolder stroke */
+.day-main .heart-stroke {
+  width: 58px;
+  height: 55px;
+  color: var(--color-primary);
+  opacity: 1;
+  filter: drop-shadow(0 2px 6px rgba(185, 141, 116, 0.35));
+}
+.day-main .heart-stroke path {
+  stroke-width: 3;
+}
+
+@keyframes drawHeart {
+  0% { stroke-dashoffset: 100; }
+  100% { stroke-dashoffset: 0; }
+}
+
+/* Day label underneath */
+.day-label {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+  z-index: 2;
+  opacity: 0.85;
+}
+
+/* Legend */
+.calendar-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(185, 141, 116, 0.1);
+  position: relative;
+  z-index: 1;
+}
+.legend-heart-icon {
+  color: var(--color-rose);
+  flex-shrink: 0;
+}
+.legend-text {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--color-text-light);
+  letter-spacing: 0.5px;
+}
+
 /* ==========================================================
    RSVP - Glassmorphism Form
    ========================================================== */
@@ -1505,6 +1723,34 @@ button {
   }
   .timeline-time {
     font-size: 1.4rem;
+  }
+
+  .event-calendar {
+    max-width: 100%;
+  }
+  .calendar-card {
+    padding: 24px 18px 20px;
+  }
+  .calendar-month {
+    font-size: 1.3rem;
+  }
+  .day-cell {
+    height: 46px;
+  }
+  .day-number {
+    font-size: 0.78rem;
+  }
+  .heart-stroke {
+    width: 44px;
+    height: 42px;
+  }
+  .day-main .heart-stroke {
+    width: 48px;
+    height: 46px;
+  }
+  .day-label {
+    font-size: 0.48rem;
+    bottom: -1px;
   }
 
   .countdown-item {

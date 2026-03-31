@@ -280,7 +280,7 @@
         <h2 class="section-title">Sự Kiện</h2>
         <div class="section-divider">✦</div>
       </div>
-
+<!-- 
       <div class="event-timeline" data-aos="fade-up" data-aos-delay="200">
         <div class="timeline-item">
           <div class="timeline-icon">
@@ -310,6 +310,49 @@
           </div>
         </div>
       
+      </div> -->
+
+      <!-- LỊCH SỰ KIỆN - THÁNG 5/2026 -->
+      <div class="event-calendar" data-aos="fade-up" data-aos-delay="300">
+        <div class="calendar-card">
+          <div class="calendar-header">
+            <div class="calendar-header-deco">
+              <svg class="calendar-heart-deco" viewBox="0 0 24 24" width="18" height="18"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor"/></svg>
+            </div>
+            <span class="calendar-month">Tháng 5</span>
+            <span class="calendar-year">2026</span>
+          </div>
+
+          <div class="calendar-body">
+            <div class="calendar-weekdays">
+              <span>CN</span><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span>
+            </div>
+            <div class="calendar-days">
+              {{-- Tháng 5/2026: ngày 1 là Thứ Sáu → 5 ô trống --}}
+              <span class="day-cell"></span>
+              <span class="day-cell"></span>
+              <span class="day-cell"></span>
+              <span class="day-cell"></span>
+              <span class="day-cell"></span>
+              @for($d = 1; $d <= 31; $d++)
+                @if(in_array($d, [22, 23, 24]))
+                  <span class="day-cell day-highlight {{ $d === 24 ? 'day-main' : '' }}">
+                    <svg class="heart-stroke" viewBox="0 0 60 55" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M30 50 C30 50 4 35 4 18 C4 8 12 2 20 6 C25 9 28 14 30 18 C32 14 35 9 40 6 C48 2 56 8 56 18 C56 35 30 50 30 50Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" pathLength="100"/></svg>
+                    <span class="day-number">{{ $d }}</span>
+                    <span class="day-label">{{ $d === 22 ? 'Ăn Hỏi' : ($d === 23 ? 'Khai Tiệc' : 'Thành Hôn') }}</span>
+                  </span>
+                @else
+                  <span class="day-cell"><span class="day-number">{{ $d }}</span></span>
+                @endif
+              @endfor
+            </div>
+          </div>
+
+          <div class="calendar-legend">
+            <svg viewBox="0 0 60 55" width="16" height="15" class="legend-heart-icon" fill="none"><path d="M30 50 C30 50 4 35 4 18 C4 8 12 2 20 6 C25 9 28 14 30 18 C32 14 35 9 40 6 C48 2 56 8 56 18 C56 35 30 50 30 50Z" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="legend-text">Ngày trọng đại</span>
+          </div>
+        </div>
       </div>
 
       <div class="event-venue" data-aos="fade-up" data-aos-delay="400">
