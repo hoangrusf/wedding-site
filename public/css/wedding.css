@@ -1480,14 +1480,31 @@ button {
   .event-timeline {
     flex-direction: column;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
   }
   .timeline-item {
     width: 100%;
-    max-width: 320px;
-    flex-direction: row;
-    gap: 16px;
-    padding: 18px 22px;
+    max-width: 340px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    padding: 20px 16px;
+  }
+  .timeline-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 4px;
+  }
+  .timeline-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+  .timeline-content h4 {
+    font-size: 0.92rem;
+  }
+  .timeline-time {
+    font-size: 1.4rem;
   }
 
   .countdown-item {
