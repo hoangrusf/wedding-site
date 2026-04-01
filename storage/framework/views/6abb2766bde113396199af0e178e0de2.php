@@ -26,8 +26,11 @@
         : $value;
 
     $heroImageUrl  = $resolveUrl($config->hero_image_url,  'hero_image_url');
+    $heroImagePos  = $config->hero_image_position ?? 'center center';
     $groomImageUrl = $resolveUrl($config->groom_image_url ?? null, 'groom_image_url');
+    $groomImagePos = $config->groom_image_position ?? 'center center';
     $brideImageUrl = $resolveUrl($config->bride_image_url ?? null, 'bride_image_url');
+    $brideImagePos = $config->bride_image_position ?? 'center center';
 
     if (!empty($bankInfo['groom']['qr_url'])) {
         $bankInfo['groom']['qr_url'] = $resolveUrl($bankInfo['groom']['qr_url'], 'groom_qr_url');
@@ -38,6 +41,9 @@
   ?>
   <!-- CANVAS - Hiệu ứng hoa anh đào rơi -->
   <canvas id="petals-canvas"></canvas>
+
+  <!-- CANVAS - Hiệu ứng pháo hoa -->
+  <canvas id="fireworks-canvas"></canvas>
 
   <!-- MÀN HÌNH CHỜ - PHONG BÌ -->
   <div id="envelope-screen">
@@ -112,7 +118,7 @@
     </nav>
 
     <!-- HERO SECTION -->
-    <section id="hero" class="hero-section" <?php if($heroImageUrl): ?> style="background-image: url('<?php echo e($heroImageUrl); ?>')" <?php endif; ?>>
+    <section id="hero" class="hero-section" <?php if($heroImageUrl): ?> style="background-image: url('<?php echo e($heroImageUrl); ?>'); background-position: <?php echo e($heroImagePos); ?>" <?php endif; ?>>
       <div class="hero-overlay"></div>
       <div class="hero-content" data-aos="fade-up" data-aos-duration="1200">
         <p class="hero-subtitle">We're Getting Married</p>
@@ -257,9 +263,12 @@
               'wide' => 'g-wide',
               default => 'g-span-1',
             };
+            $imgFit = $photo->object_fit ?? 'cover';
+            $imgPos = $photo->object_position ?? 'center center';
           ?>
           <div class="gallery-item <?php echo e($layoutClass); ?>" data-aos="zoom-in" data-aos-delay="<?php echo e(100 + $i * 50); ?>">
-            <img src="<?php echo e($imgSrc); ?>" alt="<?php echo e($photo->alt_text ?? 'Ảnh cưới ' . ($i + 1)); ?>" loading="lazy" />
+            <img src="<?php echo e($imgSrc); ?>" alt="<?php echo e($photo->alt_text ?? 'Ảnh cưới ' . ($i + 1)); ?>" loading="lazy"
+                 style="object-fit: <?php echo e($imgFit); ?>; object-position: <?php echo e($imgPos); ?>;" />
           </div>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
       </div>
@@ -280,7 +289,7 @@
         <h2 class="section-title">Sự Kiện</h2>
         <div class="section-divider">✦</div>
       </div>
-
+<!-- 
       <div class="event-timeline" data-aos="fade-up" data-aos-delay="200">
         <div class="timeline-item">
           <div class="timeline-icon">
@@ -310,6 +319,49 @@
           </div>
         </div>
       
+      </div> -->
+
+      <!-- LỊCH SỰ KIỆN - THÁNG 5/2026 -->
+      <div class="event-calendar" data-aos="fade-up" data-aos-delay="300">
+        <div class="calendar-card">
+          <div class="calendar-header">
+            <div class="calendar-header-deco">
+              <svg class="calendar-heart-deco" viewBox="0 0 24 24" width="18" height="18"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor"/></svg>
+            </div>
+            <span class="calendar-month">Tháng 5</span>
+            <span class="calendar-year">2026</span>
+          </div>
+
+          <div class="calendar-body">
+            <div class="calendar-weekdays">
+              <span>CN</span><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span>
+            </div>
+            <div class="calendar-days">
+              
+              <span class="day-cell"></span>
+              <span class="day-cell"></span>
+              <span class="day-cell"></span>
+              <span class="day-cell"></span>
+              <span class="day-cell"></span>
+              <?php for($d = 1; $d <= 31; $d++): ?>
+                <?php if(in_array($d, [22, 23, 24])): ?>
+                  <span class="day-cell day-highlight <?php echo e($d === 24 ? 'day-main' : ''); ?>">
+                    <svg class="heart-stroke" viewBox="0 0 60 55" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M30 50 C30 50 4 35 4 18 C4 8 12 2 20 6 C25 9 28 14 30 18 C32 14 35 9 40 6 C48 2 56 8 56 18 C56 35 30 50 30 50Z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" pathLength="100"/></svg>
+                    <span class="day-number"><?php echo e($d); ?></span>
+                    <span class="day-label"><?php echo e($d === 22 ? 'Ăn Hỏi' : ($d === 23 ? 'Khai Tiệc' : 'Thành Hôn')); ?></span>
+                  </span>
+                <?php else: ?>
+                  <span class="day-cell"><span class="day-number"><?php echo e($d); ?></span></span>
+                <?php endif; ?>
+              <?php endfor; ?>
+            </div>
+          </div>
+
+          <div class="calendar-legend">
+            <svg viewBox="0 0 60 55" width="16" height="15" class="legend-heart-icon" fill="none"><path d="M30 50 C30 50 4 35 4 18 C4 8 12 2 20 6 C25 9 28 14 30 18 C32 14 35 9 40 6 C48 2 56 8 56 18 C56 35 30 50 30 50Z" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="legend-text">Ngày trọng đại</span>
+          </div>
+        </div>
       </div>
 
       <div class="event-venue" data-aos="fade-up" data-aos-delay="400">
@@ -435,7 +487,7 @@
         <div class="gift-card" data-aos="fade-right" data-aos-delay="200">
           <div class="gift-avatar">
             <?php if(!empty($brideImageUrl)): ?>
-              <img src="<?php echo e($brideImageUrl); ?>" alt="<?php echo e($config->bride_name); ?>" style="width:90px;height:90px;border-radius:50%;object-fit:cover;" />
+              <img src="<?php echo e($brideImageUrl); ?>" alt="<?php echo e($config->bride_name); ?>" style="width:90px;height:90px;border-radius:50%;object-fit:cover;object-position:<?php echo e($brideImagePos); ?>;" />
             <?php else: ?>
               <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 1c1 1.5 2 3 2 4.5a2 2 0 0 1-4 0C10 4 11 2.5 12 1z" fill="currentColor" opacity="0.15"/></svg>
             <?php endif; ?>
@@ -462,7 +514,7 @@
         <div class="gift-card" data-aos="fade-left" data-aos-delay="200">
           <div class="gift-avatar">
             <?php if(!empty($groomImageUrl)): ?>
-              <img src="<?php echo e($groomImageUrl); ?>" alt="<?php echo e($config->groom_name); ?>" style="width:90px;height:90px;border-radius:50%;object-fit:cover;" />
+              <img src="<?php echo e($groomImageUrl); ?>" alt="<?php echo e($config->groom_name); ?>" style="width:90px;height:90px;border-radius:50%;object-fit:cover;object-position:<?php echo e($groomImagePos); ?>;" />
             <?php else: ?>
               <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             <?php endif; ?>
@@ -491,7 +543,7 @@
         <div class="gift-card" data-aos="fade-right" data-aos-delay="200">
           <div class="gift-avatar">
             <?php if(!empty($groomImageUrl)): ?>
-              <img src="<?php echo e($groomImageUrl); ?>" alt="<?php echo e($config->groom_name); ?>" style="width:90px;height:90px;border-radius:50%;object-fit:cover;" />
+              <img src="<?php echo e($groomImageUrl); ?>" alt="<?php echo e($config->groom_name); ?>" style="width:90px;height:90px;border-radius:50%;object-fit:cover;object-position:<?php echo e($groomImagePos); ?>;" />
             <?php else: ?>
               <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             <?php endif; ?>
@@ -518,7 +570,7 @@
         <div class="gift-card" data-aos="fade-left" data-aos-delay="200"> 
           <div class="gift-avatar">
             <?php if(!empty($brideImageUrl)): ?>
-              <img src="<?php echo e($brideImageUrl); ?>" alt="<?php echo e($config->bride_name); ?>" style="width:90px;height:90px;border-radius:50%;object-fit:cover;" />
+              <img src="<?php echo e($brideImageUrl); ?>" alt="<?php echo e($config->bride_name); ?>" style="width:90px;height:90px;border-radius:50%;object-fit:cover;object-position:<?php echo e($brideImagePos); ?>;" />
             <?php else: ?>
               <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 1c1 1.5 2 3 2 4.5a2 2 0 0 1-4 0C10 4 11 2.5 12 1z" fill="currentColor" opacity="0.15"/></svg>
             <?php endif; ?>
@@ -565,6 +617,33 @@ Chúng tôi vô cùng biết ơn khi được chia sẻ niềm hạnh phúc, ti�
 Sự đồng hành của bạn không chỉ là niềm vui, mà còn là nguồn động viên lớn lao để chúng tôi bắt đầu hành trình mới với thật nhiều yêu thương và hy vọng. 💖</p>
     </footer>
   </main>
+
+  <!-- TRANG TRÍ SONG HỶ - Desktop Only -->
+  <div class="desktop-side-decor decor-left" aria-hidden="true">
+    <div class="decor-panel">
+      <div class="decor-songhy-wrap">
+        <div class="decor-songhy-glow"></div>
+        <svg class="decor-songhy-ring" viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="46" stroke="#c9a96e" stroke-width="0.8" stroke-dasharray="4 6" opacity="0.35"/>
+          <circle cx="50" cy="50" r="40" stroke="#e8d5a3" stroke-width="0.5" opacity="0.2"/>
+        </svg>
+        <span class="decor-songhy">囍</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="desktop-side-decor decor-right" aria-hidden="true">
+    <div class="decor-panel">
+      <div class="decor-songhy-wrap">
+        <div class="decor-songhy-glow"></div>
+        <svg class="decor-songhy-ring" viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="46" stroke="#d4a0a7" stroke-width="0.8" stroke-dasharray="4 6" opacity="0.35"/>
+          <circle cx="50" cy="50" r="40" stroke="#e8d5a3" stroke-width="0.5" opacity="0.2"/>
+        </svg>
+        <span class="decor-songhy">囍</span>
+      </div>
+    </div>
+  </div>
 
   <!-- NÚT NHẠC NỀN NỔI -->
   <button id="music-toggle" class="music-toggle hidden" aria-label="Bật/Tắt nhạc nền">

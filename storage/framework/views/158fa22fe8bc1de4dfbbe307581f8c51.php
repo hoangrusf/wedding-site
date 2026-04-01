@@ -166,10 +166,75 @@
       margin-bottom: -0.3rem;
     }
 
+    /* Image preview with drag-to-reposition */
+    .img-preview-wrapper {
+      margin-top: 0.4rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+    }
+
+    .img-preview-box {
+      width: 180px;
+      height: 120px;
+      border: 2px dashed #d9c8af;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f9f0e6;
+      position: relative;
+      cursor: grab;
+      flex-shrink: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .img-preview-box:active { cursor: grabbing; }
+
+    .img-preview-box img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    .img-preview-box .drag-hint {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      font-size: 0.65rem;
+      text-align: center;
+      padding: 2px 4px;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+    .img-preview-box:hover .drag-hint { opacity: 1; }
+
+    .img-preview-box.empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: default;
+    }
+    .img-preview-box.empty .placeholder-text {
+      font-size: 0.75rem;
+      color: #bba78f;
+    }
+
+    .img-position-label {
+      font-size: 0.72rem;
+      color: #999;
+      margin-top: 0.25rem;
+    }
+
     @media (max-width: 600px) {
       .form-grid { grid-template-columns: 1fr; }
       .form-group.full { grid-column: 1; }
       .content { padding: 1rem; }
+      .img-preview-box { width: 140px; height: 95px; }
     }
   </style>
 </head>
@@ -245,7 +310,12 @@ unset($__errorArgs, $__bag); ?>
         </div>
         <div class="form-group">
           <label>Ảnh nền hero <span class="field-hint">URL hoặc tên file trong hero_image_url/</span></label>
-          <input type="text" name="hero_image_url" value="<?php echo e(old('hero_image_url', $config->hero_image_url)); ?>" placeholder="ten_anh.jpg hoặc https://..." />
+          <input type="text" name="hero_image_url" value="<?php echo e(old('hero_image_url', $config->hero_image_url)); ?>" placeholder="ten_anh.jpg hoặc https://..." data-preview="preview-hero" data-folder="hero_image_url" />
+          <input type="hidden" name="hero_image_position" id="pos-hero" value="<?php echo e(old('hero_image_position', $config->hero_image_position ?? 'center center')); ?>" />
+          <div class="img-preview-wrapper">
+            <div class="img-preview-box" id="preview-hero" data-position-input="pos-hero"></div>
+            <div class="img-position-label" id="pos-label-hero">Vị trí: <?php echo e(old('hero_image_position', $config->hero_image_position ?? 'center center')); ?></div>
+          </div>
         </div>
         <div class="form-group">
           <label>Nhạc nền <span class="field-hint">URL hoặc tên file trong bg-music/</span></label>
@@ -253,11 +323,21 @@ unset($__errorArgs, $__bag); ?>
         </div>
         <div class="form-group">
           <label>Ảnh chú rể <span class="field-hint">URL hoặc tên file trong groom_image_url/</span></label>
-          <input type="text" name="groom_image_url" value="<?php echo e(old('groom_image_url', $config->groom_image_url)); ?>" placeholder="ten_anh.jpg hoặc https://..." />
+          <input type="text" name="groom_image_url" value="<?php echo e(old('groom_image_url', $config->groom_image_url)); ?>" placeholder="ten_anh.jpg hoặc https://..." data-preview="preview-groom" data-folder="groom_image_url" />
+          <input type="hidden" name="groom_image_position" id="pos-groom" value="<?php echo e(old('groom_image_position', $config->groom_image_position ?? 'center center')); ?>" />
+          <div class="img-preview-wrapper">
+            <div class="img-preview-box" id="preview-groom" data-position-input="pos-groom"></div>
+            <div class="img-position-label" id="pos-label-groom">Vị trí: <?php echo e(old('groom_image_position', $config->groom_image_position ?? 'center center')); ?></div>
+          </div>
         </div>
         <div class="form-group">
           <label>Ảnh cô dâu <span class="field-hint">URL hoặc tên file trong bride_image_url/</span></label>
-          <input type="text" name="bride_image_url" value="<?php echo e(old('bride_image_url', $config->bride_image_url)); ?>" placeholder="ten_anh.jpg hoặc https://..." />
+          <input type="text" name="bride_image_url" value="<?php echo e(old('bride_image_url', $config->bride_image_url)); ?>" placeholder="ten_anh.jpg hoặc https://..." data-preview="preview-bride" data-folder="bride_image_url" />
+          <input type="hidden" name="bride_image_position" id="pos-bride" value="<?php echo e(old('bride_image_position', $config->bride_image_position ?? 'center center')); ?>" />
+          <div class="img-preview-wrapper">
+            <div class="img-preview-box" id="preview-bride" data-position-input="pos-bride"></div>
+            <div class="img-position-label" id="pos-label-bride">Vị trí: <?php echo e(old('bride_image_position', $config->bride_image_position ?? 'center center')); ?></div>
+          </div>
         </div>
       </div>
     </div>
@@ -383,6 +463,106 @@ unset($__errorArgs, $__bag); ?>
 </form>
 </div>
 
+<script>
+(function() {
+  // ── Resolve image URL ──
+  function resolveUrl(val, folder) {
+    if (!val) return '';
+    val = val.trim();
+    if (/^https?:\/\//i.test(val)) return val;
+    return '/' + folder + '/' + val;
+  }
+
+  // ── Render preview image ──
+  function renderPreview(box, src, position) {
+    if (!src) {
+      box.classList.add('empty');
+      box.innerHTML = '<span class="placeholder-text">Chưa có ảnh</span>';
+      return;
+    }
+    box.classList.remove('empty');
+    box.innerHTML = '<img src="' + src + '" style="object-position:' + position + '" /><span class="drag-hint">Nhấn giữ & kéo để căn chỉnh</span>';
+  }
+
+  // ── Init all image inputs ──
+  document.querySelectorAll('input[data-preview]').forEach(function(input) {
+    var previewId = input.getAttribute('data-preview');
+    var folder    = input.getAttribute('data-folder');
+    var box       = document.getElementById(previewId);
+    var posInput  = document.getElementById(box.getAttribute('data-position-input'));
+    var labelId   = 'pos-label-' + previewId.replace('preview-', '');
+    var label     = document.getElementById(labelId);
+
+    // Initial render
+    renderPreview(box, resolveUrl(input.value, folder), posInput.value);
+
+    // Live update on URL change
+    input.addEventListener('input', function() {
+      renderPreview(box, resolveUrl(input.value, folder), posInput.value);
+    });
+
+    // ── Drag-to-reposition ──
+    var dragging = false;
+    var startX, startY, startPosX, startPosY;
+
+    function parsePosition(pos) {
+      var parts = (pos || 'center center').split(/\s+/);
+      var x = parseFloat(parts[0]);
+      var y = parseFloat(parts[1]);
+      if (isNaN(x)) x = 50;
+      if (isNaN(y)) y = 50;
+      return { x: x, y: y };
+    }
+
+    function onStart(e) {
+      var img = box.querySelector('img');
+      if (!img) return;
+      e.preventDefault();
+      dragging = true;
+      var pt = e.touches ? e.touches[0] : e;
+      startX = pt.clientX;
+      startY = pt.clientY;
+      var cur = parsePosition(posInput.value);
+      startPosX = cur.x;
+      startPosY = cur.y;
+      box.style.cursor = 'grabbing';
+    }
+
+    function onMove(e) {
+      if (!dragging) return;
+      e.preventDefault();
+      var pt = e.touches ? e.touches[0] : e;
+      var dx = pt.clientX - startX;
+      var dy = pt.clientY - startY;
+
+      // Sensitivity: ~0.5% per pixel moved
+      var newX = Math.max(0, Math.min(100, startPosX - dx * 0.5));
+      var newY = Math.max(0, Math.min(100, startPosY - dy * 0.5));
+
+      var pos = Math.round(newX) + '% ' + Math.round(newY) + '%';
+      posInput.value = pos;
+      if (label) label.textContent = 'Vị trí: ' + pos;
+
+      var img = box.querySelector('img');
+      if (img) img.style.objectPosition = pos;
+    }
+
+    function onEnd() {
+      if (!dragging) return;
+      dragging = false;
+      box.style.cursor = 'grab';
+    }
+
+    box.addEventListener('mousedown', onStart);
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onEnd);
+
+    box.addEventListener('touchstart', onStart, { passive: false });
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend', onEnd);
+  });
+})();
+</script>
 </body>
 </html>
 <?php /**PATH D:\New folder\resources\views/admin/config.blade.php ENDPATH**/ ?>

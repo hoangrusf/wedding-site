@@ -122,6 +122,19 @@ button {
   opacity: 1;
 }
 
+/* ---- Canvas pháo hoa ---- */
+#fireworks-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
 /* ==========================================================
    MÀN HÌNH CHỜ - PHONG BÌ SANG TRỌNG
    ========================================================== */
@@ -1818,4 +1831,276 @@ button {
     min-width: unset;
     width: 100%;
   }
+}
+
+/* ==========================================================
+   TRANG TRÍ SONG HỶ & LONG PHỤNG - Desktop Only
+   ========================================================== */
+.desktop-side-decor {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 2s ease 1s;
+}
+
+.decor-left {
+  left: 12px;
+}
+
+.decor-right {
+  right: 12px;
+}
+
+/* Show on desktop when main-content is visible */
+@media (min-width: 1400px) {
+  .desktop-side-decor {
+    display: flex;
+  }
+  .main-content:not(.hidden) ~ .desktop-side-decor {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 1600px) {
+  .decor-left { left: 30px; }
+  .decor-right { right: 30px; }
+}
+
+@media (min-width: 1800px) {
+  .decor-left { left: 50px; }
+  .decor-right { right: 50px; }
+}
+
+.decor-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* --- Dragon & Phoenix Image --- */
+.decor-creature-wrap {
+  display: flex;
+  justify-content: center;
+  animation: decor-float-creature 6s ease-in-out infinite;
+}
+
+.decor-creature-img {
+  width: 110px;
+  height: 260px;
+  object-fit: contain;
+  object-position: center top;
+  filter:
+    drop-shadow(0 0 10px rgba(201, 169, 110, 0.4))
+    drop-shadow(0 0 24px rgba(201, 169, 110, 0.15));
+  transition: filter 0.5s ease;
+}
+
+@media (min-width: 1600px) {
+  .decor-creature-img {
+    width: 130px;
+    height: 310px;
+  }
+}
+
+@media (min-width: 1800px) {
+  .decor-creature-img {
+    width: 150px;
+    height: 360px;
+  }
+}
+
+/* --- Connector Line --- */
+.decor-connector-line {
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(to bottom, rgba(201, 169, 110, 0.4), rgba(201, 169, 110, 0.08));
+  animation: decor-pulse-line 3s ease-in-out infinite alternate;
+}
+
+/* --- Song Hỷ (囍) --- */
+.decor-songhy-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 140px;
+}
+
+@media (min-width: 1600px) {
+  .decor-songhy-wrap {
+    width: 165px;
+    height: 165px;
+  }
+}
+
+@media (min-width: 1800px) {
+  .decor-songhy-wrap {
+    width: 190px;
+    height: 190px;
+  }
+}
+
+.decor-songhy {
+  font-size: 4.5rem;
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(
+    135deg,
+    #e8d5a3 0%,
+    #c9a96e 20%,
+    #b98d74 40%,
+    #c9a96e 60%,
+    #e8d5a3 80%,
+    #c9a96e 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter:
+    drop-shadow(0 0 14px rgba(201, 169, 110, 0.6))
+    drop-shadow(0 0 32px rgba(201, 169, 110, 0.25));
+  animation:
+    decor-shimmer-gold 4s ease-in-out infinite,
+    decor-float-songhy 5s ease-in-out infinite;
+  position: relative;
+  z-index: 2;
+}
+
+@media (min-width: 1600px) {
+  .decor-songhy {
+    font-size: 5.5rem;
+  }
+}
+
+@media (min-width: 1800px) {
+  .decor-songhy {
+    font-size: 6.5rem;
+  }
+}
+
+/* Rotating ring around Song Hỷ */
+.decor-songhy-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  animation: decor-ring-spin 25s linear infinite;
+  z-index: 1;
+}
+
+/* Glow aura behind Song Hỷ */
+.decor-songhy-glow {
+  position: absolute;
+  width: 110%;
+  height: 110%;
+  top: -5%;
+  left: -5%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(201, 169, 110, 0.18) 0%,
+    rgba(201, 169, 110, 0.06) 50%,
+    transparent 75%
+  );
+  animation: decor-glow-pulse 3.5s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+/* Sparkle dots around Song Hỷ */
+.decor-songhy-wrap::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow:
+    -28px -18px 0 1px rgba(232, 213, 163, 0.6),
+     22px -24px 0 0.5px rgba(201, 169, 110, 0.5),
+    -20px  26px 0 0.5px rgba(201, 169, 110, 0.45),
+     30px  14px 0 1px rgba(232, 213, 163, 0.55),
+    -32px   4px 0 0.5px rgba(201, 169, 110, 0.4),
+      8px -32px 0 1px rgba(232, 213, 163, 0.5),
+     -8px  34px 0 0.5px rgba(201, 169, 110, 0.35),
+     35px  -6px 0 0.5px rgba(232, 213, 163, 0.45);
+  animation: decor-sparkle-twinkle 4s ease-in-out infinite alternate;
+  z-index: 3;
+}
+
+/* --- Animation offsets for left/right --- */
+.decor-left .decor-creature-wrap {
+  animation-delay: 0s;
+}
+.decor-right .decor-creature-wrap {
+  animation-delay: -3s;
+}
+.decor-left .decor-songhy {
+  animation-delay: 0s, -2.5s;
+}
+.decor-right .decor-songhy {
+  animation-delay: -2s, -1s;
+}
+.decor-left .decor-songhy-ring {
+  animation-direction: normal;
+}
+.decor-right .decor-songhy-ring {
+  animation-direction: reverse;
+}
+.decor-left .decor-songhy-glow {
+  animation-delay: 0s;
+}
+.decor-right .decor-songhy-glow {
+  animation-delay: -1.75s;
+}
+.decor-left .decor-songhy-wrap::after {
+  animation-delay: 0s;
+}
+.decor-right .decor-songhy-wrap::after {
+  animation-delay: -2s;
+}
+
+/* --- Keyframes --- */
+@keyframes decor-float-creature {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes decor-float-songhy {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes decor-shimmer-gold {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes decor-ring-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes decor-glow-pulse {
+  0% { opacity: 0.5; transform: scale(0.92); }
+  100% { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes decor-pulse-line {
+  0% { opacity: 0.3; }
+  100% { opacity: 0.7; }
+}
+
+@keyframes decor-sparkle-twinkle {
+  0% { opacity: 0.3; transform: rotate(0deg); }
+  100% { opacity: 0.9; transform: rotate(15deg); }
 }

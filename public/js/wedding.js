@@ -68,6 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
       startPetals();
       petalsCanvas.classList.add('active');
 
+      startFireworks();
+
       AOS.init({
         duration: 900,
         easing: 'ease-out-cubic',
@@ -475,7 +477,197 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================================
-  // 9. TOAST NOTIFICATION
+  // 9. PHÁO HOA (Fireworks)
+  // ============================================================
+  const fwCanvas = document.getElementById('fireworks-canvas');
+  const fwCtx = fwCanvas.getContext('2d');
+  let fwAnimId = null;
+  let fwParticles = [];
+  let fwRockets = [];
+  let fwRunning = false;
+  let fwStopTimer = null;
+
+  function fwResize() {
+    fwCanvas.width = window.innerWidth;
+    fwCanvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', fwResize);
+
+  // Màu pháo hoa thanh lịch, tone rose gold & pastel
+  const FW_COLORS = [
+    '#f5c842', '#f0a060', '#e87878', '#e8a0c8',
+    '#c8a0e8', '#80c8f0', '#80e8c0', '#f0e080',
+    '#f0b0a0', '#d4a0c8', '#a0c8e8', '#f8e8a0',
+    '#ffffff', '#ffd6cc', '#ffe4b5', '#d4b5e0'
+  ];
+
+  class FwParticle {
+    constructor(x, y, color) {
+      this.x = x;
+      this.y = y;
+      this.color = color;
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 1.5 + Math.random() * 5;
+      this.vx = Math.cos(angle) * speed;
+      this.vy = Math.sin(angle) * speed;
+      this.alpha = 1;
+      this.decay = 0.012 + Math.random() * 0.016;
+      this.gravity = 0.08;
+      this.size = 1.5 + Math.random() * 2.5;
+      this.trail = [];
+      this.sparkle = Math.random() < 0.3;
+    }
+    update() {
+      this.trail.push({ x: this.x, y: this.y, alpha: this.alpha });
+      if (this.trail.length > 6) this.trail.shift();
+      this.x += this.vx;
+      this.y += this.vy;
+      this.vy += this.gravity;
+      this.vx *= 0.98;
+      this.alpha -= this.decay;
+    }
+    draw(ctx) {
+      // Trail
+      for (let i = 0; i < this.trail.length; i++) {
+        const t = this.trail[i];
+        const a = (i / this.trail.length) * t.alpha * 0.4;
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, this.size * 0.5, 0, Math.PI * 2);
+        ctx.fillStyle = this.color.replace(')', `,${a})`).replace('rgb', 'rgba').replace('#', 'rgba(').replace('rgba(', 'rgba(') ;
+        // simpler alpha approach:
+        ctx.globalAlpha = a;
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+      ctx.globalAlpha = this.alpha;
+      if (this.sparkle && Math.random() < 0.5) {
+        // star shape
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(Math.random() * Math.PI);
+        ctx.beginPath();
+        for (let i = 0; i < 4; i++) {
+          const a = (i / 4) * Math.PI * 2;
+          const r = i % 2 === 0 ? this.size * 2 : this.size * 0.6;
+          i === 0 ? ctx.moveTo(Math.cos(a)*r, Math.sin(a)*r) : ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r);
+        }
+        ctx.closePath();
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.restore();
+      } else {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  class FwRocket {
+    constructor(side) {
+      // side: 'left' or 'right'
+      this.x = side === 'left'
+        ? 60 + Math.random() * 80
+        : fwCanvas.width - 60 - Math.random() * 80;
+      this.y = fwCanvas.height;
+      this.vy = -(9 + Math.random() * 6);
+      this.vx = (side === 'left' ? 1 : -1) * (0.3 + Math.random() * 1.2);
+      this.targetY = fwCanvas.height * (0.12 + Math.random() * 0.32);
+      this.color = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
+      this.exploded = false;
+      this.trail = [];
+      this.size = 2.5;
+    }
+    update() {
+      this.trail.push({ x: this.x, y: this.y });
+      if (this.trail.length > 10) this.trail.shift();
+      this.x += this.vx;
+      this.y += this.vy;
+      this.vy += 0.12; // gravity slows it
+      if (this.y <= this.targetY) {
+        this.exploded = true;
+        this.explode();
+      }
+    }
+    explode() {
+      const count = 80 + Math.floor(Math.random() * 50);
+      const color1 = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
+      const color2 = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
+      for (let i = 0; i < count; i++) {
+        fwParticles.push(new FwParticle(this.x, this.y, Math.random() < 0.6 ? color1 : color2));
+      }
+      // Extra white ring burst
+      for (let i = 0; i < 20; i++) {
+        const a = (i / 20) * Math.PI * 2;
+        const p = new FwParticle(this.x, this.y, '#ffffff');
+        const s = 4.5;
+        p.vx = Math.cos(a) * s;
+        p.vy = Math.sin(a) * s;
+        fwParticles.push(p);
+      }
+    }
+    draw(ctx) {
+      for (let i = 0; i < this.trail.length; i++) {
+        const t = this.trail[i];
+        ctx.globalAlpha = (i / this.trail.length) * 0.7;
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, this.size * (i / this.trail.length), 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff8e8';
+      ctx.fill();
+    }
+  }
+
+  let fwLaunchTimer = null;
+  function launchRocket() {
+    if (!fwRunning) return;
+    fwRockets.push(new FwRocket('left'));
+    fwRockets.push(new FwRocket('right'));
+    // Random next launch: 600ms–1600ms
+    const delay = 600 + Math.random() * 1000;
+    fwLaunchTimer = setTimeout(launchRocket, delay);
+  }
+
+  function fwAnimate() {
+    if (!fwRunning && fwParticles.length === 0 && fwRockets.length === 0) {
+      fwCanvas.style.opacity = '0';
+      return;
+    }
+    fwAnimId = requestAnimationFrame(fwAnimate);
+    fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+
+    fwRockets = fwRockets.filter(r => !r.exploded);
+    fwRockets.forEach(r => { r.update(); r.draw(fwCtx); });
+
+    fwParticles = fwParticles.filter(p => p.alpha > 0.01);
+    fwParticles.forEach(p => { p.update(); p.draw(fwCtx); });
+  }
+
+  function startFireworks() {
+    fwResize();
+    fwRunning = true;
+    fwCanvas.style.opacity = '1';
+    fwParticles = [];
+    fwRockets = [];
+    // First launch immediately after a short delay
+    setTimeout(launchRocket, 400);
+    fwAnimate();
+    // Stop launching after 12s, let existing particles fade out
+    fwStopTimer = setTimeout(() => {
+      fwRunning = false;
+      clearTimeout(fwLaunchTimer);
+    }, 12000);
+  }
+
+  // ============================================================
+  // 10. TOAST NOTIFICATION
   // ============================================================
   function showToast(message, duration = 3000) {
     toast.textContent = message;
