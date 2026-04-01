@@ -25,6 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1. MỞ THIỆP (Envelope Open Animation)
   // ============================================================
   openBtn.addEventListener('click', () => {
+    // Phải gọi play() ngay trong gesture context để mobile không bị block autoplay
+    bgMusic.volume = 0.4;
+    const earlyPlay = bgMusic.play();
+    if (earlyPlay !== undefined) {
+      earlyPlay.then(() => { isMusicPlaying = true; }).catch(() => { isMusicPlaying = false; });
+    }
+
     const card = document.querySelector('.invitation-card');
     if (card) {
       card.style.transition = 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease';
@@ -52,7 +59,11 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => mainNav.classList.add('visible'), 600);
 
       musicToggle.classList.remove('hidden');
-      playMusic();
+      if (isMusicPlaying) {
+        musicToggle.classList.remove('paused');
+      } else {
+        musicToggle.classList.add('paused');
+      }
 
       startPetals();
       petalsCanvas.classList.add('active');
