@@ -257,9 +257,12 @@
               'wide' => 'g-wide',
               default => 'g-span-1',
             };
+            $imgFit = $photo->object_fit ?? 'cover';
+            $imgPos = $photo->object_position ?? 'center center';
           ?>
           <div class="gallery-item <?php echo e($layoutClass); ?>" data-aos="zoom-in" data-aos-delay="<?php echo e(100 + $i * 50); ?>">
-            <img src="<?php echo e($imgSrc); ?>" alt="<?php echo e($photo->alt_text ?? 'Ảnh cưới ' . ($i + 1)); ?>" loading="lazy" />
+            <img src="<?php echo e($imgSrc); ?>" alt="<?php echo e($photo->alt_text ?? 'Ảnh cưới ' . ($i + 1)); ?>" loading="lazy"
+                 style="object-fit: <?php echo e($imgFit); ?>; object-position: <?php echo e($imgPos); ?>;" />
           </div>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
       </div>

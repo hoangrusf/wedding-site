@@ -257,9 +257,12 @@
               'wide' => 'g-wide',
               default => 'g-span-1',
             };
+            $imgFit = $photo->object_fit ?? 'cover';
+            $imgPos = $photo->object_position ?? 'center center';
           @endphp
           <div class="gallery-item {{ $layoutClass }}" data-aos="zoom-in" data-aos-delay="{{ 100 + $i * 50 }}">
-            <img src="{{ $imgSrc }}" alt="{{ $photo->alt_text ?? 'Ảnh cưới ' . ($i + 1) }}" loading="lazy" />
+            <img src="{{ $imgSrc }}" alt="{{ $photo->alt_text ?? 'Ảnh cưới ' . ($i + 1) }}" loading="lazy"
+                 style="object-fit: {{ $imgFit }}; object-position: {{ $imgPos }};" />
           </div>
         @endforeach
       </div>

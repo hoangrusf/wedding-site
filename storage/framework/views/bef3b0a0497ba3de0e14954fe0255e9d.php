@@ -170,7 +170,6 @@
     .photo-thumb {
       width: 100px;
       height: 70px;
-      object-fit: cover;
       border-radius: 6px;
       background: #f4ede4;
     }
@@ -237,6 +236,76 @@
       .photo-item { grid-template-columns: 80px 1fr; }
       .photo-actions { grid-column: 1 / -1; justify-content: flex-end; }
     }
+
+    /* Position picker grid */
+    .position-picker {
+      display: inline-grid;
+      grid-template-columns: repeat(3, 28px);
+      grid-template-rows: repeat(3, 28px);
+      gap: 3px;
+      border: 1.5px solid #e0d0c0;
+      border-radius: 6px;
+      padding: 4px;
+      background: #faf6f0;
+    }
+    .position-picker .pos-cell {
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      border: 1.5px solid transparent;
+      background: #ede0cc;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.55rem;
+      color: #999;
+      transition: all 0.15s;
+    }
+    .position-picker .pos-cell:hover { background: #d9c8af; }
+    .position-picker .pos-cell.active {
+      background: #b48c64;
+      border-color: #9a7450;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    /* Image preview with fit/position */
+    .img-preview-box {
+      width: 140px;
+      height: 100px;
+      border: 2px dashed #d9c8af;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f9f0e6;
+      position: relative;
+    }
+    .img-preview-box img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .fit-position-row {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .fit-position-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .fit-badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: #f3e8db;
+      color: #7a5c3e;
+    }
   </style>
 </head>
 <body>
@@ -298,6 +367,39 @@ unset($__errorArgs, $__bag); ?>
             </select>
           </div>
           <div class="form-group">
+            <label>Chế độ cắt ảnh</label>
+            <select name="object_fit" id="add-object-fit" onchange="updateAddPreview()">
+              <option value="cover">Cover — lấp đầy khung (cắt)</option>
+              <option value="contain">Contain — vừa khung (không cắt)</option>
+              <option value="fill">Fill — kéo giãn đầy khung</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label>Căn chỉnh ảnh trong khung <span class="field-hint">chọn vùng trọng tâm</span></label>
+            <div class="fit-position-row">
+              <div class="fit-position-group">
+                <div class="position-picker" id="add-position-picker">
+                  <div class="pos-cell" data-pos="top left" title="Trên-Trái">↖</div>
+                  <div class="pos-cell" data-pos="top center" title="Trên-Giữa">↑</div>
+                  <div class="pos-cell" data-pos="top right" title="Trên-Phải">↗</div>
+                  <div class="pos-cell" data-pos="center left" title="Giữa-Trái">←</div>
+                  <div class="pos-cell active" data-pos="center center" title="Giữa">●</div>
+                  <div class="pos-cell" data-pos="center right" title="Giữa-Phải">→</div>
+                  <div class="pos-cell" data-pos="bottom left" title="Dưới-Trái">↙</div>
+                  <div class="pos-cell" data-pos="bottom center" title="Dưới-Giữa">↓</div>
+                  <div class="pos-cell" data-pos="bottom right" title="Dưới-Phải">↘</div>
+                </div>
+                <input type="hidden" name="object_position" id="add-object-position" value="center center" />
+              </div>
+              <div class="fit-position-group">
+                <label style="font-size:0.73rem;">Xem trước</label>
+                <div class="img-preview-box" id="add-preview-box">
+                  <img id="add-preview-img" src="" alt="Preview" style="object-fit:cover; object-position:center center; display:none;" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
             <label>Thứ tự <span class="field-hint">số nhỏ hiển thị trước</span></label>
             <input type="number" name="sort_order" value="0" min="0" />
           </div>
@@ -328,11 +430,14 @@ unset($__errorArgs, $__bag); ?>
               }
             ?>
             <div class="photo-item">
-              <img src="<?php echo e($imgSrc); ?>" alt="<?php echo e($photo->alt_text ?? 'Ảnh cưới'); ?>" class="photo-thumb" loading="lazy" />
+              <img src="<?php echo e($imgSrc); ?>" alt="<?php echo e($photo->alt_text ?? 'Ảnh cưới'); ?>" class="photo-thumb" loading="lazy"
+                   style="object-fit: <?php echo e($photo->object_fit ?? 'cover'); ?>; object-position: <?php echo e($photo->object_position ?? 'center center'); ?>;" />
               <div class="photo-info">
                 <div class="url"><?php echo e($photo->image_url); ?></div>
                 <div class="meta">
                   <span class="layout-badge layout-<?php echo e($photo->layout); ?>"><?php echo e($photo->layout); ?></span>
+                  <span class="fit-badge"><?php echo e($photo->object_fit ?? 'cover'); ?></span>
+                  <span class="fit-badge"><?php echo e($photo->object_position ?? 'center center'); ?></span>
                   &nbsp;·&nbsp; Thứ tự: <?php echo e($photo->sort_order); ?>
 
                   <?php if($photo->alt_text): ?>
@@ -342,7 +447,7 @@ unset($__errorArgs, $__bag); ?>
                 </div>
               </div>
               <div class="photo-actions">
-                <button type="button" class="btn-edit" onclick="openEditModal(<?php echo e($photo->id); ?>, '<?php echo e(e($photo->image_url)); ?>', '<?php echo e(e($photo->alt_text)); ?>', '<?php echo e($photo->layout); ?>', <?php echo e($photo->sort_order); ?>)">✏️ Sửa</button>
+                <button type="button" class="btn-edit" onclick="openEditModal(<?php echo e($photo->id); ?>, '<?php echo e(e($photo->image_url)); ?>', '<?php echo e(e($photo->alt_text)); ?>', '<?php echo e($photo->layout); ?>', <?php echo e($photo->sort_order); ?>, '<?php echo e($photo->object_fit ?? 'cover'); ?>', '<?php echo e($photo->object_position ?? 'center center'); ?>')">✏️ Sửa</button>
                 <form method="POST" action="<?php echo e(route('admin.gallery.delete', $photo)); ?>" onsubmit="return confirm('Xóa ảnh này?')">
                   <?php echo csrf_field(); ?>
                   <?php echo method_field('DELETE'); ?>
@@ -383,6 +488,39 @@ unset($__errorArgs, $__bag); ?>
           </select>
         </div>
         <div class="form-group">
+          <label>Chế độ cắt ảnh</label>
+          <select name="object_fit" id="edit-object-fit" onchange="updateEditPreview()">
+            <option value="cover">Cover — lấp đầy khung</option>
+            <option value="contain">Contain — vừa khung</option>
+            <option value="fill">Fill — kéo giãn</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Căn chỉnh ảnh trong khung</label>
+          <div class="fit-position-row">
+            <div class="fit-position-group">
+              <div class="position-picker" id="edit-position-picker">
+                <div class="pos-cell" data-pos="top left" title="Trên-Trái">↖</div>
+                <div class="pos-cell" data-pos="top center" title="Trên-Giữa">↑</div>
+                <div class="pos-cell" data-pos="top right" title="Trên-Phải">↗</div>
+                <div class="pos-cell" data-pos="center left" title="Giữa-Trái">←</div>
+                <div class="pos-cell active" data-pos="center center" title="Giữa">●</div>
+                <div class="pos-cell" data-pos="center right" title="Giữa-Phải">→</div>
+                <div class="pos-cell" data-pos="bottom left" title="Dưới-Trái">↙</div>
+                <div class="pos-cell" data-pos="bottom center" title="Dưới-Giữa">↓</div>
+                <div class="pos-cell" data-pos="bottom right" title="Dưới-Phải">↘</div>
+              </div>
+              <input type="hidden" name="object_position" id="edit-object-position" value="center center" />
+            </div>
+            <div class="fit-position-group">
+              <label style="font-size:0.73rem;">Xem trước</label>
+              <div class="img-preview-box" id="edit-preview-box">
+                <img id="edit-preview-img" src="" alt="Preview" style="object-fit:cover; object-position:center center; display:none;" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
           <label>Thứ tự</label>
           <input type="number" name="sort_order" id="edit-sort-order" min="0" />
         </div>
@@ -396,14 +534,88 @@ unset($__errorArgs, $__bag); ?>
 </div>
 
 <script>
-  function openEditModal(id, imageUrl, altText, layout, sortOrder) {
+  // ── Position picker logic ──
+  function initPositionPicker(pickerId, hiddenInputId, previewImgId) {
+    const picker = document.getElementById(pickerId);
+    const hiddenInput = document.getElementById(hiddenInputId);
+    const previewImg = document.getElementById(previewImgId);
+
+    picker.querySelectorAll('.pos-cell').forEach(cell => {
+      cell.addEventListener('click', function() {
+        picker.querySelectorAll('.pos-cell').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        hiddenInput.value = this.dataset.pos;
+        if (previewImg) previewImg.style.objectPosition = this.dataset.pos;
+      });
+    });
+  }
+
+  function setPositionPicker(pickerId, hiddenInputId, value) {
+    const picker = document.getElementById(pickerId);
+    const hiddenInput = document.getElementById(hiddenInputId);
+    hiddenInput.value = value;
+    picker.querySelectorAll('.pos-cell').forEach(c => {
+      c.classList.toggle('active', c.dataset.pos === value);
+    });
+  }
+
+  // ── Add form: live preview ──
+  const addUrlInput = document.querySelector('input[name="image_url"]');
+  addUrlInput.addEventListener('input', updateAddPreview);
+
+  function updateAddPreview() {
+    const url = addUrlInput.value.trim();
+    const img = document.getElementById('add-preview-img');
+    const fit = document.getElementById('add-object-fit').value;
+    const pos = document.getElementById('add-object-position').value;
+
+    if (url) {
+      let src = url;
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        src = '/gallery/' + url;
+      }
+      img.src = src;
+      img.style.display = 'block';
+    } else {
+      img.style.display = 'none';
+    }
+    img.style.objectFit = fit;
+    img.style.objectPosition = pos;
+  }
+
+  initPositionPicker('add-position-picker', 'add-object-position', 'add-preview-img');
+
+  // ── Edit modal ──
+  function openEditModal(id, imageUrl, altText, layout, sortOrder, objectFit, objectPosition) {
     document.getElementById('edit-form').action = '/admin/gallery/' + id;
     document.getElementById('edit-image-url').value = imageUrl;
     document.getElementById('edit-alt-text').value = altText;
     document.getElementById('edit-layout').value = layout;
     document.getElementById('edit-sort-order').value = sortOrder;
+    document.getElementById('edit-object-fit').value = objectFit || 'cover';
+    setPositionPicker('edit-position-picker', 'edit-object-position', objectPosition || 'center center');
+
+    // Preview
+    const img = document.getElementById('edit-preview-img');
+    let src = imageUrl;
+    if (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
+      src = '/gallery/' + imageUrl;
+    }
+    img.src = src;
+    img.style.objectFit = objectFit || 'cover';
+    img.style.objectPosition = objectPosition || 'center center';
+    img.style.display = 'block';
+
     document.getElementById('edit-modal').classList.add('active');
   }
+
+  function updateEditPreview() {
+    const img = document.getElementById('edit-preview-img');
+    img.style.objectFit = document.getElementById('edit-object-fit').value;
+    img.style.objectPosition = document.getElementById('edit-object-position').value;
+  }
+
+  initPositionPicker('edit-position-picker', 'edit-object-position', 'edit-preview-img');
 
   function closeEditModal() {
     document.getElementById('edit-modal').classList.remove('active');

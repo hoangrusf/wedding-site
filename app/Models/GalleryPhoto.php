@@ -10,6 +10,8 @@ class GalleryPhoto extends Model
         'image_url',
         'alt_text',
         'layout',
+        'object_fit',
+        'object_position',
         'sort_order',
     ];
 }

@@ -286,10 +286,12 @@ class RsvpController extends Controller
         }
 
         $validated = $request->validate([
-            'image_url'  => ['required', 'string', 'max:2000'],
-            'alt_text'   => ['nullable', 'string', 'max:255'],
-            'layout'     => ['required', 'in:normal,tall,wide'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
+            'image_url'       => ['required', 'string', 'max:2000'],
+            'alt_text'        => ['nullable', 'string', 'max:255'],
+            'layout'          => ['required', 'in:normal,tall,wide'],
+            'object_fit'      => ['required', 'in:cover,contain,fill'],
+            'object_position' => ['required', 'string', 'max:50'],
+            'sort_order'      => ['nullable', 'integer', 'min:0'],
         ]);
 
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
@@ -310,10 +312,12 @@ class RsvpController extends Controller
         }
 
         $validated = $request->validate([
-            'image_url'  => ['required', 'string', 'max:2000'],
-            'alt_text'   => ['nullable', 'string', 'max:255'],
-            'layout'     => ['required', 'in:normal,tall,wide'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
+            'image_url'       => ['required', 'string', 'max:2000'],
+            'alt_text'        => ['nullable', 'string', 'max:255'],
+            'layout'          => ['required', 'in:normal,tall,wide'],
+            'object_fit'      => ['required', 'in:cover,contain,fill'],
+            'object_position' => ['required', 'string', 'max:50'],
+            'sort_order'      => ['nullable', 'integer', 'min:0'],
         ]);
 
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
