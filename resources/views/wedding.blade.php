@@ -26,8 +26,11 @@
         : $value;
 
     $heroImageUrl  = $resolveUrl($config->hero_image_url,  'hero_image_url');
+    $heroImagePos  = $config->hero_image_position ?? 'center center';
     $groomImageUrl = $resolveUrl($config->groom_image_url ?? null, 'groom_image_url');
+    $groomImagePos = $config->groom_image_position ?? 'center center';
     $brideImageUrl = $resolveUrl($config->bride_image_url ?? null, 'bride_image_url');
+    $brideImagePos = $config->bride_image_position ?? 'center center';
 
     if (!empty($bankInfo['groom']['qr_url'])) {
         $bankInfo['groom']['qr_url'] = $resolveUrl($bankInfo['groom']['qr_url'], 'groom_qr_url');
@@ -112,7 +115,7 @@
     </nav>
 
     <!-- HERO SECTION -->
-    <section id="hero" class="hero-section" @if($heroImageUrl) style="background-image: url('{{ $heroImageUrl }}')" @endif>
+    <section id="hero" class="hero-section" @if($heroImageUrl) style="background-image: url('{{ $heroImageUrl }}'); background-position: {{ $heroImagePos }}" @endif>
       <div class="hero-overlay"></div>
       <div class="hero-content" data-aos="fade-up" data-aos-duration="1200">
         <p class="hero-subtitle">We're Getting Married</p>
@@ -481,7 +484,7 @@
         <div class="gift-card" data-aos="fade-right" data-aos-delay="200">
           <div class="gift-avatar">
             @if(!empty($brideImageUrl))
-              <img src="{{ $brideImageUrl }}" alt="{{ $config->bride_name }}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;" />
+              <img src="{{ $brideImageUrl }}" alt="{{ $config->bride_name }}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;object-position:{{ $brideImagePos }};" />
             @else
               <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 1c1 1.5 2 3 2 4.5a2 2 0 0 1-4 0C10 4 11 2.5 12 1z" fill="currentColor" opacity="0.15"/></svg>
             @endif
@@ -508,7 +511,7 @@
         <div class="gift-card" data-aos="fade-left" data-aos-delay="200">
           <div class="gift-avatar">
             @if(!empty($groomImageUrl))
-              <img src="{{ $groomImageUrl }}" alt="{{ $config->groom_name }}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;" />
+              <img src="{{ $groomImageUrl }}" alt="{{ $config->groom_name }}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;object-position:{{ $groomImagePos }};" />
             @else
               <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             @endif
@@ -537,7 +540,7 @@
         <div class="gift-card" data-aos="fade-right" data-aos-delay="200">
           <div class="gift-avatar">
             @if(!empty($groomImageUrl))
-              <img src="{{ $groomImageUrl }}" alt="{{ $config->groom_name }}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;" />
+              <img src="{{ $groomImageUrl }}" alt="{{ $config->groom_name }}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;object-position:{{ $groomImagePos }};" />
             @else
               <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             @endif
@@ -564,7 +567,7 @@
         <div class="gift-card" data-aos="fade-left" data-aos-delay="200"> {{-- type=1 --}}
           <div class="gift-avatar">
             @if(!empty($brideImageUrl))
-              <img src="{{ $brideImageUrl }}" alt="{{ $config->bride_name }}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;" />
+              <img src="{{ $brideImageUrl }}" alt="{{ $config->bride_name }}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;object-position:{{ $brideImagePos }};" />
             @else
               <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 1c1 1.5 2 3 2 4.5a2 2 0 0 1-4 0C10 4 11 2.5 12 1z" fill="currentColor" opacity="0.15"/></svg>
             @endif

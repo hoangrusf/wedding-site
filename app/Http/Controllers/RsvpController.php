@@ -203,8 +203,11 @@ class RsvpController extends Controller
             'bride_map_url'         => ['nullable', 'string', 'max:2000'],
             'bride_map_iframe_url'  => ['nullable', 'string', 'max:2000'],
             'hero_image_url'        => ['nullable', 'string', 'max:2000'],
+            'hero_image_position'   => ['nullable', 'string', 'max:50'],
             'groom_image_url'       => ['nullable', 'string', 'max:2000'],
+            'groom_image_position'  => ['nullable', 'string', 'max:50'],
             'bride_image_url'       => ['nullable', 'string', 'max:2000'],
+            'bride_image_position'  => ['nullable', 'string', 'max:50'],
             'background_music_url'  => ['nullable', 'string', 'max:2000'],
             // Bank info fields
             'groom_bank_name'       => ['nullable', 'string', 'max:100'],
@@ -251,8 +254,11 @@ class RsvpController extends Controller
             'bride_map_url'        => $validated['bride_map_url'],
             'bride_map_iframe_url' => $validated['bride_map_iframe_url'],
             'hero_image_url'       => $validated['hero_image_url'],
+            'hero_image_position'  => $validated['hero_image_position'] ?? 'center center',
             'groom_image_url'      => $validated['groom_image_url'],
+            'groom_image_position' => $validated['groom_image_position'] ?? 'center center',
             'bride_image_url'      => $validated['bride_image_url'],
+            'bride_image_position' => $validated['bride_image_position'] ?? 'center center',
             'background_music_url' => $validated['background_music_url'],
             'bank_account_info'    => json_encode($bankInfo, JSON_UNESCAPED_UNICODE),
         ]);

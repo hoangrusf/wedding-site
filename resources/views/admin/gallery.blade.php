@@ -272,18 +272,43 @@
 
     /* Image preview with fit/position */
     .img-preview-box {
-      width: 140px;
-      height: 100px;
+      width: 180px;
+      height: 130px;
       border: 2px dashed #d9c8af;
       border-radius: 8px;
       overflow: hidden;
       background: #f9f0e6;
       position: relative;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
     }
+    .img-preview-box:active { cursor: grabbing; }
     .img-preview-box img {
       width: 100%;
       height: 100%;
       display: block;
+      pointer-events: none;
+    }
+    .img-preview-box .drag-hint {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      font-size: 0.65rem;
+      text-align: center;
+      padding: 2px 4px;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+    .img-preview-box:hover .drag-hint { opacity: 1; }
+    .img-position-label {
+      font-size: 0.72rem;
+      color: #999;
+      margin-top: 0.2rem;
     }
     .fit-position-row {
       display: flex;
@@ -368,7 +393,7 @@
             </select>
           </div>
           <div class="form-group full">
-            <label>Căn chỉnh ảnh trong khung <span class="field-hint">chọn vùng trọng tâm</span></label>
+            <label>Căn chỉnh ảnh trong khung <span class="field-hint">nhấn giữ & kéo ảnh để căn chỉnh vị trí</span></label>
             <div class="fit-position-row">
               <div class="fit-position-group">
                 <div class="position-picker" id="add-position-picker">
@@ -385,10 +410,12 @@
                 <input type="hidden" name="object_position" id="add-object-position" value="center center" />
               </div>
               <div class="fit-position-group">
-                <label style="font-size:0.73rem;">Xem trước</label>
-                <div class="img-preview-box" id="add-preview-box">
+                <label style="font-size:0.73rem;">Xem trước <span class="field-hint">— kéo ảnh để chỉnh vị trí</span></label>
+                <div class="img-preview-box" id="add-preview-box" data-position-input="add-object-position">
                   <img id="add-preview-img" src="" alt="Preview" style="object-fit:cover; object-position:center center; display:none;" />
+                  <span class="drag-hint">Nhấn giữ & kéo để căn chỉnh</span>
                 </div>
+                <div class="img-position-label" id="add-pos-label">Vị trí: center center</div>
               </div>
             </div>
           </div>
@@ -487,7 +514,7 @@
           </select>
         </div>
         <div class="form-group full">
-          <label>Căn chỉnh ảnh trong khung</label>
+          <label>Căn chỉnh ảnh trong khung <span class="field-hint">nhấn giữ & kéo ảnh để căn chỉnh vị trí</span></label>
           <div class="fit-position-row">
             <div class="fit-position-group">
               <div class="position-picker" id="edit-position-picker">
@@ -504,10 +531,12 @@
               <input type="hidden" name="object_position" id="edit-object-position" value="center center" />
             </div>
             <div class="fit-position-group">
-              <label style="font-size:0.73rem;">Xem trước</label>
-              <div class="img-preview-box" id="edit-preview-box">
+              <label style="font-size:0.73rem;">Xem trước <span class="field-hint">— kéo ảnh để chỉnh vị trí</span></label>
+              <div class="img-preview-box" id="edit-preview-box" data-position-input="edit-object-position">
                 <img id="edit-preview-img" src="" alt="Preview" style="object-fit:cover; object-position:center center; display:none;" />
+                <span class="drag-hint">Nhấn giữ & kéo để căn chỉnh</span>
               </div>
+              <div class="img-position-label" id="edit-pos-label">Vị trí: center center</div>
             </div>
           </div>
         </div>
@@ -537,6 +566,10 @@
         this.classList.add('active');
         hiddenInput.value = this.dataset.pos;
         if (previewImg) previewImg.style.objectPosition = this.dataset.pos;
+        // Update label
+        var labelId = hiddenInputId.replace('object-position', 'pos-label');
+        var label = document.getElementById(labelId);
+        if (label) label.textContent = 'Vị trí: ' + this.dataset.pos;
       });
     });
   }
@@ -548,6 +581,72 @@
     picker.querySelectorAll('.pos-cell').forEach(c => {
       c.classList.toggle('active', c.dataset.pos === value);
     });
+    var labelId = hiddenInputId.replace('object-position', 'pos-label');
+    var label = document.getElementById(labelId);
+    if (label) label.textContent = 'Vị trí: ' + value;
+  }
+
+  // ── Drag-to-reposition logic ──
+  function initDragReposition(boxId, hiddenInputId, previewImgId, labelId) {
+    var box = document.getElementById(boxId);
+    var posInput = document.getElementById(hiddenInputId);
+    var img = document.getElementById(previewImgId);
+    var label = document.getElementById(labelId);
+    var dragging = false;
+    var startX, startY, startPosX, startPosY;
+
+    function parsePosition(pos) {
+      var parts = (pos || '50% 50%').replace(/center/g, '50%').split(/\s+/);
+      var x = parseFloat(parts[0]);
+      var y = parseFloat(parts[1]);
+      if (isNaN(x)) x = 50;
+      if (isNaN(y)) y = 50;
+      return { x: x, y: y };
+    }
+
+    function onStart(e) {
+      if (!img || img.style.display === 'none') return;
+      e.preventDefault();
+      dragging = true;
+      var pt = e.touches ? e.touches[0] : e;
+      startX = pt.clientX;
+      startY = pt.clientY;
+      var cur = parsePosition(posInput.value);
+      startPosX = cur.x;
+      startPosY = cur.y;
+      box.style.cursor = 'grabbing';
+    }
+
+    function onMove(e) {
+      if (!dragging) return;
+      e.preventDefault();
+      var pt = e.touches ? e.touches[0] : e;
+      var dx = pt.clientX - startX;
+      var dy = pt.clientY - startY;
+      var newX = Math.max(0, Math.min(100, startPosX - dx * 0.5));
+      var newY = Math.max(0, Math.min(100, startPosY - dy * 0.5));
+      var pos = Math.round(newX) + '% ' + Math.round(newY) + '%';
+      posInput.value = pos;
+      if (label) label.textContent = 'Vị trí: ' + pos;
+      if (img) img.style.objectPosition = pos;
+      // Also clear grid picker active state (user is using freeform drag)
+      var pickerId = hiddenInputId.replace('object-position', 'position-picker');
+      var picker = document.getElementById(pickerId);
+      if (picker) picker.querySelectorAll('.pos-cell').forEach(c => c.classList.remove('active'));
+    }
+
+    function onEnd() {
+      if (!dragging) return;
+      dragging = false;
+      box.style.cursor = 'grab';
+    }
+
+    box.addEventListener('mousedown', onStart);
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onEnd);
+    box.addEventListener('touchstart', onStart, { passive: false });
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend', onEnd);
   }
 
   // ── Add form: live preview ──
@@ -575,6 +674,7 @@
   }
 
   initPositionPicker('add-position-picker', 'add-object-position', 'add-preview-img');
+  initDragReposition('add-preview-box', 'add-object-position', 'add-preview-img', 'add-pos-label');
 
   // ── Edit modal ──
   function openEditModal(id, imageUrl, altText, layout, sortOrder, objectFit, objectPosition) {
@@ -597,6 +697,9 @@
     img.style.objectPosition = objectPosition || 'center center';
     img.style.display = 'block';
 
+    var label = document.getElementById('edit-pos-label');
+    if (label) label.textContent = 'Vị trí: ' + (objectPosition || 'center center');
+
     document.getElementById('edit-modal').classList.add('active');
   }
 
@@ -607,6 +710,7 @@
   }
 
   initPositionPicker('edit-position-picker', 'edit-object-position', 'edit-preview-img');
+  initDragReposition('edit-preview-box', 'edit-object-position', 'edit-preview-img', 'edit-pos-label');
 
   function closeEditModal() {
     document.getElementById('edit-modal').classList.remove('active');
