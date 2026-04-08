@@ -76,8 +76,55 @@ document.addEventListener('DOMContentLoaded', () => {
         once: true,
         offset: 80,
       });
+
+      // Bắt đầu auto-scroll sau khi thiệp hiện ra
+      setTimeout(() => startAutoScroll(), 1800);
     }, 1000);
   });
+
+  // ============================================================
+  // AUTO-SCROLL
+  // ============================================================
+  let autoScrollRAF = null;
+  let autoScrollStopped = false;
+
+  function startAutoScroll() {
+    autoScrollStopped = false;
+
+    // Dừng khi người dùng cuộn tay (wheel, touch, keyboard)
+    function stopOnUserScroll() {
+      autoScrollStopped = true;
+      if (autoScrollRAF) {
+        cancelAnimationFrame(autoScrollRAF);
+        autoScrollRAF = null;
+      }
+      window.removeEventListener('wheel', stopOnUserScroll, { passive: true });
+      window.removeEventListener('touchmove', stopOnUserScroll, { passive: true });
+      window.removeEventListener('keydown', stopOnUserScroll);
+    }
+
+    window.addEventListener('wheel', stopOnUserScroll, { passive: true });
+    window.addEventListener('touchmove', stopOnUserScroll, { passive: true });
+    window.addEventListener('keydown', stopOnUserScroll);
+
+    const totalHeight = document.body.scrollHeight - window.innerHeight;
+    const pixelsPerSecond = 60; // tốc độ cuộn: 60px/giây (chậm, đều)
+    const startTime = performance.now();
+    const startY = window.scrollY;
+    const remaining = totalHeight - startY;
+
+    function step(now) {
+      if (autoScrollStopped) return;
+      const elapsed = (now - startTime) / 1000; // giây
+      const target = Math.min(startY + pixelsPerSecond * elapsed, totalHeight);
+      window.scrollTo(0, target);
+      if (target < totalHeight) {
+        autoScrollRAF = requestAnimationFrame(step);
+      }
+    }
+
+    autoScrollRAF = requestAnimationFrame(step);
+  }
 
   // ============================================================
   // 2. NHẠC NỀN (Background Music)
