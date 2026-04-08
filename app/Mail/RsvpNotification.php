@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Mail;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
+
+class RsvpNotification extends Mailable
+{
+    use Queueable, SerializesModels;
+
+    public function __construct(
+        public readonly array $rsvpData
+    ) {}
+
+    public function envelope(): Envelope
+    {
+        $attending = $this->rsvpData['is_attending'] ? 'Tham dự' : 'Không tham dự';
+        $name      = $this->rsvpData['guest_name'];
+
+        return new Envelope(
+            subject: "[Thiệp Cưới] {$name} - {$attending}",
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            view: 'mail.rsvp-notification',
+        );
+    }
+}

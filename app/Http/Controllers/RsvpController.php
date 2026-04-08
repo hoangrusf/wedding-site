@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\RsvpNotification;
 use App\Models\GalleryPhoto;
 use App\Models\Guest;
 use App\Models\Rsvp;
 use App\Models\WeddingConfig;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class RsvpController extends Controller
 {
@@ -75,11 +77,29 @@ class RsvpController extends Controller
             'is_attending'    => ['required', 'boolean'],
             'companion_count' => ['nullable', 'integer', 'min:0', 'max:10'],
             'wishes_message'  => ['nullable', 'string', 'max:1000'],
+            'type'            => ['nullable', 'integer', 'in:1,2'],
         ]);
+
+        $type = (int) ($validated['type'] ?? 1);
+        unset($validated['type']);
 
         $validated['companion_count'] = $validated['companion_count'] ?? 0;
 
         $rsvp = Rsvp::create($validated);
+
+        // Gửi email thông báo theo type: 1=nhà trai, 2=nhà gái
+        $config = WeddingConfig::first();
+        $notifyEmail = $type === 2
+            ? ($config->bride_notification_email ?? null)
+            : ($config->groom_notification_email ?? null);
+
+        if ($notifyEmail) {
+            try {
+                Mail::to($notifyEmail)->send(new RsvpNotification($validated));
+            } catch (\Exception $e) {
+                \Log::warning('Gửi email RSVP thất bại: ' . $e->getMessage());
+            }
+        }
 
         return response()->json([
             'success' => true,
@@ -217,7 +237,9 @@ class RsvpController extends Controller
             'bride_bank_name'       => ['nullable', 'string', 'max:100'],
             'bride_account_no'      => ['nullable', 'string', 'max:50'],
             'bride_account_name'    => ['nullable', 'string', 'max:100'],
-            'bride_qr_url'          => ['nullable', 'string', 'max:2000'],
+            'bride_qr_url'                 => ['nullable', 'string', 'max:2000'],
+            'groom_notification_email'    => ['nullable', 'email', 'max:255'],
+            'bride_notification_email'    => ['nullable', 'email', 'max:255'],
         ]);
 
         $bankInfo = [];
@@ -259,8 +281,10 @@ class RsvpController extends Controller
             'groom_image_position' => $validated['groom_image_position'] ?? 'center center',
             'bride_image_url'      => $validated['bride_image_url'],
             'bride_image_position' => $validated['bride_image_position'] ?? 'center center',
-            'background_music_url' => $validated['background_music_url'],
-            'bank_account_info'    => json_encode($bankInfo, JSON_UNESCAPED_UNICODE),
+            'background_music_url'       => $validated['background_music_url'],
+            'bank_account_info'            => json_encode($bankInfo, JSON_UNESCAPED_UNICODE),
+            'groom_notification_email'     => $validated['groom_notification_email'] ?? null,
+            'bride_notification_email'     => $validated['bride_notification_email'] ?? null,
         ]);
 
         return back()->with('success', 'Đã lưu cấu hình thành công!');

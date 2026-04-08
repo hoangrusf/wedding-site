@@ -456,6 +456,39 @@ unset($__errorArgs, $__bag); ?>
     </div>
   </div>
 
+  
+  <div class="config-section">
+    <div class="section-title">📧 Email thông báo RSVP</div>
+    <div class="section-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Email nhà trai <span class="field-hint">nhận thông báo khi khách mở link type=1</span></label>
+          <input type="text" name="groom_notification_email" value="<?php echo e(old('groom_notification_email', $config->groom_notification_email)); ?>" placeholder="email_nha_trai@gmail.com" />
+          <?php $__errorArgs = ['groom_notification_email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><p class="error-msg"><?php echo e($message); ?></p><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+        </div>
+        <div class="form-group">
+          <label>Email nhà gái <span class="field-hint">nhận thông báo khi khách mở link type=2</span></label>
+          <input type="text" name="bride_notification_email" value="<?php echo e(old('bride_notification_email', $config->bride_notification_email)); ?>" placeholder="email_nha_gai@gmail.com" />
+          <?php $__errorArgs = ['bride_notification_email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><p class="error-msg"><?php echo e($message); ?></p><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="form-actions">
     <button type="submit" class="btn-save">💾 Lưu cấu hình</button>
   </div>

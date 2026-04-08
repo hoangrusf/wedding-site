@@ -615,6 +615,7 @@ Trong khoảnh khắc ý nghĩa này, sự có mặt của bạn như một món
 Chúng tôi vô cùng biết ơn khi được chia sẻ niềm hạnh phúc, tiếng cười và những kỷ niệm đẹp cùng bạn. Mong rằng từng khoảnh khắc nơi đây sẽ lưu lại trong tim bạn như một dấu ấn dịu dàng, đáng nhớ.
 
 Sự đồng hành của bạn không chỉ là niềm vui, mà còn là nguồn động viên lớn lao để chúng tôi bắt đầu hành trình mới với thật nhiều yêu thương và hy vọng. 💖</p>
+<p class="footer-thanks">© Designed and developed by Nguyễn Công Hoàng</p>
     </footer>
   </main>
 

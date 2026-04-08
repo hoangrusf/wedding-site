@@ -435,6 +435,25 @@
     </div>
   </div>
 
+  {{-- ── EMAIL THÔNG BÁO ── --}}
+  <div class="config-section">
+    <div class="section-title">📧 Email thông báo RSVP</div>
+    <div class="section-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Email nhà trai <span class="field-hint">nhận thông báo khi khách mở link type=1</span></label>
+          <input type="text" name="groom_notification_email" value="{{ old('groom_notification_email', $config->groom_notification_email) }}" placeholder="email_nha_trai@gmail.com" />
+          @error('groom_notification_email')<p class="error-msg">{{ $message }}</p>@enderror
+        </div>
+        <div class="form-group">
+          <label>Email nhà gái <span class="field-hint">nhận thông báo khi khách mở link type=2</span></label>
+          <input type="text" name="bride_notification_email" value="{{ old('bride_notification_email', $config->bride_notification_email) }}" placeholder="email_nha_gai@gmail.com" />
+          @error('bride_notification_email')<p class="error-msg">{{ $message }}</p>@enderror
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="form-actions">
     <button type="submit" class="btn-save">💾 Lưu cấu hình</button>
   </div>

@@ -30,6 +30,8 @@ class WeddingConfig extends Model
         'bride_image_url',
         'bride_image_position',
         'background_music_url',
+        'groom_notification_email',
+        'bride_notification_email',
     ];
 
     protected function casts(): array
