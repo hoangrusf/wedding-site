@@ -675,3 +675,28 @@
 #49 C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php(23): require_once('C://Users//thispc...')
 #50 {main}
 "} 
+[2026-04-08 17:55:53] local.ERROR: Class "AddMailEnabledToWeddingConfigs" not found {"exception":"[object] (Error(code: 0): Class \"AddMailEnabledToWeddingConfigs\" not found at C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php:558)
+[stacktrace]
+#0 C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(236): Illuminate/Database/Migrations/Migrator->resolvePath('C://Users//thispc...')
+#1 C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(211): Illuminate/Database/Migrations/Migrator->runUp('C://Users//thispc...', 10, false)
+#2 C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(138): Illuminate/Database/Migrations/Migrator->runPending(Array, Array)
+#3 C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(116): Illuminate/Database/Migrations/Migrator->run(Array, Array)
+#4 C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Database/Migrations/Migrator.php(671): Illuminate/Database/Console/Migrations/MigrateCommand->Illuminate/Database/Console/Migrations/{closure}()
+#5 C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(109): Illuminate/Database/Migrations/Migrator->usingConnection(NULL, Object(Closure))
+#6 C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Database/Console/Migrations/MigrateCommand.php(88): Illuminate/Database/Console/Migrations/MigrateCommand->runMigrations()
+#7 C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate/Database/Console/Migrations/MigrateCommand->handle()
+#8 C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate/Container/BoundMethod::Illuminate/Container/{closure}()
+#9 C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate/Container/Util::unwrapIfClosure(Object(Closure))
+#10 C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate/Container/BoundMethod::callBoundMethod(Object(Illuminate/Foundation/Application), Array, Object(Closure))
+#11 C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate/Container/BoundMethod::call(Object(Illuminate/Foundation/Application), Array, Array, NULL)
+#12 C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate/Container/Container->call(Array)
+#13 C:/Users/thispc/Documents/wedding-site/vendor/symfony/console/Command/Command.php(341): Illuminate/Console/Command->execute(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#14 C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony/Component/Console/Command/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#15 C:/Users/thispc/Documents/wedding-site/vendor/symfony/console/Application.php(1117): Illuminate/Console/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#16 C:/Users/thispc/Documents/wedding-site/vendor/symfony/console/Application.php(356): Symfony/Component/Console/Application->doRunCommand(Object(Illuminate/Database/Console/Migrations/MigrateCommand), Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#17 C:/Users/thispc/Documents/wedding-site/vendor/symfony/console/Application.php(195): Symfony/Component/Console/Application->doRun(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#18 C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony/Component/Console/Application->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#19 C:/Users/thispc/Documents/wedding-site/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate/Foundation/Console/Kernel->handle(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#20 C:/Users/thispc/Documents/wedding-site/artisan(16): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
+#21 {main}
+"} 
