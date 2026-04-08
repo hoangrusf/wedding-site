@@ -459,7 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function startPetals() {
-    const petalCount = window.innerWidth < 768 ? 25 : 40;
+    const petalCount = window.innerWidth < 768 ? 12 : 20;
     petals = [];
     for (let i = 0; i < petalCount; i++) {
       petals.push(new Petal());
@@ -592,14 +592,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
     explode() {
-      const count = 80 + Math.floor(Math.random() * 50);
+      const count = 45 + Math.floor(Math.random() * 25);
       const color1 = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
       const color2 = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
       for (let i = 0; i < count; i++) {
         fwParticles.push(new FwParticle(this.x, this.y, Math.random() < 0.6 ? color1 : color2));
       }
       // Extra white ring burst
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 10; i++) {
         const a = (i / 20) * Math.PI * 2;
         const p = new FwParticle(this.x, this.y, '#ffffff');
         const s = 4.5;
@@ -630,8 +630,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!fwRunning) return;
     fwRockets.push(new FwRocket('left'));
     fwRockets.push(new FwRocket('right'));
-    // Random next launch: 600ms–1600ms
-    const delay = 600 + Math.random() * 1000;
+    // Random next launch: 1200ms–2400ms
+    const delay = 1200 + Math.random() * 1200;
     fwLaunchTimer = setTimeout(launchRocket, delay);
   }
 
@@ -659,11 +659,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // First launch immediately after a short delay
     setTimeout(launchRocket, 400);
     fwAnimate();
-    // Stop launching after 12s, let existing particles fade out
+    // Stop launching after 8s, let existing particles fade out
     fwStopTimer = setTimeout(() => {
       fwRunning = false;
       clearTimeout(fwLaunchTimer);
-    }, 12000);
+    }, 8000);
   }
 
   // ============================================================

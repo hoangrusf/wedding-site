@@ -554,11 +554,12 @@ button {
 }
 
 .cd-number {
-  font-family: var(--font-serif);
-  font-size: 2.2rem;
-  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15.5px;
+  font-weight: 400;
   color: var(--color-primary);
   line-height: 1;
+  letter-spacing: 0.05em;
 }
 
 .cd-label {
@@ -1774,7 +1775,7 @@ button {
     padding: 14px 16px;
     min-width: 66px;
   }
-  .cd-number { font-size: 1.7rem; }
+  .cd-number { font-size: 15.5px; }
 
   .lightbox-prev { left: 8px; }
   .lightbox-next { right: 8px; }
