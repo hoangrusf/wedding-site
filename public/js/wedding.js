@@ -241,7 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
       is_attending: true,
       companion_count: parseInt(companionCount) || 0,
       wishes_message: wish || null,
-      type: wData.type,
     };
 
     // Gắn guest_id nếu có

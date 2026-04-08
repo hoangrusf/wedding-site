@@ -30,16 +30,12 @@ class WeddingConfig extends Model
         'bride_image_url',
         'bride_image_position',
         'background_music_url',
-        'groom_notification_email',
-        'bride_notification_email',
-        'mail_notifications_enabled',
     ];
 
     protected function casts(): array
     {
         return [
-            'wedding_date'                => 'datetime',
-            'mail_notifications_enabled'  => 'boolean',
+            'wedding_date' => 'datetime',
         ];
     }
 }

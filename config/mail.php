@@ -115,12 +115,4 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Notification Recipient
-    |--------------------------------------------------------------------------
-    | Địa chỉ email nhận thông báo khi có khách xác nhận tham dự.
-    */
-    'notification_recipient' => env('NOTIFICATION_EMAIL'),
-
 ];

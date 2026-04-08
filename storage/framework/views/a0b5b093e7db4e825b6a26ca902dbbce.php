@@ -234,12 +234,21 @@
   <div class="header-actions" style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;">
     <a href="<?php echo e(route('admin.config')); ?>" style="padding:0.4rem 1rem;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:6px;font-size:0.82rem;text-decoration:none;">⚙️ Cấu hình thiệp</a>
     <a href="<?php echo e(route('admin.gallery')); ?>" style="padding:0.4rem 1rem;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:6px;font-size:0.82rem;text-decoration:none;">🖼️ Album ảnh</a>
+    <form method="POST" action="<?php echo e(route('admin.rsvp.deleteAll')); ?>" id="form-delete-all" onsubmit="return confirmDeleteAll()">
+      <?php echo csrf_field(); ?>
+      <?php echo method_field('DELETE'); ?>
+      <button type="submit" style="padding:0.4rem 1rem;background:rgba(220,53,69,0.75);color:#fff;border:1px solid rgba(220,53,69,0.5);border-radius:6px;font-size:0.82rem;cursor:pointer;white-space:nowrap;">🗑️ Xóa tất cả</button>
+    </form>
     <form method="POST" action="<?php echo e(route('admin.logout')); ?>">
       <?php echo csrf_field(); ?>
       <button type="submit" class="btn-logout">Đăng xuất</button>
     </form>
   </div>
 </header>
+
+<?php if(session('success')): ?>
+<div style="margin:1rem 1.5rem 0;padding:0.75rem 1.1rem;border-radius:8px;background:#e8f5e9;color:#2e7d32;border:1px solid #c8e6c9;font-size:0.88rem;">✓ <?php echo e(session('success')); ?></div>
+<?php endif; ?>
 
 <!-- Thống kê -->
 <div class="stats-bar">
@@ -334,6 +343,10 @@
         row.style.display = 'none';
       }
     });
+  }
+
+  function confirmDeleteAll() {
+    return confirm('Bạn có chắc muốn XÓA TOÀN BỘ danh sách xác nhận?\nHành động này không thể hoàn tác!');
   }
 </script>
 

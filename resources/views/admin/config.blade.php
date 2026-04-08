@@ -435,35 +435,6 @@
     </div>
   </div>
 
-  {{-- ── EMAIL THÔNG BÁO ── --}}
-  <div class="config-section">
-    <div class="section-title">📧 Email thông báo RSVP</div>
-    <div class="section-body">
-      <div class="form-grid">
-        <div class="form-group full">
-          <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;">
-            <input type="hidden" name="mail_notifications_enabled" value="0" />
-            <input type="checkbox" name="mail_notifications_enabled" value="1"
-              {{ old('mail_notifications_enabled', $config->mail_notifications_enabled) ? 'checked' : '' }}
-              style="width:16px;height:16px;accent-color:#7a5c3e;cursor:pointer;" />
-            <span style="font-size:0.88rem;font-weight:600;color:#3a2c1e;">Bật gửi email thông báo</span>
-          </label>
-          <p style="font-size:0.78rem;color:#888;margin-top:0.2rem;">Khi bật, hệ thống sẽ gửi email đến địa chỉ bên dưới mỗi khi có khách xác nhận RSVP. Cần cấu hình SMTP đúng trên server.</p>
-        </div>
-        <div class="form-group">
-          <label>Email nhà trai <span class="field-hint">nhận thông báo khi khách mở link type=1</span></label>
-          <input type="text" name="groom_notification_email" value="{{ old('groom_notification_email', $config->groom_notification_email) }}" placeholder="email_nha_trai@gmail.com" />
-          @error('groom_notification_email')<p class="error-msg">{{ $message }}</p>@enderror
-        </div>
-        <div class="form-group">
-          <label>Email nhà gái <span class="field-hint">nhận thông báo khi khách mở link type=2</span></label>
-          <input type="text" name="bride_notification_email" value="{{ old('bride_notification_email', $config->bride_notification_email) }}" placeholder="email_nha_gai@gmail.com" />
-          @error('bride_notification_email')<p class="error-msg">{{ $message }}</p>@enderror
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="form-actions">
     <button type="submit" class="btn-save">💾 Lưu cấu hình</button>
   </div>
