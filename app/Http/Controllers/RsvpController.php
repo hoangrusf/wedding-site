@@ -93,11 +93,11 @@ class RsvpController extends Controller
             ? ($config->bride_notification_email ?? null)
             : ($config->groom_notification_email ?? null);
 
-        if ($notifyEmail) {
+        if ($config && $config->mail_notifications_enabled && $notifyEmail) {
             try {
                 Mail::to($notifyEmail)->send(new RsvpNotification($validated));
             } catch (\Exception $e) {
-                \Log::warning('Gửi email RSVP thất bại: ' . $e->getMessage());
+                \Log::error('Gửi email RSVP thất bại: ' . $e->getMessage());
             }
         }
 
@@ -165,6 +165,21 @@ class RsvpController extends Controller
     {
         $request->session()->forget('admin_auth');
         return redirect()->route('admin.rsvp');
+    }
+
+    /**
+     * Xóa toàn bộ danh sách RSVP.
+     * URL: DELETE /admin/rsvp
+     */
+    public function deleteAllRsvps(Request $request)
+    {
+        if (!$request->session()->get('admin_auth')) {
+            abort(403);
+        }
+
+        Rsvp::truncate();
+
+        return back()->with('success', 'Đã xóa toàn bộ danh sách xác nhận.');
     }
 
     /**
@@ -238,8 +253,9 @@ class RsvpController extends Controller
             'bride_account_no'      => ['nullable', 'string', 'max:50'],
             'bride_account_name'    => ['nullable', 'string', 'max:100'],
             'bride_qr_url'                 => ['nullable', 'string', 'max:2000'],
-            'groom_notification_email'    => ['nullable', 'email', 'max:255'],
-            'bride_notification_email'    => ['nullable', 'email', 'max:255'],
+            'groom_notification_email'       => ['nullable', 'email', 'max:255'],
+            'bride_notification_email'       => ['nullable', 'email', 'max:255'],
+            'mail_notifications_enabled'     => ['nullable', 'boolean'],
         ]);
 
         $bankInfo = [];
@@ -285,6 +301,7 @@ class RsvpController extends Controller
             'bank_account_info'            => json_encode($bankInfo, JSON_UNESCAPED_UNICODE),
             'groom_notification_email'     => $validated['groom_notification_email'] ?? null,
             'bride_notification_email'     => $validated['bride_notification_email'] ?? null,
+            'mail_notifications_enabled'   => $request->boolean('mail_notifications_enabled'),
         ]);
 
         return back()->with('success', 'Đã lưu cấu hình thành công!');
