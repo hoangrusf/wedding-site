@@ -93,12 +93,12 @@
           <div class="card-ornament">
             <svg viewBox="0 0 120 16" class="ornament-svg"><line x1="0" y1="8" x2="40" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.3"/><circle cx="60" cy="8" r="2.5" fill="currentColor" opacity="0.25"/><line x1="80" y1="8" x2="120" y2="8" stroke="currentColor" stroke-width="0.5" opacity="0.3"/></svg>
           </div>
+
+          <button id="open-btn" class="open-envelope-btn" aria-label="Mở thiệp cưới">
+            <span>Mở Thiệp Cưới</span>
+          </button>
         </div>
       </div>
-
-      <button id="open-btn" class="open-envelope-btn" aria-label="Mở thiệp cưới">
-        <span>Mở Thiệp Cưới</span>
-      </button>
     </div>
   </div>
 
@@ -122,7 +122,7 @@
       <div class="hero-overlay"></div>
       <div class="hero-content" data-aos="fade-up" data-aos-duration="1200">
         <p class="hero-subtitle">We're Getting Married</p>
-        <h1 class="hero-names">
+        <p class="hero-names">
           @if($type == 2)
             <span class="hero-bride">{{ $config->bride_name }}</span>
             <span class="hero-amp">&amp;</span>
@@ -132,7 +132,7 @@
             <span class="hero-amp">&amp;</span>
             <span class="hero-bride">{{ $config->bride_name }}</span>
           @endif
-        </h1>
+</p>
         <p class="hero-date">{{ $config->wedding_date->format('d') }} . {{ $config->wedding_date->format('m') }} . {{ $config->wedding_date->format('Y') }}</p>
         <p class="hero-quote">"Yêu là cùng nhau bước qua mọi mùa, dù nắng hay mưa"</p>
 
@@ -161,7 +161,7 @@
     <!-- THÔNG TIN HAI HỌ -->
     <section id="family" class="family-section">
       <div class="section-header" data-aos="fade-up">
-        <h2 class="section-title">Hai Bên Gia Đình</h2>
+        <p class="section-title">Hai Bên Gia Đình</p>
         <div class="section-divider">❧</div>
       </div>
       <div class="family-grid">
@@ -250,7 +250,7 @@
     <!-- ALBUM ẢNH CƯỚI -->
     <section id="gallery" class="gallery-section">
       <div class="section-header" data-aos="fade-up">
-        <h2 class="section-title">Album Ảnh Cưới</h2>
+        <p class="section-title">Album Ảnh Cưới</p>
         <div class="section-divider">✦</div>
       </div>
       @if($galleryPhotos->count() > 0)
@@ -286,7 +286,7 @@
     <!-- SỰ KIỆN & ĐỊA ĐIỂM -->
     <section id="event" class="event-section">
       <div class="section-header" data-aos="fade-up">
-        <h2 class="section-title">Sự Kiện</h2>
+        <p class="section-title">Sự Kiện</p>
         <div class="section-divider">✦</div>
       </div>
 <!-- 
@@ -399,7 +399,7 @@
     <!-- RSVP - Xác nhận tham dự -->
     <section id="rsvp" class="rsvp-section">
       <div class="section-header" data-aos="fade-up">
-        <h2 class="section-title">Xác Nhận Tham Dự</h2>
+        <p class="section-title">Xác Nhận Tham Dự</p>
         <div class="section-divider">✦</div>
         <p class="section-subtitle">Sự hiện diện của bạn là niềm vinh hạnh của chúng tôi</p>
       </div>
@@ -474,7 +474,7 @@
     <!-- MỪNG CƯỚI -->
     <section id="gift" class="gift-section">
       <div class="section-header" data-aos="fade-up">
-        <h2 class="section-title">Hộp Mừng Cưới</h2>
+        <p class="section-title">Hộp Mừng Cưới</p>
         <div class="section-divider">✦</div>
         <p class="section-subtitle">Thay cho tấm lòng, xin gửi lời chúc phúc qua đây</p>
       </div>
@@ -601,9 +601,9 @@
       <div class="footer-hearts">♡</div>
       <p class="footer-names">
         @if($type == 2)
-          {{ $config->bride_name }} ♡ {{ $config->groom_name }}
+          {{ $config->bride_name }} <span class="amp">&amp;</span> {{ $config->groom_name }}
         @else
-          {{ $config->groom_name }} ♡ {{ $config->bride_name }}
+          {{ $config->groom_name }} <span class="amp">&amp;</span> {{ $config->bride_name }}
         @endif
       </p>
       <p class="footer-date">{{ $config->wedding_date->format('d') }} . {{ $config->wedding_date->format('m') }} . {{ $config->wedding_date->format('Y') }}</p>
