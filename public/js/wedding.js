@@ -246,6 +246,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ============================================================
+  // 4b. GIFT AVATAR & QR — CLICK TO VIEW FULL IMAGE
+  // ============================================================
+  document.querySelectorAll('.gift-avatar img, .gift-qr img').forEach(img => {
+    img.style.cursor = 'pointer';
+    img.addEventListener('click', () => openLightbox(img.src));
+  });
+
+  // ============================================================
   // 5. RSVP FORM — GỬI DỮ LIỆU QUA LARAVEL API
   // ============================================================
   rsvpForm.addEventListener('submit', handleRSVP);
@@ -404,7 +412,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.main-nav a');
 
+  const sideDecors = document.querySelectorAll('.desktop-side-decor');
+  const footer = document.querySelector('.footer');
+
   function onScroll() {
+    // Hide song hỷ when footer is reached
+    if (footer) {
+      const footerTop = footer.getBoundingClientRect().top;
+      const threshold = window.innerHeight * 0.85;
+      sideDecors.forEach(el => el.classList.toggle('hide-decor', footerTop < threshold));
+    }
+
     const scrollY = window.scrollY + 120;
     sections.forEach(section => {
       const top = section.offsetTop;

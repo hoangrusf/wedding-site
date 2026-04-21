@@ -1581,8 +1581,8 @@ button {
   bottom: 24px;
   right: 24px;
   z-index: 9998;
-  width: 52px;
-  height: 52px;
+  width: 38px;
+  height: 38px;
   background: linear-gradient(135deg, var(--color-primary), var(--color-gold));
   color: #fff;
   border-radius: 50%;
@@ -1591,7 +1591,7 @@ button {
   justify-content: center;
   box-shadow: 0 4px 20px rgba(185, 141, 116, 0.4);
   transition: transform 0.3s, box-shadow 0.3s;
-  font-size: 1.3rem;
+  font-size: 1rem;
 }
 .music-toggle:hover {
   transform: scale(1.12);
@@ -1610,19 +1610,19 @@ button {
 .music-bars {
   display: flex;
   align-items: flex-end;
-  gap: 3px;
-  height: 18px;
+  gap: 2px;
+  height: 13px;
 }
 .music-bars span {
   display: block;
-  width: 3px;
+  width: 2px;
   background: #fff;
   border-radius: 2px;
   animation: musicBar 0.8s ease infinite alternate;
 }
-.music-bars span:nth-child(1) { height: 8px; animation-delay: 0s; }
-.music-bars span:nth-child(2) { height: 14px; animation-delay: 0.2s; }
-.music-bars span:nth-child(3) { height: 10px; animation-delay: 0.4s; }
+.music-bars span:nth-child(1) { height: 6px; animation-delay: 0s; }
+.music-bars span:nth-child(2) { height: 10px; animation-delay: 0.2s; }
+.music-bars span:nth-child(3) { height: 7px; animation-delay: 0.4s; }
 
 .music-toggle.paused .music-bars span {
   animation: none;
@@ -1842,7 +1842,13 @@ button {
   align-items: center;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 2s ease 1s;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+  visibility: visible;
+}
+
+.desktop-side-decor.hide-decor {
+  opacity: 0 !important;
+  visibility: hidden;
 }
 
 .decor-left {
@@ -1853,13 +1859,32 @@ button {
   right: 12px;
 }
 
-/* Show on desktop when main-content is visible */
-@media (min-width: 1400px) {
-  .desktop-side-decor {
-    display: flex;
+/* Show on all screens - vertically centered, half peeking from sides */
+.desktop-side-decor {
+  display: flex;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+}
+
+.main-content:not(.hidden) ~ .desktop-side-decor {
+  opacity: 1;
+}
+
+/* Mobile: smaller, half-visible from edges */
+@media (max-width: 1399px) {
+  .decor-songhy-wrap {
+    width: 72px;
+    height: 72px;
   }
-  .main-content:not(.hidden) ~ .desktop-side-decor {
-    opacity: 1;
+  .decor-songhy {
+    font-size: 2.8rem;
+  }
+  .decor-left {
+    left: -36px; /* half of 72px */
+  }
+  .decor-right {
+    right: -36px; /* half of 72px */
   }
 }
 

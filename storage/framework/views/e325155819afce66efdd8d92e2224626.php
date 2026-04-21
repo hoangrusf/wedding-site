@@ -613,8 +613,7 @@ Trong khoảnh khắc ý nghĩa này, sự có mặt của bạn như một món
 
 Chúng tôi vô cùng biết ơn khi được chia sẻ niềm hạnh phúc, tiếng cười và những kỷ niệm đẹp cùng bạn. Mong rằng từng khoảnh khắc nơi đây sẽ lưu lại trong tim bạn như một dấu ấn dịu dàng, đáng nhớ.
 
-Sự đồng hành của bạn không chỉ là niềm vui, mà còn là nguồn động viên lớn lao để chúng tôi bắt đầu hành trình mới với thật nhiều yêu thương và hy vọng. <svg viewBox="0 0 60 55" width="16" height="15" class="legend-heart-icon" fill="none"><path d="M30 50 C30 50 4 35 4 18 C4 8 12 2 20 6 C25 9 28 14 30 18 C32 14 35 9 40 6 C48 2 56 8 56 18 C56 35 30 50 30 50Z" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-</p>
+Sự đồng hành của bạn không chỉ là niềm vui, mà còn là nguồn động viên lớn lao để chúng tôi bắt đầu hành trình mới với thật nhiều yêu thương và hy vọng. ❤</p>
 <p class="footer-thanks">© Designed and developed by Nguyễn Công Hoàng</p>
     </footer>
   </main>
