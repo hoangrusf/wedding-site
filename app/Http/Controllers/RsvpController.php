@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\GalleryPhoto;
 use App\Models\Guest;
 use App\Models\Rsvp;
+use App\Models\VisitLog;
 use App\Models\WeddingConfig;
 use Illuminate\Http\Request;
 
@@ -40,9 +41,18 @@ class RsvpController extends Controller
             ];
         }
 
-        // Lấy lời chúc đã có
+        // Ghi nhận lượt truy cập
+        VisitLog::create([
+            'invite_name' => $inviteCode ?: null,
+            'type'        => (int) $type,
+            'ip_address'  => $request->ip(),
+            'user_agent'  => $request->userAgent(),
+        ]);
+
+        // Lấy lời chúc đã có (lọc theo type)
         $wishes = Rsvp::whereNotNull('wishes_message')
             ->where('wishes_message', '!=', '')
+            ->where('type', (int) $type)
             ->latest()
             ->get();
 
@@ -70,6 +80,7 @@ class RsvpController extends Controller
     {
         $validated = $request->validate([
             'guest_id'        => ['nullable', 'exists:guests,id'],
+            'type'            => ['nullable', 'integer', 'in:1,2'],
             'guest_name'      => ['required', 'string', 'max:255'],
             'phone_number'    => ['nullable', 'string', 'max:20'],
             'is_attending'    => ['required', 'boolean'],
@@ -78,6 +89,7 @@ class RsvpController extends Controller
         ]);
 
         $validated['companion_count'] = $validated['companion_count'] ?? 0;
+        $validated['type'] = $validated['type'] ?? 1;
 
         $rsvp = Rsvp::create($validated);
 
@@ -90,13 +102,19 @@ class RsvpController extends Controller
 
     /**
      * Lấy danh sách lời chúc (API cho AJAX load thêm).
+     * Lọc theo type nếu có: ?type=1 hoặc ?type=2
      */
-    public function wishes()
+    public function wishes(Request $request)
     {
-        $wishes = Rsvp::whereNotNull('wishes_message')
+        $query = Rsvp::whereNotNull('wishes_message')
             ->where('wishes_message', '!=', '')
-            ->latest()
-            ->get(['guest_name', 'wishes_message', 'created_at']);
+            ->latest();
+
+        if ($request->has('type')) {
+            $query->where('type', (int) $request->query('type'));
+        }
+
+        $wishes = $query->get(['guest_name', 'wishes_message', 'created_at']);
 
         return response()->json($wishes);
     }
@@ -115,10 +133,18 @@ class RsvpController extends Controller
             ->latest()
             ->get();
 
-        $totalAttending     = $rsvps->where('is_attending', true)->sum(fn($r) => 1 + $r->companion_count);
-        $totalNotAttending  = $rsvps->where('is_attending', false)->count();
+        $totalAttending       = $rsvps->where('is_attending', true)->sum(fn($r) => 1 + $r->companion_count);
+        $totalNotAttending    = $rsvps->where('is_attending', false)->count();
+        $totalGroomAttending  = $rsvps->where('is_attending', true)->where('type', 1)->sum(fn($r) => 1 + $r->companion_count);
+        $totalBrideAttending  = $rsvps->where('is_attending', true)->where('type', 2)->sum(fn($r) => 1 + $r->companion_count);
 
-        return view('admin.rsvp', compact('rsvps', 'totalAttending', 'totalNotAttending'));
+        return view('admin.rsvp', compact(
+            'rsvps',
+            'totalAttending',
+            'totalNotAttending',
+            'totalGroomAttending',
+            'totalBrideAttending'
+        ));
     }
 
     /**
@@ -145,6 +171,47 @@ class RsvpController extends Controller
     {
         $request->session()->forget('admin_auth');
         return redirect()->route('admin.rsvp');
+    }
+
+    /**
+     * Trang admin - danh sách truy cập thiệp.
+     * URL: GET /admin/visits
+     */
+    public function adminVisits(Request $request)
+    {
+        if (!$request->session()->get('admin_auth')) {
+            return view('admin.login');
+        }
+
+        $visits = VisitLog::latest()->get();
+
+        return view('admin.visits', compact('visits'));
+    }
+
+    /**
+     * Xóa một lượt xem.
+     * URL: DELETE /admin/visits/{visit}
+     */
+    public function deleteVisit(Request $request, VisitLog $visit)
+    {
+        if (!$request->session()->get('admin_auth')) {
+            abort(403);
+        }
+        $visit->delete();
+        return back()->with('success', 'Đã xóa lượt xem.');
+    }
+
+    /**
+     * Xóa toàn bộ lượt xem.
+     * URL: DELETE /admin/visits
+     */
+    public function deleteAllVisits(Request $request)
+    {
+        if (!$request->session()->get('admin_auth')) {
+            abort(403);
+        }
+        VisitLog::truncate();
+        return back()->with('success', 'Đã xóa toàn bộ lượt xem.');
     }
 
     /**
@@ -192,6 +259,7 @@ class RsvpController extends Controller
             'groom_name'            => ['required', 'string', 'max:100'],
             'bride_name'            => ['required', 'string', 'max:100'],
             'wedding_date'          => ['required', 'date'],
+            'bride_wedding_date'     => ['nullable', 'date'],
             'groom_parents'         => ['nullable', 'string', 'max:255'],
             'bride_parents'         => ['nullable', 'string', 'max:255'],
             'groom_event_location'  => ['nullable', 'string', 'max:255'],
@@ -243,6 +311,7 @@ class RsvpController extends Controller
             'groom_name'           => $validated['groom_name'],
             'bride_name'           => $validated['bride_name'],
             'wedding_date'         => $validated['wedding_date'],
+            'bride_wedding_date'   => $validated['bride_wedding_date'] ?? null,
             'groom_parents'        => $validated['groom_parents'],
             'bride_parents'        => $validated['bride_parents'],
             'groom_event_location' => $validated['groom_event_location'],

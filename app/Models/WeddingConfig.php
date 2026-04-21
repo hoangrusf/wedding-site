@@ -10,6 +10,7 @@ class WeddingConfig extends Model
         'groom_name',
         'bride_name',
         'wedding_date',
+        'bride_wedding_date',
         'groom_parents',
         'bride_parents',
         // Địa điểm nhà trai (type=1)
@@ -35,7 +36,8 @@ class WeddingConfig extends Model
     protected function casts(): array
     {
         return [
-            'wedding_date' => 'datetime',
+            'wedding_date'       => 'datetime',
+            'bride_wedding_date' => 'datetime',
         ];
     }
 }

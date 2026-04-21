@@ -234,6 +234,7 @@
   <div class="header-actions" style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;">
     <a href="{{ route('admin.config') }}" style="padding:0.4rem 1rem;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:6px;font-size:0.82rem;text-decoration:none;">⚙️ Cấu hình thiệp</a>
     <a href="{{ route('admin.gallery') }}" style="padding:0.4rem 1rem;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:6px;font-size:0.82rem;text-decoration:none;">🖼️ Album ảnh</a>
+    <a href="{{ route('admin.visits') }}" style="padding:0.4rem 1rem;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:6px;font-size:0.82rem;text-decoration:none;">👁️ Lượt xem thiệp</a>
     <form method="POST" action="{{ route('admin.rsvp.deleteAll') }}" id="form-delete-all" onsubmit="return confirmDeleteAll()">
       @csrf
       @method('DELETE')
@@ -258,11 +259,19 @@
   </div>
   <div class="stat-card attending">
     <div class="stat-number">{{ $totalAttending }}</div>
-    <div class="stat-label">Người sẽ tham dự (gồm đi cùng)</div>
+    <div class="stat-label">Tổng tham dự (kể đi cùng)</div>
   </div>
   <div class="stat-card not-attending">
     <div class="stat-number">{{ $totalNotAttending }}</div>
     <div class="stat-label">Không thể tham dự</div>
+  </div>
+  <div class="stat-card" style="background:#e3f0fb;">
+    <div class="stat-number" style="color:#1565c0;">{{ $totalGroomAttending }}</div>
+    <div class="stat-label">Nhà Trai tham dự</div>
+  </div>
+  <div class="stat-card" style="background:#fce4ec;">
+    <div class="stat-number" style="color:#880e4f;">{{ $totalBrideAttending }}</div>
+    <div class="stat-label">Nhà Gái tham dự</div>
   </div>
 </div>
 
@@ -271,6 +280,8 @@
   <button class="filter-btn active" onclick="filterTable('all', this)">Tất cả</button>
   <button class="filter-btn" onclick="filterTable('attending', this)">✓ Tham dự</button>
   <button class="filter-btn" onclick="filterTable('not-attending', this)">✗ Không tham dự</button>
+  <button class="filter-btn" onclick="filterTable('groom', this)">🔵 Nhà Trai</button>
+  <button class="filter-btn" onclick="filterTable('bride', this)">🩷 Nhà Gái</button>
 </div>
 
 <!-- Bảng -->
@@ -280,6 +291,7 @@
       <tr>
         <th>#</th>
         <th>Họ tên</th>
+        <th>Nhà</th>
         <th>Số điện thoại</th>
         <th>Xác nhận</th>
         <th>Đi cùng</th>
@@ -289,9 +301,16 @@
     </thead>
     <tbody>
       @forelse($rsvps as $index => $rsvp)
-      <tr data-status="{{ $rsvp->is_attending ? 'attending' : 'not-attending' }}">
+      <tr data-status="{{ $rsvp->is_attending ? 'attending' : 'not-attending' }}" data-type="{{ $rsvp->type == 2 ? 'bride' : 'groom' }}">
         <td>{{ $index + 1 }}</td>
         <td class="td-name">{{ $rsvp->guest_name }}</td>
+        <td>
+          @if($rsvp->type == 2)
+            <span class="badge badge-bride">Nhà Gái</span>
+          @else
+            <span class="badge badge-groom">Nhà Trai</span>
+          @endif
+        </td>
         <td class="td-phone">{{ $rsvp->phone_number ?? '—' }}</td>
         <td>
           @if($rsvp->is_attending)
@@ -323,7 +342,7 @@
       </tr>
       @empty
       <tr class="empty-row">
-        <td colspan="7">Chưa có xác nhận nào.</td>
+        <td colspan="8">Chưa có xác nhận nào.</td>
       </tr>
       @endforelse
     </tbody>
@@ -336,11 +355,15 @@
     btn.classList.add('active');
 
     document.querySelectorAll('#rsvp-table tbody tr:not(.empty-row)').forEach(row => {
-      if (status === 'all' || row.dataset.status === status) {
-        row.style.display = '';
-      } else {
-        row.style.display = 'none';
-      }
+      const matchStatus = status === 'all' || row.dataset.status === status;
+      const matchType   = status === 'all' || status === 'attending' || status === 'not-attending'
+                          || row.dataset.type === status;
+      const show = status === 'all'
+        || (status === 'attending'     && row.dataset.status === 'attending')
+        || (status === 'not-attending' && row.dataset.status === 'not-attending')
+        || (status === 'groom'         && row.dataset.type === 'groom')
+        || (status === 'bride'         && row.dataset.type === 'bride');
+      row.style.display = show ? '' : 'none';
     });
   }
 

@@ -298,10 +298,11 @@ document.addEventListener('DOMContentLoaded', () => {
       wishes_message: wish || null,
     };
 
-    // Gắn guest_id nếu có
+    // Gắn guest_id và type nếu có
     if (wData.guestId) {
       payload.guest_id = wData.guestId;
     }
+    payload.type = wData.type || 1;
 
     // Gửi request đến Laravel API
     fetch(wData.rsvpUrl, {

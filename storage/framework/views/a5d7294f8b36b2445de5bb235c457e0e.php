@@ -297,9 +297,21 @@ endif;
 unset($__errorArgs, $__bag); ?>
         </div>
         <div class="form-group">
-          <label>Ngày giờ cưới <span class="required" style="color:#c62828">*</span></label>
+          <label>Ngày giờ cưới - Nhà Trai (type=1) <span class="required" style="color:#c62828">*</span></label>
           <input type="datetime-local" name="wedding_date" value="<?php echo e(old('wedding_date', $config->wedding_date->format('Y-m-d\TH:i'))); ?>" required class="<?php echo e($errors->has('wedding_date') ? 'input-error' : ''); ?>" />
           <?php $__errorArgs = ['wedding_date'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><p class="error-msg"><?php echo e($message); ?></p><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+        </div>
+        <div class="form-group">
+          <label>Ngày giờ cưới - Nhà Gái (type=2) <span class="field-hint" style="font-size:0.8rem;color:#9a8070;">Để trống = dùng ngày giờ nhà trai</span></label>
+          <input type="datetime-local" name="bride_wedding_date" value="<?php echo e(old('bride_wedding_date', $config->bride_wedding_date?->format('Y-m-d\TH:i'))); ?>" class="<?php echo e($errors->has('bride_wedding_date') ? 'input-error' : ''); ?>" />
+          <?php $__errorArgs = ['bride_wedding_date'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }

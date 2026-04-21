@@ -16,6 +16,9 @@ Route::delete('/admin/rsvp', [RsvpController::class, 'deleteAllRsvps'])->name('a
 Route::get('/admin/config', [RsvpController::class, 'adminConfig'])->name('admin.config');
 Route::post('/admin/config', [RsvpController::class, 'updateConfig'])->name('admin.config.update');
 Route::get('/admin/gallery', [RsvpController::class, 'adminGallery'])->name('admin.gallery');
+Route::get('/admin/visits', [RsvpController::class, 'adminVisits'])->name('admin.visits');
+Route::delete('/admin/visits/{visit}', [RsvpController::class, 'deleteVisit'])->name('admin.visit.delete');
+Route::delete('/admin/visits', [RsvpController::class, 'deleteAllVisits'])->name('admin.visits.deleteAll');
 Route::post('/admin/gallery', [RsvpController::class, 'storeGalleryPhoto'])->name('admin.gallery.store');
 Route::put('/admin/gallery/{photo}', [RsvpController::class, 'updateGalleryPhoto'])->name('admin.gallery.update');
 Route::delete('/admin/gallery/{photo}', [RsvpController::class, 'deleteGalleryPhoto'])->name('admin.gallery.delete');

@@ -671,7 +671,11 @@ Sự đồng hành của bạn không chỉ là niềm vui, mà còn là nguồn
   <!-- Truyền dữ liệu từ server sang JS -->
   <script>
     window.weddingData = {
+      @if($type == 2 && $config->bride_wedding_date)
+      weddingDate: '{{ $config->bride_wedding_date->toIso8601String() }}',
+      @else
       weddingDate: '{{ $config->wedding_date->toIso8601String() }}',
+      @endif
       guestId: {{ $guest ? $guest->id : 'null' }},
       displayName: @json($displayName),
       type: {{ $type }},

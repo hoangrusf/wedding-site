@@ -283,9 +283,14 @@
           @error('bride_name')<p class="error-msg">{{ $message }}</p>@enderror
         </div>
         <div class="form-group">
-          <label>Ngày giờ cưới <span class="required" style="color:#c62828">*</span></label>
+          <label>Ngày giờ cưới - Nhà Trai (type=1) <span class="required" style="color:#c62828">*</span></label>
           <input type="datetime-local" name="wedding_date" value="{{ old('wedding_date', $config->wedding_date->format('Y-m-d\TH:i')) }}" required class="{{ $errors->has('wedding_date') ? 'input-error' : '' }}" />
           @error('wedding_date')<p class="error-msg">{{ $message }}</p>@enderror
+        </div>
+        <div class="form-group">
+          <label>Ngày giờ cưới - Nhà Gái (type=2) <span class="field-hint" style="font-size:0.8rem;color:#9a8070;">Để trống = dùng ngày giờ nhà trai</span></label>
+          <input type="datetime-local" name="bride_wedding_date" value="{{ old('bride_wedding_date', $config->bride_wedding_date?->format('Y-m-d\TH:i')) }}" class="{{ $errors->has('bride_wedding_date') ? 'input-error' : '' }}" />
+          @error('bride_wedding_date')<p class="error-msg">{{ $message }}</p>@enderror
         </div>
         <div class="form-group">
           <label>Ảnh nền hero <span class="field-hint">URL hoặc tên file trong hero_image_url/</span></label>

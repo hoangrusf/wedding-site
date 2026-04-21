@@ -9,6 +9,7 @@ class Rsvp extends Model
 {
     protected $fillable = [
         'guest_id',
+        'type',
         'guest_name',
         'phone_number',
         'is_attending',
@@ -21,6 +22,7 @@ class Rsvp extends Model
         return [
             'is_attending'    => 'boolean',
             'companion_count' => 'integer',
+            'type'            => 'integer',
         ];
     }
 
