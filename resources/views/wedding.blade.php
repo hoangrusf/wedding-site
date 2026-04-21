@@ -173,7 +173,7 @@
         <!-- Nhà Gái (hiển thị trước khi type=2) -->
         <div class="family-card bride-family" data-aos="fade-right" data-aos-delay="200">
           <div class="family-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 22V12h6v10"/><path d="M12 3c0 0 2-2 4-1" stroke-dasharray="2 2" opacity="0.5"/><circle cx="18" cy="5" r="1.5" fill="currentColor" opacity="0.3"/></svg>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 22V12h6v10"/></svg>
           </div>
           <h3>Nhà Gái</h3>
           @if(count($brideParentsParts) >= 2)
@@ -228,7 +228,7 @@
         <!-- Nhà Gái -->
         <div class="family-card bride-family" data-aos="fade-left" data-aos-delay="200">
           <div class="family-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 22V12h6v10"/><path d="M12 3c0 0 2-2 4-1" stroke-dasharray="2 2" opacity="0.5"/><circle cx="18" cy="5" r="1.5" fill="currentColor" opacity="0.3"/></svg>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 22V12h6v10"/></svg>
           </div>
           <h3>Nhà Gái</h3>
           @if(count($brideParentsParts) >= 2)
@@ -328,8 +328,7 @@
             <div class="calendar-header-deco">
               <svg class="calendar-heart-deco" viewBox="0 0 24 24" width="18" height="18"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor"/></svg>
             </div>
-            <span class="calendar-month">Tháng 5</span>
-            <span class="calendar-year">2026</span>
+            <span class="calendar-month">Tháng 5 2026</span>
           </div>
 
           <div class="calendar-body">
