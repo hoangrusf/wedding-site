@@ -314,16 +314,23 @@ button {
 .card-couple-names .groom-name,
 .card-couple-names .bride-name {
   font-family: var(--font-heading);
-  font-size: 1.4rem;
-  color: var(--color-primary-dark);
+  font-size: 1.8rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--color-gold), var(--color-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  letter-spacing: 0.5px;
 }
 
 .amp {
   font-family: var(--font-serif);
-  font-size: 1rem;
+  font-size: 1.3rem;
   color: var(--color-gold);
   font-style: italic;
-  opacity: 0.7;
+  opacity: 0.75;
+  font-weight: 500;
 }
 
 .card-date {
@@ -1503,13 +1510,14 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 90px;
-  height: 90px;
+  width: 250px;
+  height: 250px;
   margin: 0 auto 14px;
   border-radius: 50%;
   background: linear-gradient(135deg, rgba(185, 141, 116, 0.08), rgba(201, 169, 110, 0.1));
   border: 1px solid rgba(185, 141, 116, 0.15);
   color: var(--color-primary);
+  overflow: hidden;
 }
 
 .gift-card h3 {
@@ -2002,7 +2010,7 @@ button {
   }
   .card-couple-names .groom-name,
   .card-couple-names .bride-name {
-    font-size: 1.65rem;
+    font-size: 2.2rem;
   }
   .card-guest-name {
     font-size: 2rem;
@@ -2032,7 +2040,7 @@ button {
   }
   .card-couple-names .groom-name,
   .card-couple-names .bride-name {
-    font-size: 1.8rem;
+    font-size: 2.5rem;
   }
   .card-guest-name {
     font-size: 2.2rem;
@@ -2603,7 +2611,6 @@ button {
     opacity: 1;
     transform: translateY(0);
   }
-}
 }
 
 @media (min-width: 1600px) {

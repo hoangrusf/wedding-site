@@ -195,6 +195,7 @@
       display: block;
       object-fit: cover;
       pointer-events: none;
+      transition: transform 0.15s ease-out;
     }
 
     .img-preview-box .drag-hint {
@@ -296,9 +297,10 @@
           <label>Ảnh nền hero <span class="field-hint">URL hoặc tên file trong hero_image_url/</span></label>
           <input type="text" name="hero_image_url" value="{{ old('hero_image_url', $config->hero_image_url) }}" placeholder="ten_anh.jpg hoặc https://..." data-preview="preview-hero" data-folder="hero_image_url" />
           <input type="hidden" name="hero_image_position" id="pos-hero" value="{{ old('hero_image_position', $config->hero_image_position ?? 'center center') }}" />
+          <input type="hidden" name="hero_image_scale" id="scale-hero" value="{{ old('hero_image_scale', $config->hero_image_scale ?? 1) }}" />
           <div class="img-preview-wrapper">
-            <div class="img-preview-box" id="preview-hero" data-position-input="pos-hero"></div>
-            <div class="img-position-label" id="pos-label-hero">Vị trí: {{ old('hero_image_position', $config->hero_image_position ?? 'center center') }}</div>
+            <div class="img-preview-box" id="preview-hero" data-position-input="pos-hero" data-scale-input="scale-hero"></div>
+            <div class="img-position-label" id="pos-label-hero">Vị trí: {{ old('hero_image_position', $config->hero_image_position ?? 'center center') }} | Zoom: {{ old('hero_image_scale', $config->hero_image_scale ?? 1) }}x</div>
           </div>
         </div>
         <div class="form-group">
@@ -309,18 +311,20 @@
           <label>Ảnh chú rể <span class="field-hint">URL hoặc tên file trong groom_image_url/</span></label>
           <input type="text" name="groom_image_url" value="{{ old('groom_image_url', $config->groom_image_url) }}" placeholder="ten_anh.jpg hoặc https://..." data-preview="preview-groom" data-folder="groom_image_url" />
           <input type="hidden" name="groom_image_position" id="pos-groom" value="{{ old('groom_image_position', $config->groom_image_position ?? 'center center') }}" />
+          <input type="hidden" name="groom_image_scale" id="scale-groom" value="{{ old('groom_image_scale', $config->groom_image_scale ?? 1) }}" />
           <div class="img-preview-wrapper">
-            <div class="img-preview-box" id="preview-groom" data-position-input="pos-groom"></div>
-            <div class="img-position-label" id="pos-label-groom">Vị trí: {{ old('groom_image_position', $config->groom_image_position ?? 'center center') }}</div>
+            <div class="img-preview-box" id="preview-groom" data-position-input="pos-groom" data-scale-input="scale-groom"></div>
+            <div class="img-position-label" id="pos-label-groom">Vị trí: {{ old('groom_image_position', $config->groom_image_position ?? 'center center') }} | Zoom: {{ old('groom_image_scale', $config->groom_image_scale ?? 1) }}x</div>
           </div>
         </div>
         <div class="form-group">
           <label>Ảnh cô dâu <span class="field-hint">URL hoặc tên file trong bride_image_url/</span></label>
           <input type="text" name="bride_image_url" value="{{ old('bride_image_url', $config->bride_image_url) }}" placeholder="ten_anh.jpg hoặc https://..." data-preview="preview-bride" data-folder="bride_image_url" />
           <input type="hidden" name="bride_image_position" id="pos-bride" value="{{ old('bride_image_position', $config->bride_image_position ?? 'center center') }}" />
+          <input type="hidden" name="bride_image_scale" id="scale-bride" value="{{ old('bride_image_scale', $config->bride_image_scale ?? 1) }}" />
           <div class="img-preview-wrapper">
-            <div class="img-preview-box" id="preview-bride" data-position-input="pos-bride"></div>
-            <div class="img-position-label" id="pos-label-bride">Vị trí: {{ old('bride_image_position', $config->bride_image_position ?? 'center center') }}</div>
+            <div class="img-preview-box" id="preview-bride" data-position-input="pos-bride" data-scale-input="scale-bride"></div>
+            <div class="img-position-label" id="pos-label-bride">Vị trí: {{ old('bride_image_position', $config->bride_image_position ?? 'center center') }} | Zoom: {{ old('bride_image_scale', $config->bride_image_scale ?? 1) }}x</div>
           </div>
         </div>
       </div>
@@ -458,14 +462,15 @@
   }
 
   // ── Render preview image ──
-  function renderPreview(box, src, position) {
+  function renderPreview(box, src, position, scale) {
     if (!src) {
       box.classList.add('empty');
       box.innerHTML = '<span class="placeholder-text">Chưa có ảnh</span>';
       return;
     }
     box.classList.remove('empty');
-    box.innerHTML = '<img src="' + src + '" style="object-position:' + position + '" /><span class="drag-hint">Nhấn giữ & kéo để căn chỉnh</span>';
+    var scaleValue = parseFloat(scale) || 1;
+    box.innerHTML = '<img src="' + src + '" style="object-position:' + position + '; transform: scale(' + scaleValue + ')" /><span class="drag-hint">Kéo để căn | Shift + Lăn chuột để zoom</span>';
   }
 
   // ── Init all image inputs ──
@@ -474,15 +479,22 @@
     var folder    = input.getAttribute('data-folder');
     var box       = document.getElementById(previewId);
     var posInput  = document.getElementById(box.getAttribute('data-position-input'));
+    var scaleInput = document.getElementById(box.getAttribute('data-scale-input'));
     var labelId   = 'pos-label-' + previewId.replace('preview-', '');
     var label     = document.getElementById(labelId);
 
     // Initial render
-    renderPreview(box, resolveUrl(input.value, folder), posInput.value);
+    renderPreview(box, resolveUrl(input.value, folder), posInput.value, scaleInput.value);
+    
+    // Cập nhật label ban đầu
+    if (label) {
+      var initialScale = parseFloat(scaleInput.value) || 1;
+      label.textContent = 'Vị trí: ' + posInput.value + ' | Zoom: ' + initialScale.toFixed(2) + 'x';
+    }
 
     // Live update on URL change
     input.addEventListener('input', function() {
-      renderPreview(box, resolveUrl(input.value, folder), posInput.value);
+      renderPreview(box, resolveUrl(input.value, folder), posInput.value, scaleInput.value);
     });
 
     // ── Drag-to-reposition ──
@@ -525,10 +537,14 @@
 
       var pos = Math.round(newX) + '% ' + Math.round(newY) + '%';
       posInput.value = pos;
-      if (label) label.textContent = 'Vị trí: ' + pos;
+      var currentScale = parseFloat(scaleInput.value) || 1;
+      if (label) label.textContent = 'Vị trí: ' + pos + ' | Zoom: ' + currentScale.toFixed(2) + 'x';
 
       var img = box.querySelector('img');
-      if (img) img.style.objectPosition = pos;
+      if (img) {
+        img.style.objectPosition = pos;
+        img.style.transform = 'scale(' + currentScale + ')';
+      }
     }
 
     function onEnd() {
@@ -544,6 +560,43 @@
     box.addEventListener('touchstart', onStart, { passive: false });
     document.addEventListener('touchmove', onMove, { passive: false });
     document.addEventListener('touchend', onEnd);
+
+    // ── Shift + Wheel Zoom ──
+    var scale = parseFloat(scaleInput.value) || 1;
+
+    box.addEventListener('wheel', function(e) {
+      // Chỉ zoom khi giữ Shift
+      if (!e.shiftKey) return;
+      
+      var img = box.querySelector('img');
+      if (!img) return;
+      
+      e.preventDefault();
+      
+      // Tính toán scale mới (deltaY âm = zoom in, dương = zoom out)
+      var delta = e.deltaY > 0 ? -0.1 : 0.1;
+      scale = Math.max(0.5, Math.min(3, scale + delta));
+      
+      // Áp dụng transform
+      img.style.transform = 'scale(' + scale + ')';
+      
+      // Lưu vào input
+      scaleInput.value = scale.toFixed(2);
+      
+      // Cập nhật label
+      if (label) {
+        label.textContent = 'Vị trí: ' + posInput.value + ' | Zoom: ' + scale.toFixed(2) + 'x';
+      }
+    }, { passive: false });
+
+    // Reset scale khi thay đổi ảnh
+    input.addEventListener('input', function() {
+      scale = 1;
+      scaleInput.value = '1';
+      if (label) {
+        label.textContent = 'Vị trí: ' + posInput.value + ' | Zoom: 1x';
+      }
+    });
   });
 })();
 </script>

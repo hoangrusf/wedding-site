@@ -26,10 +26,13 @@ class WeddingConfig extends Model
         'bank_account_info',
         'hero_image_url',
         'hero_image_position',
+        'hero_image_scale',
         'groom_image_url',
         'groom_image_position',
+        'groom_image_scale',
         'bride_image_url',
         'bride_image_position',
+        'bride_image_scale',
         'background_music_url',
     ];
 
@@ -38,6 +41,9 @@ class WeddingConfig extends Model
         return [
             'wedding_date'       => 'datetime',
             'bride_wedding_date' => 'datetime',
+            'hero_image_scale'   => 'decimal:2',
+            'groom_image_scale'  => 'decimal:2',
+            'bride_image_scale'  => 'decimal:2',
         ];
     }
 }
