@@ -1693,6 +1693,43 @@ button {
     gap: 24px;
   }
 
+  .gift-envelope-container {
+    max-width: 380px;
+  }
+
+  .red-envelope {
+    width: 250px;
+    height: 156px;
+  }
+
+  .songhy-circle {
+    width: 90px;
+    height: 90px;
+  }
+
+  .songhy-text {
+    font-size: 2.7rem;
+  }
+
+  .coin {
+    width: 38px;
+    height: 38px;
+  }
+
+  .coin-symbol {
+    font-size: 18px;
+  }
+
+  .corner-decor svg {
+    width: 42px;
+    height: 42px;
+  }
+
+  .gift-envelope-hint {
+    font-size: 0.9rem;
+    margin-top: 25px;
+  }
+
   .form-row {
     grid-template-columns: 1fr;
   }
@@ -1819,6 +1856,63 @@ button {
   .rsvp-form { padding: 22px 16px; }
   .gift-card { padding: 28px 18px; }
 
+  .gift-envelope-container {
+    max-width: 340px;
+  }
+
+  .red-envelope {
+    width: 220px;
+    height: 138px;
+  }
+
+  .songhy-circle {
+    width: 75px;
+    height: 75px;
+  }
+
+  .songhy-text {
+    font-size: 2.2rem;
+  }
+
+  .coin {
+    width: 32px;
+    height: 32px;
+  }
+
+  .coin-symbol {
+    font-size: 16px;
+  }
+
+  .corner-decor svg {
+    width: 38px;
+    height: 38px;
+  }
+
+  .corner-decor.top-left,
+  .corner-decor.top-right {
+    top: 8px;
+  }
+
+  .corner-decor.bottom-left,
+  .corner-decor.bottom-right {
+    bottom: 8px;
+  }
+
+  .corner-decor.top-left,
+  .corner-decor.bottom-left {
+    left: 8px;
+  }
+
+  .corner-decor.top-right,
+  .corner-decor.bottom-right {
+    right: 8px;
+  }
+
+  .gift-envelope-hint {
+    font-size: 0.85rem;
+    margin-top: 20px;
+  }
+
   .attending-options {
     flex-direction: column;
     gap: 0.6rem;
@@ -1921,6 +2015,475 @@ button {
     drop-shadow(0 0 10px rgba(201, 169, 110, 0.4))
     drop-shadow(0 0 24px rgba(201, 169, 110, 0.15));
   transition: filter 0.5s ease;
+}
+
+/* ==========================================================
+   RED ENVELOPE (PHONG BÌ LÌ XÌ) - THEO THIẾT KẾ
+   ========================================================== */
+.gift-envelope-container {
+  max-width: 420px;
+  margin: 60px auto 80px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+}
+
+/* Đồng xu vàng bay xung quanh */
+.coin {
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  z-index: 5;
+  animation: coin-float 2s ease-in-out infinite;
+}
+
+.coin-face {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(145deg, #f4e5a1 0%, #d4af37 50%, #b8960f 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 
+    0 5px 15px rgba(212, 175, 55, 0.5),
+    inset 0 2px 5px rgba(255, 255, 255, 0.5),
+    inset 0 -2px 5px rgba(0, 0, 0, 0.3);
+  border: 3px solid #d4af37;
+  position: relative;
+}
+
+.coin-face::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+}
+
+.coin-symbol {
+  font-size: 22px;
+  font-weight: bold;
+  color: #8b6914;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+  z-index: 1;
+}
+
+.coin-1 {
+  top: 5%;
+  left: 5%;
+  animation-delay: 0s;
+}
+
+.coin-2 {
+  top: 15%;
+  right: 8%;
+  animation-delay: 0.6s;
+}
+
+.coin-3 {
+  top: 50%;
+  right: 0%;
+  animation-delay: 1.2s;
+}
+
+.coin-4 {
+  bottom: 20%;
+  right: 5%;
+  animation-delay: 1.8s;
+}
+
+.coin-5 {
+  bottom: 15%;
+  left: 2%;
+  animation-delay: 2.4s;
+}
+
+@keyframes coin-float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  20% {
+    transform: translateY(-10px) rotate(90deg);
+  }
+  40% {
+    transform: translateY(-5px) rotate(180deg);
+  }
+  60% {
+    transform: translateY(-12px) rotate(270deg);
+  }
+  80% {
+    transform: translateY(-8px) rotate(360deg);
+  }
+}
+
+.gift-envelope-container:hover .coin {
+  animation: coin-shake 0.2s ease-in-out infinite;
+}
+
+@keyframes coin-shake {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-5deg) scale(1.1);
+  }
+  75% {
+    transform: rotate(5deg) scale(1.1);
+  }
+}
+
+/* Red Envelope */
+.red-envelope {
+  position: relative;
+  width: 280px;
+  height: 175px;
+  margin: 0 auto;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: envelope-shake 1.5s ease-in-out infinite;
+}
+
+@keyframes envelope-shake {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  10% {
+    transform: rotate(-1deg);
+  }
+  20% {
+    transform: rotate(1deg);
+  }
+  30% {
+    transform: rotate(-1deg);
+  }
+  40% {
+    transform: rotate(1deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+}
+
+.gift-envelope-container:hover .red-envelope {
+  transform: translateY(-8px) scale(1.02);
+  animation: envelope-shake-hover 0.3s ease-in-out infinite;
+}
+
+@keyframes envelope-shake-hover {
+  0%, 100% {
+    transform: translateY(-8px) scale(1.02) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-8px) scale(1.02) rotate(-2deg);
+  }
+  75% {
+    transform: translateY(-8px) scale(1.02) rotate(2deg);
+  }
+}
+
+/* Envelope Body */
+.envelope-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(145deg, 
+    #c8102e 0%,
+    #b91c2e 50%,
+    #a01a26 100%
+  );
+  border-radius: 16px;
+  box-shadow: 
+    0 15px 40px rgba(200, 16, 46, 0.5),
+    0 8px 20px rgba(0, 0, 0, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -3px 10px rgba(0, 0, 0, 0.2);
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Corner Decorations */
+.corner-decor {
+  position: absolute;
+  z-index: 2;
+  opacity: 0.9;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  animation: corner-shimmer 2s ease-in-out infinite;
+}
+
+@keyframes corner-shimmer {
+  0%, 100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.gift-envelope-container:hover .corner-decor {
+  animation: corner-wiggle 0.3s ease-in-out infinite;
+}
+
+@keyframes corner-wiggle {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.corner-decor.top-left {
+  top: 10px;
+  left: 10px;
+}
+
+.corner-decor.top-right {
+  top: 10px;
+  right: 10px;
+}
+
+.corner-decor.bottom-left {
+  bottom: 10px;
+  left: 10px;
+}
+
+.corner-decor.bottom-right {
+  bottom: 10px;
+  right: 10px;
+}
+
+/* Song Hỷ Circle */
+.songhy-circle {
+  position: relative;
+  width: 105px;
+  height: 105px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: songhy-pulse 1.5s ease-in-out infinite, songhy-wobble 2s ease-in-out infinite;
+}
+
+@keyframes songhy-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes songhy-wobble {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-2deg) scale(1.02);
+  }
+  75% {
+    transform: rotate(2deg) scale(1.02);
+  }
+}
+
+.circle-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(145deg, #f4e5a1 0%, #d4af37 50%, #b8960f 100%);
+  border-radius: 50%;
+  box-shadow: 
+    0 8px 25px rgba(212, 175, 55, 0.6),
+    inset 0 3px 8px rgba(255, 255, 255, 0.5),
+    inset 0 -3px 8px rgba(0, 0, 0, 0.3);
+  border: 4px solid #d4af37;
+}
+
+.circle-ring::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+}
+
+.circle-ring::after {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  background: linear-gradient(145deg, #c8102e 0%, #b91c2e 50%, #a01a26 100%);
+  border-radius: 50%;
+  box-shadow: 
+    inset 0 2px 5px rgba(0, 0, 0, 0.3),
+    0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+.songhy-text {
+  position: relative;
+  font-size: 3.2rem;
+  font-weight: 900;
+  color: #d4af37;
+  z-index: 2;
+  text-shadow: 
+    0 3px 6px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(212, 175, 55, 0.5),
+    0 0 30px rgba(212, 175, 55, 0.3);
+  animation: songhy-glow 2s ease-in-out infinite;
+}
+
+@keyframes songhy-glow {
+  0%, 100% {
+    text-shadow: 
+      0 3px 6px rgba(0, 0, 0, 0.5),
+      0 0 20px rgba(212, 175, 55, 0.5),
+      0 0 30px rgba(212, 175, 55, 0.3);
+  }
+  50% {
+    text-shadow: 
+      0 3px 6px rgba(0, 0, 0, 0.5),
+      0 0 30px rgba(212, 175, 55, 0.8),
+      0 0 45px rgba(212, 175, 55, 0.5);
+  }
+}
+
+/* Hint text */
+.gift-envelope-hint {
+  margin-top: 35px;
+  font-size: 0.95rem;
+  color: var(--color-text-light);
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  animation: hint-fade 2s ease-in-out infinite;
+}
+
+@keyframes hint-fade {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Opening Animation */
+.gift-envelope-container.opening .red-envelope {
+  animation: envelope-open-shake 0.4s ease-in-out;
+}
+
+@keyframes envelope-open-shake {
+  0%, 100% { 
+    transform: rotate(0deg); 
+  }
+  10%, 30%, 50%, 70%, 90% { 
+    transform: rotate(-5deg) scale(1.05); 
+  }
+  20%, 40%, 60%, 80% { 
+    transform: rotate(5deg) scale(1.05); 
+  }
+}
+
+.gift-envelope-container.opening .envelope-body {
+  animation: envelope-flash 0.5s ease-out;
+}
+
+@keyframes envelope-flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.9; }
+}
+
+.gift-envelope-container.opening .songhy-circle {
+  animation: songhy-burst 1s ease-out forwards;
+}
+
+@keyframes songhy-burst {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+.gift-envelope-container.opening .coin {
+  animation: coin-burst 1s ease-out forwards !important;
+}
+
+@keyframes coin-burst {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx, 0), var(--ty, -150px)) scale(0.5) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.gift-envelope-container.opening .coin-1 {
+  --tx: -120px;
+  --ty: -120px;
+}
+
+.gift-envelope-container.opening .coin-2 {
+  --tx: 120px;
+  --ty: -120px;
+}
+
+.gift-envelope-container.opening .coin-3 {
+  --tx: 130px;
+  --ty: -80px;
+}
+
+.gift-envelope-container.opening .coin-4 {
+  --tx: 100px;
+  --ty: -150px;
+}
+
+.gift-envelope-container.opening .coin-5 {
+  --tx: -100px;
+  --ty: -150px;
+}
+
+.gift-envelope-container.opening .corner-decor {
+  animation: corner-sparkle 0.8s ease-out forwards;
+}
+
+@keyframes corner-sparkle {
+  0% {
+    opacity: 0.9;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.8));
+  }
+  100% {
+    opacity: 0;
+    filter: drop-shadow(0 0 25px rgba(212, 175, 55, 1));
+  }
+}
+
+/* Gift grid fade in */
+.gift-grid {
+  animation: gift-grid-fade-in 0.8s ease-out forwards;
+}
+
+@keyframes gift-grid-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 }
 
 @media (min-width: 1600px) {

@@ -7,7 +7,14 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
+    'App\\Http\\Controllers\\RsvpController' => $baseDir . '/app/Http/Controllers/RsvpController.php',
+    'App\\Http\\Middleware\\ThrottlePerIp' => $baseDir . '/app/Http/Middleware/ThrottlePerIp.php',
+    'App\\Models\\GalleryPhoto' => $baseDir . '/app/Models/GalleryPhoto.php',
+    'App\\Models\\Guest' => $baseDir . '/app/Models/Guest.php',
+    'App\\Models\\Rsvp' => $baseDir . '/app/Models/Rsvp.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
+    'App\\Models\\VisitLog' => $baseDir . '/app/Models/VisitLog.php',
+    'App\\Models\\WeddingConfig' => $baseDir . '/app/Models/WeddingConfig.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Brick\\Math\\BigDecimal' => $vendorDir . '/brick/math/src/BigDecimal.php',
@@ -133,6 +140,7 @@ return array(
     'Cron\\MonthField' => $vendorDir . '/dragonmantank/cron-expression/src/Cron/MonthField.php',
     'Database\\Factories\\UserFactory' => $baseDir . '/database/factories/UserFactory.php',
     'Database\\Seeders\\DatabaseSeeder' => $baseDir . '/database/seeders/DatabaseSeeder.php',
+    'Database\\Seeders\\WeddingSeeder' => $baseDir . '/database/seeders/WeddingSeeder.php',
     'DateError' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
     'DateException' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/DateException.php',
     'DateInvalidOperationException' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/DateInvalidOperationException.php',

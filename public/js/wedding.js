@@ -363,7 +363,37 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================================
-  // 6. COPY SỐ TÀI KHOẢN
+  // 6. RED ENVELOPE INTERACTION
+  // ============================================================
+  const giftEnvelopeContainer = document.getElementById('gift-box-container');
+  const giftGrid = document.getElementById('gift-grid');
+
+  if (giftEnvelopeContainer && giftGrid) {
+    giftEnvelopeContainer.addEventListener('click', () => {
+      // Add opening animation
+      giftEnvelopeContainer.classList.add('opening');
+      
+      // After animation completes, hide envelope and show grid
+      setTimeout(() => {
+        giftEnvelopeContainer.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        giftEnvelopeContainer.style.opacity = '0';
+        giftEnvelopeContainer.style.transform = 'translateY(-30px) scale(0.95)';
+        
+        setTimeout(() => {
+          giftEnvelopeContainer.style.display = 'none';
+          giftGrid.style.display = 'grid';
+          
+          // Trigger AOS animation for gift cards if not already initialized
+          if (typeof AOS !== 'undefined') {
+            AOS.refresh();
+          }
+        }, 600);
+      }, 1000);
+    });
+  }
+
+  // ============================================================
+  // 7. COPY SỐ TÀI KHOẢN
   // ============================================================
   document.querySelectorAll('.btn-copy').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -408,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ============================================================
-  // 7. NAVIGATION - Active link on scroll
+  // 8. NAVIGATION - Active link on scroll
   // ============================================================
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.main-nav a');
@@ -454,7 +484,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ============================================================
-  // 8. HIỆU ỨNG HOA ANH ĐÀO RƠI (Cherry Blossom Petals Canvas)
+  // 9. HIỆU ỨNG HOA ANH ĐÀO RƠI (Cherry Blossom Petals Canvas)
   // ============================================================
   const ctx = petalsCanvas.getContext('2d');
   let petals = [];
@@ -543,7 +573,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================================
-  // 9. PHÁO HOA (Fireworks)
+  // 10. PHÁO HOA (Fireworks)
   // ============================================================
   const fwCanvas = document.getElementById('fireworks-canvas');
   const fwCtx = fwCanvas.getContext('2d');
@@ -733,7 +763,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================================
-  // 10. TOAST NOTIFICATION
+  // 11. TOAST NOTIFICATION
   // ============================================================
   function showToast(message, duration = 3000) {
     toast.textContent = message;
@@ -744,7 +774,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================================
-  // 10. HELPER - XSS Prevention
+  // 12. HELPER - XSS Prevention
   // ============================================================
   function escapeHTML(str) {
     const div = document.createElement('div');

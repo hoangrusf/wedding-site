@@ -478,7 +478,91 @@
         <p class="section-subtitle">Thay cho tấm lòng, xin gửi lời chúc phúc qua đây</p>
       </div>
 
-      <div class="gift-grid">
+      <!-- Phong Bì Lì Xì -->
+      <div id="gift-box-container" class="gift-envelope-container" data-aos="fade-up" data-aos-delay="200">
+        <!-- Đồng xu vàng bay xung quanh -->
+        <div class="coin coin-1">
+          <div class="coin-face">
+            <span class="coin-symbol">$</span>
+          </div>
+        </div>
+        <div class="coin coin-2">
+          <div class="coin-face">
+            <span class="coin-symbol">$</span>
+          </div>
+        </div>
+        <div class="coin coin-3">
+          <div class="coin-face">
+            <span class="coin-symbol">$</span>
+          </div>
+        </div>
+        <div class="coin coin-4">
+          <div class="coin-face">
+            <span class="coin-symbol">$</span>
+          </div>
+        </div>
+        <div class="coin coin-5">
+          <div class="coin-face">
+            <span class="coin-symbol">$</span>
+          </div>
+        </div>
+        
+        <div class="red-envelope">
+          <!-- Các góc trang trí -->
+          <div class="corner-decor top-left">
+            <svg viewBox="0 0 50 50" width="45" height="45">
+              <!-- Outer L-shape -->
+              <path d="M5,5 L30,5 M5,5 L5,30" stroke="#d4af37" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <!-- Inner L-shape -->
+              <path d="M10,10 L25,10 M10,10 L10,25" stroke="#d4af37" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <!-- Small decorative line -->
+              <path d="M15,15 L20,15 M15,15 L15,20" stroke="#d4af37" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="corner-decor top-right">
+            <svg viewBox="0 0 50 50" width="45" height="45">
+              <!-- Outer L-shape -->
+              <path d="M20,5 L45,5 M45,5 L45,30" stroke="#d4af37" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <!-- Inner L-shape -->
+              <path d="M25,10 L40,10 M40,10 L40,25" stroke="#d4af37" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <!-- Small decorative line -->
+              <path d="M30,15 L35,15 M35,15 L35,20" stroke="#d4af37" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="corner-decor bottom-left">
+            <svg viewBox="0 0 50 50" width="45" height="45">
+              <!-- Outer L-shape -->
+              <path d="M5,20 L5,45 M5,45 L30,45" stroke="#d4af37" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <!-- Inner L-shape -->
+              <path d="M10,25 L10,40 M10,40 L25,40" stroke="#d4af37" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <!-- Small decorative line -->
+              <path d="M15,30 L15,35 M15,35 L20,35" stroke="#d4af37" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="corner-decor bottom-right">
+            <svg viewBox="0 0 50 50" width="45" height="45">
+              <!-- Outer L-shape -->
+              <path d="M45,20 L45,45 M20,45 L45,45" stroke="#d4af37" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <!-- Inner L-shape -->
+              <path d="M40,25 L40,40 M25,40 L40,40" stroke="#d4af37" stroke-width="2" fill="none" stroke-linecap="round"/>
+              <!-- Small decorative line -->
+              <path d="M35,30 L35,35 M30,35 L35,35" stroke="#d4af37" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
+          
+          <div class="envelope-body">
+            <!-- Vòng tròn vàng chứa chữ Song Hỷ -->
+            <div class="songhy-circle">
+              <div class="circle-ring"></div>
+              <span class="songhy-text">囍</span>
+            </div>
+          </div>
+        </div>
+        
+        <p class="gift-envelope-hint">Nhấn để mở</p>
+      </div>
+
+      <div class="gift-grid" id="gift-grid" style="display: none;">
         @if($type == 2)
 
         @if(isset($bankInfo['bride']))
