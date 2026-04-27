@@ -462,8 +462,11 @@
         <div id="wishes-list" class="wishes-list">
           @foreach($wishes as $wish)
           <div class="wish-card">
-            <p class="wish-text">"{{ $wish->wishes_message }}"</p>
-            <p class="wish-author">— {{ $wish->guest_name }}</p>
+            <div class="wish-header">
+              <p class="wish-author">{{ $wish->guest_name }}</p>
+              <p class="wish-date">{{ $wish->created_at->format('d/m/Y H:i') }}</p>
+            </div>
+            <p class="wish-text">{{ $wish->wishes_message }}</p>
           </div>
           @endforeach
         </div>

@@ -355,9 +355,22 @@ document.addEventListener('DOMContentLoaded', () => {
     card.className = 'wish-card';
     const safeWish = escapeHTML(wish);
     const safeName = escapeHTML(name);
+    
+    // Lấy ngày giờ hiện tại
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
+    
     card.innerHTML = `
-      <p class="wish-text">"${safeWish}"</p>
-      <p class="wish-author">— ${safeName}</p>
+      <div class="wish-header">
+        <p class="wish-author">${safeName}</p>
+        <p class="wish-date">${formattedDate}</p>
+      </div>
+      <p class="wish-text">${safeWish}</p>
     `;
     wishesList.prepend(card);
   }
