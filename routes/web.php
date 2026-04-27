@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [RsvpController::class, 'show'])->name('wedding.show');
 Route::post('/rsvp', [RsvpController::class, 'store'])->name('rsvp.store');
+Route::post('/wishes', [RsvpController::class, 'storeWish'])->name('wishes.store');
 Route::get('/api/wishes', [RsvpController::class, 'wishes'])->name('wishes.index');
 
 // Admin - Danh sách xác nhận tham dự

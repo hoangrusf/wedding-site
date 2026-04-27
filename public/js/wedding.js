@@ -266,7 +266,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const name = nameInput.value.trim();
     const phone = phoneInput.value.trim();
     const companionCount = document.getElementById('guest-count').value;
-    const wish = document.getElementById('guest-wish').value.trim();
 
     // Validation
     if (!name) {
@@ -295,7 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
       phone_number: phone,
       is_attending: true,
       companion_count: parseInt(companionCount) || 0,
-      wishes_message: wish || null,
     };
 
     // Gắn guest_id và type nếu có
@@ -326,13 +324,100 @@ document.addEventListener('DOMContentLoaded', () => {
       btnText.classList.remove('hidden');
       btnLoader.classList.add('hidden');
 
-      // Thêm lời chúc vào wall
-      if (wish) {
-        addWishToWall(name, wish);
-      }
-
       showToast('Cảm ơn bạn! Xác nhận đã được ghi nhận 💕');
       rsvpForm.reset();
+    })
+    .catch(err => {
+      btnSubmit.disabled = false;
+      btnText.classList.remove('hidden');
+      btnLoader.classList.add('hidden');
+
+      // Hiển thị lỗi validation nếu có
+      if (err && err.errors) {
+        const firstError = Object.values(err.errors)[0];
+        showToast(firstError[0] || 'Có lỗi xảy ra, vui lòng thử lại');
+      } else {
+        showToast('Có lỗi xảy ra, vui lòng thử lại');
+      }
+    });
+  }
+
+  // ============================================================
+  // 5B. GUESTBOOK FORM — GỬI LỜI CHÚC
+  // ============================================================
+  const guestbookForm = document.getElementById('guestbook-form');
+  if (guestbookForm) {
+    guestbookForm.addEventListener('submit', handleGuestbook);
+  }
+
+  function handleGuestbook(e) {
+    e.preventDefault();
+
+    const nameInput = document.getElementById('wish-name');
+    const messageInput = document.getElementById('wish-message');
+    const name = nameInput.value.trim();
+    const message = messageInput.value.trim();
+
+    // Validation
+    if (!name) {
+      showToast('Vui lòng nhập họ và tên');
+      nameInput.focus();
+      return;
+    }
+    if (!message) {
+      showToast('Vui lòng nhập lời chúc');
+      messageInput.focus();
+      return;
+    }
+
+    const btnSubmit = document.getElementById('btn-wish');
+    const btnText = btnSubmit.querySelector('.btn-text');
+    const btnLoader = btnSubmit.querySelector('.btn-loader');
+
+    // Show loading
+    btnSubmit.disabled = true;
+    btnText.classList.add('hidden');
+    btnLoader.classList.remove('hidden');
+
+    // Build payload
+    const payload = {
+      guest_name: name,
+      wishes_message: message,
+    };
+
+    // Gắn guest_id và type nếu có
+    if (wData.guestId) {
+      payload.guest_id = wData.guestId;
+    }
+    payload.type = wData.type || 1;
+
+    // Gửi request đến Laravel API
+    fetch(wData.wishesUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-CSRF-TOKEN': wData.csrfToken,
+      },
+      body: JSON.stringify(payload),
+    })
+    .then(response => {
+      if (!response.ok) {
+        return response.json().then(err => { throw err; });
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Ẩn loading
+      btnSubmit.disabled = false;
+      btnText.classList.remove('hidden');
+      btnLoader.classList.add('hidden');
+
+      // Thêm lời chúc vào wall
+      addWishToWall(name, message);
+
+      showToast('Cảm ơn lời chúc của bạn! 💕');
+      guestbookForm.reset();
     })
     .catch(err => {
       btnSubmit.disabled = false;

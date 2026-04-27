@@ -113,6 +113,7 @@
         <li><a href="#gallery">Ảnh cưới</a></li>
         <li><a href="#event">Sự kiện</a></li>
         <li><a href="#rsvp">Xác nhận tham dự</a></li>
+        <li><a href="#guestbook">Sổ lưu bút</a></li>
         <li><a href="#gift">Mừng cưới</a></li>
       </ul>
     </nav>
@@ -443,12 +444,39 @@
             </label>
           </div>
         </div>
-        <div class="form-group">
-          <label for="guest-wish">Lời chúc đến Cô Dâu &amp; Chú Rể</label>
-          <textarea id="guest-wish" name="wishes_message" rows="4" placeholder="Gửi lời chúc tốt đẹp nhất..." maxlength="500"></textarea>
-        </div>
         <button type="submit" class="btn-submit" id="btn-rsvp">
           <span class="btn-text">Gửi Xác Nhận</span>
+          <span class="btn-loader hidden">
+            <svg class="spinner" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="30 70"/></svg>
+            Đang gửi...
+          </span>
+        </button>
+      </form>
+    </section>
+
+    <!-- SỔ LƯU BÚT - Lời chúc -->
+    <section id="guestbook" class="guestbook-section">
+      <div class="section-header" data-aos="fade-up">
+        <p class="section-title">Sổ Lưu Bút</p>
+        <div class="section-divider">✦</div>
+        <p class="section-subtitle">Gửi lời chúc phúc đến đôi uyên ương</p>
+      </div>
+
+      <!-- Form gửi lời chúc -->
+      <form id="guestbook-form" class="rsvp-form guestbook-form" data-aos="fade-up" data-aos-delay="200" novalidate>
+        @if($guest)
+          <input type="hidden" name="guest_id" value="{{ $guest->id }}" />
+        @endif
+        <div class="form-group">
+          <label for="wish-name">Họ và Tên <span class="required">*</span></label>
+          <input type="text" id="wish-name" name="guest_name" placeholder="Nhập họ và tên..." required maxlength="100" />
+        </div>
+        <div class="form-group">
+          <label for="wish-message">Lời chúc đến Cô Dâu &amp; Chú Rể <span class="required">*</span></label>
+          <textarea id="wish-message" name="wishes_message" rows="4" placeholder="Gửi lời chúc tốt đẹp nhất..." required maxlength="500"></textarea>
+        </div>
+        <button type="submit" class="btn-submit" id="btn-wish">
+          <span class="btn-text">Gửi Lời Chúc</span>
           <span class="btn-loader hidden">
             <svg class="spinner" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="30 70"/></svg>
             Đang gửi...
@@ -783,6 +811,7 @@ Sự đồng hành của bạn không chỉ là niềm vui, mà còn là nguồn
       displayName: @json($displayName),
       type: {{ $type }},
       rsvpUrl: '{{ route('rsvp.store') }}',
+      wishesUrl: '{{ route('wishes.store') }}',
       csrfToken: '{{ csrf_token() }}'
     };
   </script>

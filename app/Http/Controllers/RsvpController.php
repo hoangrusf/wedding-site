@@ -120,6 +120,33 @@ class RsvpController extends Controller
     }
 
     /**
+     * Gửi lời chúc (không cần xác nhận tham dự).
+     * POST /wishes
+     */
+    public function storeWish(Request $request)
+    {
+        $validated = $request->validate([
+            'guest_id'       => ['nullable', 'exists:guests,id'],
+            'type'           => ['nullable', 'integer', 'in:1,2'],
+            'guest_name'     => ['required', 'string', 'max:255'],
+            'wishes_message' => ['required', 'string', 'max:1000'],
+        ]);
+
+        $validated['type'] = $validated['type'] ?? 1;
+        $validated['is_attending'] = false; // Chỉ gửi lời chúc, chưa xác nhận tham dự
+        $validated['phone_number'] = null;
+        $validated['companion_count'] = 0;
+
+        $rsvp = Rsvp::create($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Cảm ơn lời chúc của bạn!',
+            'data'    => $rsvp,
+        ], 201);
+    }
+
+    /**
      * Trang admin - danh sách xác nhận tham dự.
      * URL: GET /admin/rsvp
      */

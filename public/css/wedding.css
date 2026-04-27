@@ -1452,6 +1452,20 @@ button {
 }
 
 /* ==========================================================
+   SỔ LƯU BÚT - GUESTBOOK
+   ========================================================== */
+.guestbook-section {
+  padding: var(--section-padding);
+  background:
+    radial-gradient(ellipse at 60% 40%, rgba(212, 181, 160, 0.25) 0%, transparent 50%),
+    var(--color-bg-soft);
+}
+
+.guestbook-form {
+  margin-bottom: 48px;
+}
+
+/* ==========================================================
    MỪNG CƯỚI - GIFT - Glassmorphism Cards
    ========================================================== */
 .gift-section {
