@@ -578,13 +578,7 @@
               <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 1c1 1.5 2 3 2 4.5a2 2 0 0 1-4 0C10 4 11 2.5 12 1z" fill="currentColor" opacity="0.15"/></svg>
             @endif
           </div>
-          <h3>Cô Dâu</h3>
-          <p class="gift-bank">Ngân hàng: <strong>{{ $bankInfo['bride']['bank_name'] }}</strong></p>
-          <p class="gift-account">STK: <strong id="stk-bride">{{ $bankInfo['bride']['account_no'] }}</strong></p>
-          <p class="gift-holder">Chủ TK: <strong>{{ $bankInfo['bride']['account_name'] }}</strong></p>
-          <button class="btn-copy" data-target="stk-bride" aria-label="Copy số tài khoản cô dâu">
-            Copy STK
-          </button>
+          <h3>Cô Dâu - {{ $config->bride_name }}</h3>
           <div class="gift-qr">
             @if(!empty($bankInfo['bride']['qr_url']))
               <img src="{{ $bankInfo['bride']['qr_url'] }}" alt="QR Cô Dâu" loading="lazy" />
@@ -592,6 +586,10 @@
               <img src="https://img.vietqr.io/image/{{ $bankInfo['bride']['bank_name'] === 'MB Bank' ? 'MB' : $bankInfo['bride']['bank_name'] }}-{{ $bankInfo['bride']['account_no'] }}-compact.png?amount=0&addInfo=MungCuoi{{ Str::of($config->bride_name)->ascii()->replace(' ', '') }}" alt="QR Cô Dâu" loading="lazy" />
             @endif
           </div>
+          <button class="btn-download-qr" data-qr-target="bride" aria-label="Tải QR Cô Dâu">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Tải QR
+          </button>
         </div>
         @endif
 
@@ -605,13 +603,7 @@
               <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             @endif
           </div>
-          <h3>Chú Rể</h3>
-          <p class="gift-bank">Ngân hàng: <strong>{{ $bankInfo['groom']['bank_name'] }}</strong></p>
-          <p class="gift-account">STK: <strong id="stk-groom">{{ $bankInfo['groom']['account_no'] }}</strong></p>
-          <p class="gift-holder">Chủ TK: <strong>{{ $bankInfo['groom']['account_name'] }}</strong></p>
-          <button class="btn-copy" data-target="stk-groom" aria-label="Copy số tài khoản chú rể">
-            Copy STK
-          </button>
+          <h3>Chú Rể - {{ $config->groom_name }}</h3>
           <div class="gift-qr">
             @if(!empty($bankInfo['groom']['qr_url']))
               <img src="{{ $bankInfo['groom']['qr_url'] }}" alt="QR Chú Rể" loading="lazy" />
@@ -619,6 +611,18 @@
               <img src="https://img.vietqr.io/image/{{ $bankInfo['groom']['bank_name'] === 'Vietcombank' ? 'VCB' : $bankInfo['groom']['bank_name'] }}-{{ $bankInfo['groom']['account_no'] }}-compact.png?amount=0&addInfo=MungCuoi{{ Str::of($config->groom_name)->ascii()->replace(' ', '') }}" alt="QR Chú Rể" loading="lazy" />
             @endif
           </div>
+          <div class="gift-bank-info">
+            <p class="gift-bank">{{ $bankInfo['groom']['bank_name'] }}</p>
+            <p class="gift-holder">{{ $bankInfo['groom']['account_name'] }}</p>
+            <p class="gift-account">
+              STK: <span id="groom-stk-type2">{{ $bankInfo['groom']['account_no'] }}</span>
+            </p>
+            <button class="btn-copy" data-target="groom-stk-type2">📋 Copy STK</button>
+          </div>
+          <button class="btn-download-qr" data-qr-target="groom" aria-label="Tải QR Chú Rể">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Tải QR
+          </button>
         </div>
         @endif
 
@@ -634,13 +638,7 @@
               <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             @endif
           </div>
-          <h3>Chú Rể</h3>
-          <p class="gift-bank">Ngân hàng: <strong>{{ $bankInfo['groom']['bank_name'] }}</strong></p>
-          <p class="gift-account">STK: <strong id="stk-groom">{{ $bankInfo['groom']['account_no'] }}</strong></p>
-          <p class="gift-holder">Chủ TK: <strong>{{ $bankInfo['groom']['account_name'] }}</strong></p>
-          <button class="btn-copy" data-target="stk-groom" aria-label="Copy số tài khoản chú rể">
-            Copy STK
-          </button>
+          <h3>Chú Rể - {{ $config->groom_name }}</h3>
           <div class="gift-qr">
             @if(!empty($bankInfo['groom']['qr_url']))
               <img src="{{ $bankInfo['groom']['qr_url'] }}" alt="QR Chú Rể" loading="lazy" />
@@ -648,6 +646,18 @@
               <img src="https://img.vietqr.io/image/{{ $bankInfo['groom']['bank_name'] === 'Vietcombank' ? 'VCB' : $bankInfo['groom']['bank_name'] }}-{{ $bankInfo['groom']['account_no'] }}-compact.png?amount=0&addInfo=MungCuoi{{ Str::of($config->groom_name)->ascii()->replace(' ', '') }}" alt="QR Chú Rể" loading="lazy" />
             @endif
           </div>
+          <div class="gift-bank-info">
+            <p class="gift-bank">{{ $bankInfo['groom']['bank_name'] }}</p>
+            <p class="gift-holder">{{ $bankInfo['groom']['account_name'] }}</p>
+            <p class="gift-account">
+              STK: <span id="groom-stk">{{ $bankInfo['groom']['account_no'] }}</span>
+            </p>
+            <button class="btn-copy" data-target="groom-stk">📋 Copy STK</button>
+          </div>
+          <button class="btn-download-qr" data-qr-target="groom" aria-label="Tải QR Chú Rể">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Tải QR
+          </button>
         </div>
         @endif
 
@@ -661,13 +671,7 @@
               <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 1c1 1.5 2 3 2 4.5a2 2 0 0 1-4 0C10 4 11 2.5 12 1z" fill="currentColor" opacity="0.15"/></svg>
             @endif
           </div>
-          <h3>Cô Dâu</h3>
-          <p class="gift-bank">Ngân hàng: <strong>{{ $bankInfo['bride']['bank_name'] }}</strong></p>
-          <p class="gift-account">STK: <strong id="stk-bride">{{ $bankInfo['bride']['account_no'] }}</strong></p>
-          <p class="gift-holder">Chủ TK: <strong>{{ $bankInfo['bride']['account_name'] }}</strong></p>
-          <button class="btn-copy" data-target="stk-bride" aria-label="Copy số tài khoản cô dâu">
-            Copy STK
-          </button>
+          <h3>Cô Dâu - {{ $config->bride_name }}</h3>
           <div class="gift-qr">
             @if(!empty($bankInfo['bride']['qr_url']))
               <img src="{{ $bankInfo['bride']['qr_url'] }}" alt="QR Cô Dâu" loading="lazy" />
@@ -675,6 +679,18 @@
               <img src="https://img.vietqr.io/image/{{ $bankInfo['bride']['bank_name'] === 'MB Bank' ? 'MB' : $bankInfo['bride']['bank_name'] }}-{{ $bankInfo['bride']['account_no'] }}-compact.png?amount=0&addInfo=MungCuoi{{ Str::of($config->bride_name)->ascii()->replace(' ', '') }}" alt="QR Cô Dâu" loading="lazy" />
             @endif
           </div>
+          <div class="gift-bank-info">
+            <p class="gift-bank">{{ $bankInfo['bride']['bank_name'] }}</p>
+            <p class="gift-holder">{{ $bankInfo['bride']['account_name'] }}</p>
+            <p class="gift-account">
+              STK: <span id="bride-stk-type1">{{ $bankInfo['bride']['account_no'] }}</span>
+            </p>
+            <button class="btn-copy" data-target="bride-stk-type1">📋 Copy STK</button>
+          </div>
+          <button class="btn-download-qr" data-qr-target="bride" aria-label="Tải QR Cô Dâu">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Tải QR
+          </button>
         </div>
         @endif
 

@@ -451,7 +451,36 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ============================================================
-  // 8. NAVIGATION - Active link on scroll
+  // 8. DOWNLOAD QR CODE
+  // ============================================================
+  document.querySelectorAll('.btn-download-qr').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const target = btn.getAttribute('data-qr-target');
+      const qrImg = btn.closest('.gift-card').querySelector('.gift-qr img');
+      
+      if (!qrImg) return;
+
+      try {
+        const response = await fetch(qrImg.src);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `QR_${target === 'bride' ? 'Co_Dau' : 'Chu_Re'}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        
+        showToast('Đã tải QR xuống máy!');
+      } catch (error) {
+        showToast('Không thể tải QR. Vui lòng thử lại.');
+      }
+    });
+  });
+
+  // ============================================================
+  // 9. NAVIGATION - Active link on scroll
   // ============================================================
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.main-nav a');
@@ -586,7 +615,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================================
-  // 10. PHÁO HOA (Fireworks)
+  // 11. PHÁO HOA (Fireworks)
   // ============================================================
   const fwCanvas = document.getElementById('fireworks-canvas');
   const fwCtx = fwCanvas.getContext('2d');
@@ -776,7 +805,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================================
-  // 11. TOAST NOTIFICATION
+  // 12. TOAST NOTIFICATION
   // ============================================================
   function showToast(message, duration = 3000) {
     toast.textContent = message;
@@ -787,7 +816,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================================
-  // 12. HELPER - XSS Prevention
+  // 13. HELPER - XSS Prevention
   // ============================================================
   function escapeHTML(str) {
     const div = document.createElement('div');
