@@ -66,21 +66,37 @@ class GoogleSheetsService
 
     private function getAccessToken(): ?string
     {
-        // Priority 1: credentials from environment variable (JSON string) — works on Render / cloud hosts
-        $credentialsJson = config('services.google_sheets.credentials_json', '');
-        if (!empty($credentialsJson)) {
-            $credentials = json_decode($credentialsJson, true);
+        // Priority 1: base64-encoded credentials (most reliable for Render / cloud env vars)
+        $credentialsB64 = config('services.google_sheets.credentials_base64', '');
+        if (!empty($credentialsB64)) {
+            $decoded = base64_decode($credentialsB64, true);
+            if ($decoded === false) {
+                Log::warning('GoogleSheets: GOOGLE_SHEETS_CREDENTIALS_BASE64 không phải base64 hợp lệ.');
+                return null;
+            }
+            $credentials = json_decode($decoded, true);
             if (json_last_error() !== JSON_ERROR_NONE) {
-                Log::warning('GoogleSheets: GOOGLE_SHEETS_CREDENTIALS_JSON parse failed — ' . json_last_error_msg() . '. Length=' . strlen($credentialsJson));
+                Log::warning('GoogleSheets: GOOGLE_SHEETS_CREDENTIALS_BASE64 parse JSON failed — ' . json_last_error_msg());
                 return null;
             }
             if ($credentials && ($credentials['type'] ?? '') === 'service_account') {
                 return $this->fetchTokenFromServiceAccount($credentials);
             }
-            Log::warning('GoogleSheets: GOOGLE_SHEETS_CREDENTIALS_JSON không hợp lệ — type=' . ($credentials['type'] ?? 'null'));
+            Log::warning('GoogleSheets: GOOGLE_SHEETS_CREDENTIALS_BASE64 không hợp lệ — type=' . ($credentials['type'] ?? 'null'));
             return null;
         }
-        Log::info('GoogleSheets: credentials_json trống, thử credentials_path...');
+
+        // Priority 2: raw JSON string
+        $credentialsJson = config('services.google_sheets.credentials_json', '');
+        if (!empty($credentialsJson)) {
+            $credentials = json_decode($credentialsJson, true);
+            if ($credentials && ($credentials['type'] ?? '') === 'service_account') {
+                return $this->fetchTokenFromServiceAccount($credentials);
+            }
+            Log::warning('GoogleSheets: GOOGLE_SHEETS_CREDENTIALS_JSON không hợp lệ — json_error=' . json_last_error_msg());
+            return null;
+        }
+        Log::info('GoogleSheets: credentials_base64 và credentials_json đều trống, thử credentials_path...');
 
         // Priority 2: credentials from file path
         $credentialsPath = config('services.google_sheets.credentials_path', '');

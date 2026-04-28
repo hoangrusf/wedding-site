@@ -220,14 +220,21 @@ class RsvpController extends Controller
         $spreadsheetId   = config('services.google_sheets.spreadsheet_id');
         $sheetName       = config('services.google_sheets.sheet_name');
         $credentialsPath = config('services.google_sheets.credentials_path');
-        $credentialsJson = config('services.google_sheets.credentials_json', '');
+        $credentialsJson   = config('services.google_sheets.credentials_json', '');
+        $credentialsB64    = config('services.google_sheets.credentials_base64', '');
 
         $credentialsStatus = '❌ Chưa cấu hình';
-        if (!empty($credentialsJson)) {
+        if (!empty($credentialsB64)) {
+            $raw = base64_decode($credentialsB64, true);
+            $decoded = $raw ? json_decode($raw, true) : null;
+            $credentialsStatus = ($decoded && ($decoded['type'] ?? '') === 'service_account')
+                ? '✅ GOOGLE_SHEETS_CREDENTIALS_BASE64 (env var) — client_email: ' . ($decoded['client_email'] ?? '?')
+                : '❌ GOOGLE_SHEETS_CREDENTIALS_BASE64 không hợp lệ (json: ' . json_last_error_msg() . ')';
+        } elseif (!empty($credentialsJson)) {
             $decoded = json_decode($credentialsJson, true);
             $credentialsStatus = ($decoded && ($decoded['type'] ?? '') === 'service_account')
                 ? '✅ GOOGLE_SHEETS_CREDENTIALS_JSON (env var)'
-                : '❌ GOOGLE_SHEETS_CREDENTIALS_JSON không hợp lệ (json_last_error: ' . json_last_error_msg() . ')';
+                : '❌ GOOGLE_SHEETS_CREDENTIALS_JSON không hợp lệ (json: ' . json_last_error_msg() . ')';
         } elseif (file_exists($credentialsPath)) {
             $credentialsStatus = "✅ File: {$credentialsPath}";
         } else {
