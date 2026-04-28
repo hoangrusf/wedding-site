@@ -66,10 +66,22 @@ class GoogleSheetsService
 
     private function getAccessToken(): ?string
     {
+        // Priority 1: credentials from environment variable (JSON string) — works on Render / cloud hosts
+        $credentialsJson = config('services.google_sheets.credentials_json', '');
+        if (!empty($credentialsJson)) {
+            $credentials = json_decode($credentialsJson, true);
+            if ($credentials && ($credentials['type'] ?? '') === 'service_account') {
+                return $this->fetchTokenFromServiceAccount($credentials);
+            }
+            Log::warning('GoogleSheets: GOOGLE_SHEETS_CREDENTIALS_JSON không hợp lệ (không phải service_account JSON).');
+            return null;
+        }
+
+        // Priority 2: credentials from file path
         $credentialsPath = config('services.google_sheets.credentials_path', '');
 
         if (empty($credentialsPath)) {
-            Log::warning('GoogleSheets: GOOGLE_SHEETS_CREDENTIALS_PATH chưa được cấu hình trong .env');
+            Log::warning('GoogleSheets: Chưa cấu hình GOOGLE_SHEETS_CREDENTIALS_JSON hoặc GOOGLE_SHEETS_CREDENTIALS_PATH trong .env');
             return null;
         }
 
