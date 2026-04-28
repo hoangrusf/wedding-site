@@ -8,6 +8,20 @@ Route::post('/rsvp', [RsvpController::class, 'store'])->name('rsvp.store');
 Route::post('/wishes', [RsvpController::class, 'storeWish'])->name('wishes.store');
 Route::get('/api/wishes', [RsvpController::class, 'wishes'])->name('wishes.index');
 
+// Temp debug — xóa sau khi xác nhận hoạt động
+Route::get('/debug-env', function () {
+    $b64 = getenv('GOOGLE_SHEETS_CREDENTIALS_BASE64');
+    $json = getenv('GOOGLE_SHEETS_CREDENTIALS_JSON');
+    return response()->json([
+        'CREDENTIALS_BASE64_length' => $b64 ? strlen($b64) : 0,
+        'CREDENTIALS_BASE64_prefix' => $b64 ? substr($b64, 0, 20) . '...' : null,
+        'CREDENTIALS_JSON_length'   => $json ? strlen($json) : 0,
+        'SPREADSHEET_ID'            => getenv('GOOGLE_SHEETS_SPREADSHEET_ID'),
+        'config_base64_length'      => strlen(config('services.google_sheets.credentials_base64', '')),
+        'php_version'               => PHP_VERSION,
+    ]);
+});
+
 // Admin - Danh sách xác nhận tham dự
 Route::get('/admin/rsvp', [RsvpController::class, 'adminRsvp'])->name('admin.rsvp');
 Route::get('/admin/sheets-test', [RsvpController::class, 'testGoogleSheets'])->name('admin.sheets.test');
