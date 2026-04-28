@@ -289,10 +289,11 @@ document.addEventListener('DOMContentLoaded', () => {
     btnLoader.classList.remove('hidden');
 
     // Build payload
+    const isAttending = document.querySelector('input[name="is_attending"]:checked')?.value === '1';
     const payload = {
       guest_name: name,
       phone_number: phone,
-      is_attending: true,
+      is_attending: isAttending,
       companion_count: parseInt(companionCount) || 0,
     };
 
