@@ -232,6 +232,7 @@
     <p>Cập nhật đến {{ now()->format('H:i - d/m/Y') }}</p>
   </div>
   <div class="header-actions" style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;">
+    <a href="{{ route('admin.link') }}" style="padding:0.4rem 1rem;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:6px;font-size:0.82rem;text-decoration:none;">🔗 Tạo link thiệp</a>
     <a href="{{ route('admin.config') }}" style="padding:0.4rem 1rem;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:6px;font-size:0.82rem;text-decoration:none;">⚙️ Cấu hình thiệp</a>
     <a href="{{ route('admin.gallery') }}" style="padding:0.4rem 1rem;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:6px;font-size:0.82rem;text-decoration:none;">🖼️ Album ảnh</a>
     <a href="{{ route('admin.visits') }}" style="padding:0.4rem 1rem;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:6px;font-size:0.82rem;text-decoration:none;">👁️ Lượt xem thiệp</a>

@@ -2,7 +2,11 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#fefcf9" />
+  <meta name="color-scheme" content="light" />
+  <!-- Performance hints -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Thiệp Cưới - Minh Anh & Thuỳ Linh</title>
 
   <!-- Google Fonts: Handwriting + Serif + Sans -->
@@ -418,7 +422,8 @@
   </button>
 
   <!-- ✏️ THAY FILE NHẠC: đổi src bằng link nhạc .mp3 của bạn -->
-  <audio id="bg-music" loop preload="auto">
+  <!-- Nhạc nền - Preload none để giảm tải ban đầu -->
+  <audio id="bg-music" loop preload="none">
     <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg" />
   </audio>
 

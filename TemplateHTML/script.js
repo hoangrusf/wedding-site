@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const rsvpForm = document.getElementById('rsvp-form');
   const toast = document.getElementById('toast');
 
+  // Detect mobile devices
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
   // ============================================================
   // 0. TÊN KHÁCH MỜI TỪ URL (Dynamic URL Parameter)
   // ============================================================
@@ -150,6 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================================
   // ✏️ THAY NGÀY CƯỚI Ở ĐÂY (format: 'YYYY-MM-DDTHH:MM:SS')
   const weddingDate = new Date('2026-08-15T17:00:00').getTime();
+  let countdownInterval = null;
 
   function updateCountdown() {
     const now = Date.now();
@@ -160,6 +164,10 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('cd-hours').textContent = '--';
       document.getElementById('cd-minutes').textContent = '--';
       document.getElementById('cd-seconds').textContent = '--';
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+      }
       return;
     }
 
@@ -175,7 +183,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   updateCountdown();
-  setInterval(updateCountdown, 1000);
+  countdownInterval = setInterval(updateCountdown, 1000);
+
+  // Pause countdown when tab is not visible
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+      }
+    } else {
+      if (!countdownInterval) {
+        updateCountdown();
+        countdownInterval = setInterval(updateCountdown, 1000);
+      }
+    }
+  });
 
   // ============================================================
   // 4. GALLERY LIGHTBOX
@@ -371,6 +394,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.main-nav a');
 
+  // Throttle scroll event for better performance
+  let scrollTimeout;
   function onScroll() {
     const scrollY = window.scrollY + 120;
     sections.forEach(section => {
@@ -388,7 +413,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  window.addEventListener('scroll', onScroll, { passive: true });
+  function throttledScroll() {
+    if (scrollTimeout) return;
+    scrollTimeout = setTimeout(() => {
+      onScroll();
+      scrollTimeout = null;
+    }, 100); // Throttle to max once per 100ms
+  }
+
+  window.addEventListener('scroll', throttledScroll, { passive: true });
 
   // Smooth scroll cho nav links
   navLinks.forEach(link => {
@@ -408,6 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const ctx = petalsCanvas.getContext('2d');
   let petals = [];
   let animationFrameId = null;
+  let isPageVisible = true;
 
   function resizeCanvas() {
     petalsCanvas.width = window.innerWidth;
@@ -416,6 +450,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('resize', resizeCanvas);
   resizeCanvas();
+
+  // Pause animation when tab is not visible (saves battery & CPU)
+  document.addEventListener('visibilitychange', () => {
+    isPageVisible = !document.hidden;
+    if (isPageVisible && petals.length > 0) {
+      animatePetals();
+    } else if (!isPageVisible && animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+  });
 
   class Petal {
     constructor() {
@@ -477,7 +522,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function startPetals() {
-    // Tạo 40 cánh hoa
     const petalCount = window.innerWidth < 768 ? 25 : 40;
     petals = [];
     for (let i = 0; i < petalCount; i++) {
@@ -487,6 +531,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function animatePetals() {
+    if (!isPageVisible) return; // Don't animate when tab is hidden
+    
     ctx.clearRect(0, 0, petalsCanvas.width, petalsCanvas.height);
     petals.forEach(petal => {
       petal.update();

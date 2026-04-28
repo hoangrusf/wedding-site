@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const rsvpForm = document.getElementById('rsvp-form');
   const toast = document.getElementById('toast');
 
+  // Detect mobile devices
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
   // Dữ liệu từ server (truyền qua window.weddingData)
   const wData = window.weddingData || {};
 
@@ -617,6 +620,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const ctx = petalsCanvas.getContext('2d');
   let petals = [];
   let animationFrameId = null;
+  let isPageVisible = true;
 
   function resizeCanvas() {
     petalsCanvas.width = window.innerWidth;
@@ -625,6 +629,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('resize', resizeCanvas);
   resizeCanvas();
+
+  // Pause animation when tab is not visible (saves battery & CPU)
+  document.addEventListener('visibilitychange', () => {
+    isPageVisible = !document.hidden;
+    if (isPageVisible && petals.length > 0) {
+      animatePetals();
+    } else if (!isPageVisible && animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+  });
 
   class Petal {
     constructor() {
@@ -666,6 +681,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.rotate(this.rotation);
       ctx.fillStyle = this.color;
       ctx.beginPath();
+      // Vẽ cánh hoa bằng 2 đường cong bezier
       ctx.moveTo(0, 0);
       ctx.bezierCurveTo(
         this.size / 2, -this.size / 2,
@@ -683,7 +699,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function startPetals() {
-    const petalCount = window.innerWidth < 768 ? 12 : 20;
+    const petalCount = window.innerWidth < 768 ? 25 : 40;
     petals = [];
     for (let i = 0; i < petalCount; i++) {
       petals.push(new Petal());
@@ -692,6 +708,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function animatePetals() {
+    if (!isPageVisible) return; // Don't animate when tab is hidden
+    
     ctx.clearRect(0, 0, petalsCanvas.width, petalsCanvas.height);
     petals.forEach(petal => {
       petal.update();

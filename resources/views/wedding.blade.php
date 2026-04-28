@@ -2,8 +2,12 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
   <meta name="csrf-token" content="{{ csrf_token() }}" />
+  <meta name="theme-color" content="#fefcf9" />
+  <meta name="color-scheme" content="light" />
+  <!-- Performance hints -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Thiệp Cưới - {{ $config->groom_name }} & {{ $config->bride_name }}</title>
 
   <!-- Google Fonts -->
@@ -782,7 +786,8 @@ Sự đồng hành của bạn không chỉ là niềm vui, mà còn là nguồn
     </span>
   </button>
 
-  <audio id="bg-music" loop preload="auto">
+  <!-- Nhạc nền - Preload none để giảm tải ban đầu -->
+  <audio id="bg-music" loop preload="none">
     @php
       $musicUrl = $config->background_music_url ?? null;
       if ($musicUrl && !str_starts_with($musicUrl, 'http://') && !str_starts_with($musicUrl, 'https://')) {

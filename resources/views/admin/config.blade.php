@@ -248,6 +248,7 @@
   </div>
   <div class="header-actions">
     <a href="{{ route('admin.rsvp') }}" class="btn-nav">📋 Danh sách RSVP</a>
+    <a href="{{ route('admin.link') }}" class="btn-nav">🔗 Tạo link thiệp</a>
     <a href="{{ route('admin.gallery') }}" class="btn-nav">🖼️ Album ảnh</a>
     <form method="POST" action="{{ route('admin.logout') }}">
       @csrf

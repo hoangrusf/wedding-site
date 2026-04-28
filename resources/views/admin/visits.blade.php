@@ -169,6 +169,7 @@
   </div>
   <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;">
     <a href="{{ route('admin.rsvp') }}" class="btn-back">📋 Xác nhận tham dự</a>
+    <a href="{{ route('admin.link') }}" class="btn-back">🔗 Tạo link thiệp</a>
     <a href="{{ route('admin.config') }}" class="btn-back">⚙️ Cấu hình thiệp</a>
     <a href="{{ route('admin.gallery') }}" class="btn-back">🖼️ Album ảnh</a>
     <form method="POST" action="{{ route('admin.visits.deleteAll') }}" onsubmit="return confirm('Xóa toàn bộ lịch sử truy cập?')">

@@ -342,6 +342,7 @@
   </div>
   <div class="header-actions">
     <a href="{{ route('admin.rsvp') }}" class="btn-nav">📋 RSVP</a>
+    <a href="{{ route('admin.link') }}" class="btn-nav">🔗 Tạo link</a>
     <a href="{{ route('admin.config') }}" class="btn-nav">⚙️ Cấu hình</a>
     <form method="POST" action="{{ route('admin.logout') }}">
       @csrf

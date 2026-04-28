@@ -23,7 +23,7 @@ class RsvpController extends Controller
         $inviteCode  = $request->query('invite');
         $type        = $request->query('type', 1);
         $guest       = null;
-        $displayName = $inviteCode ?: 'Quý Khách';
+        $displayName = $inviteCode ? str_replace('_', ' ', $inviteCode) : 'Quý Khách';
 
         // Chọn địa điểm theo type: 1 = nhà trai, 2 = nhà gái
         if ($type == 2 && $config->bride_event_location) {
@@ -205,6 +205,20 @@ class RsvpController extends Controller
             'totalGroomAttending',
             'totalBrideAttending'
         ));
+    }
+
+    /**
+     * Trang tạo link thiệp cưới.
+     * URL: GET /admin/link-generator
+     */
+    public function linkGenerator(Request $request)
+    {
+        if (!$request->session()->get('admin_auth')) {
+            return view('admin.login');
+        }
+
+        $baseUrl = url('/');
+        return view('admin.link-generator', compact('baseUrl'));
     }
 
     /**

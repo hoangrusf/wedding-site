@@ -24,6 +24,7 @@ Route::get('/debug-env', function () {
 
 // Admin - Danh sách xác nhận tham dự
 Route::get('/admin/rsvp', [RsvpController::class, 'adminRsvp'])->name('admin.rsvp');
+Route::get('/admin/link-generator', [RsvpController::class, 'linkGenerator'])->name('admin.link');
 Route::get('/admin/sheets-test', [RsvpController::class, 'testGoogleSheets'])->name('admin.sheets.test');
 Route::post('/admin/login', [RsvpController::class, 'adminLogin'])->name('admin.login');
 Route::post('/admin/logout', [RsvpController::class, 'adminLogout'])->name('admin.logout');
