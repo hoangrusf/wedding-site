@@ -7,6 +7,7 @@ use App\Models\Guest;
 use App\Models\Rsvp;
 use App\Models\VisitLog;
 use App\Models\WeddingConfig;
+use App\Services\GoogleSheetsService;
 use Illuminate\Http\Request;
 
 class RsvpController extends Controller
@@ -93,6 +94,22 @@ class RsvpController extends Controller
 
         $rsvp = Rsvp::create($validated);
 
+        // Đồng bộ lên Google Sheets (không blocking — lỗi chỉ ghi log)
+        try {
+            (new GoogleSheetsService())->appendRow([
+                $rsvp->id,
+                $rsvp->created_at->format('H:i d/m/Y'),
+                $rsvp->guest_name,
+                $rsvp->type == 2 ? 'Nhà Gái' : 'Nhà Trai',
+                $rsvp->phone_number ?? '',
+                $rsvp->is_attending ? 'Tham dự' : 'Không tham dự',
+                $rsvp->companion_count,
+                $rsvp->wishes_message ?? '',
+            ]);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('GoogleSheets sync failed: ' . $e->getMessage());
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Cảm ơn bạn đã xác nhận tham dự!',
@@ -139,6 +156,22 @@ class RsvpController extends Controller
 
         $rsvp = Rsvp::create($validated);
 
+        // Đồng bộ lên Google Sheets
+        try {
+            (new GoogleSheetsService())->appendRow([
+                $rsvp->id,
+                $rsvp->created_at->format('H:i d/m/Y'),
+                $rsvp->guest_name,
+                $rsvp->type == 2 ? 'Nhà Gái' : 'Nhà Trai',
+                '',
+                'Lời chúc',
+                0,
+                $rsvp->wishes_message ?? '',
+            ]);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('GoogleSheets sync failed: ' . $e->getMessage());
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Cảm ơn lời chúc của bạn!',
@@ -172,6 +205,59 @@ class RsvpController extends Controller
             'totalGroomAttending',
             'totalBrideAttending'
         ));
+    }
+
+    /**
+     * Test kết nối Google Sheets.
+     * URL: GET /admin/sheets-test
+     */
+    public function testGoogleSheets(Request $request)
+    {
+        if (!$request->session()->get('admin_auth')) {
+            abort(403);
+        }
+
+        $spreadsheetId   = config('services.google_sheets.spreadsheet_id');
+        $sheetName       = config('services.google_sheets.sheet_name');
+        $credentialsPath = config('services.google_sheets.credentials_path');
+
+        $checks = [
+            'GOOGLE_SHEETS_SPREADSHEET_ID' => !empty($spreadsheetId) ? "✅ {$spreadsheetId}" : '❌ Chưa cấu hình',
+            'GOOGLE_SHEETS_SHEET_NAME'     => !empty($sheetName) ? "✅ {$sheetName}" : '❌ Chưa cấu hình',
+            'Credentials file'             => file_exists($credentialsPath) ? "✅ {$credentialsPath}" : "❌ Không tìm thấy: {$credentialsPath}",
+        ];
+
+        $appendResult = null;
+        if (!empty($spreadsheetId) && file_exists($credentialsPath)) {
+            try {
+                $ok = (new GoogleSheetsService())->appendRow([
+                    'TEST',
+                    now()->format('H:i d/m/Y'),
+                    'Test từ Admin',
+                    'Test',
+                    '',
+                    'Kiểm tra kết nối',
+                    0,
+                    'Dòng này được tạo tự động để kiểm tra kết nối',
+                ]);
+                $appendResult = $ok ? '✅ Ghi thành công vào Google Sheets!' : '❌ Ghi thất bại (xem laravel.log)';
+            } catch (\Throwable $e) {
+                $appendResult = '❌ Lỗi: ' . $e->getMessage();
+            }
+        }
+
+        $html = '<style>body{font-family:sans-serif;padding:2rem;background:#f4ede4;} h2{color:#5a3e2b;} table{border-collapse:collapse;width:100%;max-width:700px;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);} td,th{padding:.7rem 1rem;border-bottom:1px solid #f0e8df;font-size:.9rem;} th{background:#5a3e2b;color:#fff;text-align:left;} .result{margin-top:1.5rem;padding:1rem 1.5rem;border-radius:8px;background:#fff;font-size:1rem;} a{color:#b48c64;}</style>';
+        $html .= '<h2>🔧 Kiểm tra Google Sheets</h2><table><tr><th>Mục</th><th>Trạng thái</th></tr>';
+        foreach ($checks as $k => $v) {
+            $html .= "<tr><td><b>{$k}</b></td><td>{$v}</td></tr>";
+        }
+        $html .= '</table>';
+        if ($appendResult) {
+            $html .= "<div class='result'><b>Kết quả ghi:</b> {$appendResult}</div>";
+        }
+        $html .= '<p style="margin-top:1.5rem"><a href="' . route('admin.rsvp') . '">← Quay lại Admin</a></p>';
+
+        return response($html);
     }
 
     /**

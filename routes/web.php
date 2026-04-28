@@ -10,6 +10,7 @@ Route::get('/api/wishes', [RsvpController::class, 'wishes'])->name('wishes.index
 
 // Admin - Danh sách xác nhận tham dự
 Route::get('/admin/rsvp', [RsvpController::class, 'adminRsvp'])->name('admin.rsvp');
+Route::get('/admin/sheets-test', [RsvpController::class, 'testGoogleSheets'])->name('admin.sheets.test');
 Route::post('/admin/login', [RsvpController::class, 'adminLogin'])->name('admin.login');
 Route::post('/admin/logout', [RsvpController::class, 'adminLogout'])->name('admin.logout');
 Route::delete('/admin/rsvp/{rsvp}/wish', [RsvpController::class, 'deleteWish'])->name('admin.wish.delete');
