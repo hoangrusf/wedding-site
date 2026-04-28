@@ -70,12 +70,17 @@ class GoogleSheetsService
         $credentialsJson = config('services.google_sheets.credentials_json', '');
         if (!empty($credentialsJson)) {
             $credentials = json_decode($credentialsJson, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                Log::warning('GoogleSheets: GOOGLE_SHEETS_CREDENTIALS_JSON parse failed — ' . json_last_error_msg() . '. Length=' . strlen($credentialsJson));
+                return null;
+            }
             if ($credentials && ($credentials['type'] ?? '') === 'service_account') {
                 return $this->fetchTokenFromServiceAccount($credentials);
             }
-            Log::warning('GoogleSheets: GOOGLE_SHEETS_CREDENTIALS_JSON không hợp lệ (không phải service_account JSON).');
+            Log::warning('GoogleSheets: GOOGLE_SHEETS_CREDENTIALS_JSON không hợp lệ — type=' . ($credentials['type'] ?? 'null'));
             return null;
         }
+        Log::info('GoogleSheets: credentials_json trống, thử credentials_path...');
 
         // Priority 2: credentials from file path
         $credentialsPath = config('services.google_sheets.credentials_path', '');

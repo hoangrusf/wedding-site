@@ -220,15 +220,28 @@ class RsvpController extends Controller
         $spreadsheetId   = config('services.google_sheets.spreadsheet_id');
         $sheetName       = config('services.google_sheets.sheet_name');
         $credentialsPath = config('services.google_sheets.credentials_path');
+        $credentialsJson = config('services.google_sheets.credentials_json', '');
+
+        $credentialsStatus = '❌ Chưa cấu hình';
+        if (!empty($credentialsJson)) {
+            $decoded = json_decode($credentialsJson, true);
+            $credentialsStatus = ($decoded && ($decoded['type'] ?? '') === 'service_account')
+                ? '✅ GOOGLE_SHEETS_CREDENTIALS_JSON (env var)'
+                : '❌ GOOGLE_SHEETS_CREDENTIALS_JSON không hợp lệ (json_last_error: ' . json_last_error_msg() . ')';
+        } elseif (file_exists($credentialsPath)) {
+            $credentialsStatus = "✅ File: {$credentialsPath}";
+        } else {
+            $credentialsStatus = "❌ Không tìm thấy file: {$credentialsPath} và GOOGLE_SHEETS_CREDENTIALS_JSON trống";
+        }
 
         $checks = [
-            'GOOGLE_SHEETS_SPREADSHEET_ID' => !empty($spreadsheetId) ? "✅ {$spreadsheetId}" : '❌ Chưa cấu hình',
-            'GOOGLE_SHEETS_SHEET_NAME'     => !empty($sheetName) ? "✅ {$sheetName}" : '❌ Chưa cấu hình',
-            'Credentials file'             => file_exists($credentialsPath) ? "✅ {$credentialsPath}" : "❌ Không tìm thấy: {$credentialsPath}",
+            'GOOGLE_SHEETS_SPREADSHEET_ID'    => !empty($spreadsheetId) ? "✅ {$spreadsheetId}" : '❌ Chưa cấu hình',
+            'GOOGLE_SHEETS_SHEET_NAME'        => !empty($sheetName) ? "✅ {$sheetName}" : '❌ Chưa cấu hình',
+            'Credentials (JSON env / file)'   => $credentialsStatus,
         ];
 
         $appendResult = null;
-        if (!empty($spreadsheetId) && file_exists($credentialsPath)) {
+        if (!empty($spreadsheetId)) {
             try {
                 $ok = (new GoogleSheetsService())->appendRow([
                     'TEST',
