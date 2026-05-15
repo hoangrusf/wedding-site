@@ -210,6 +210,42 @@
 
     .btn-del-wish:hover { background: #ef9a9a; }
 
+    /* Import modal */
+    .modal-backdrop {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 900;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.8rem 2rem;
+      width: min(480px, 92vw);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    }
+    .modal-box h3 { font-size: 1.05rem; color: #5a3e2b; margin-bottom: 0.4rem; }
+    .modal-box p  { font-size: 0.82rem; color: #9a8070; margin-bottom: 1.1rem; line-height: 1.5; }
+    .modal-box input[type="file"] { width: 100%; margin-bottom: 1rem; font-size: 0.85rem; }
+    .modal-actions { display: flex; gap: 0.7rem; justify-content: flex-end; }
+    .btn-import-confirm {
+      padding: 0.45rem 1.2rem;
+      background: #5a3e2b; color: #fff;
+      border: none; border-radius: 6px;
+      font-size: 0.85rem; cursor: pointer;
+    }
+    .btn-import-confirm:hover { background: #7a5c3e; }
+    .btn-cancel {
+      padding: 0.45rem 1rem;
+      background: #f0e8df; color: #5a3e2b;
+      border: none; border-radius: 6px;
+      font-size: 0.85rem; cursor: pointer;
+    }
+    .btn-cancel:hover { background: #e4d8cc; }
+
     /* Print */
     @media print {
       .admin-header form, .filter-bar, .btn-logout { display: none; }
@@ -241,6 +277,7 @@
       @method('DELETE')
       <button type="submit" style="padding:0.4rem 1rem;background:rgba(220,53,69,0.75);color:#fff;border:1px solid rgba(220,53,69,0.5);border-radius:6px;font-size:0.82rem;cursor:pointer;white-space:nowrap;">🗑️ Xóa tất cả</button>
     </form>
+    <button type="button" onclick="document.getElementById('import-modal').classList.add('open')" style="padding:0.4rem 1rem;background:rgba(46,125,50,0.8);color:#fff;border:1px solid rgba(46,125,50,0.5);border-radius:6px;font-size:0.82rem;cursor:pointer;white-space:nowrap;">📥 Import Excel</button>
     <form method="POST" action="{{ route('admin.logout') }}">
       @csrf
       <button type="submit" class="btn-logout">Đăng xuất</button>
@@ -250,6 +287,10 @@
 
 @if(session('success'))
 <div style="margin:1rem 1.5rem 0;padding:0.75rem 1.1rem;border-radius:8px;background:#e8f5e9;color:#2e7d32;border:1px solid #c8e6c9;font-size:0.88rem;">✓ {{ session('success') }}</div>
+@endif
+
+@if(session('error'))
+<div style="margin:1rem 1.5rem 0;padding:0.75rem 1.1rem;border-radius:8px;background:#ffebee;color:#c62828;border:1px solid #ffcdd2;font-size:0.88rem;">✗ {{ session('error') }}</div>
 @endif
 
 <!-- Thống kê -->
@@ -371,7 +412,32 @@
   function confirmDeleteAll() {
     return confirm('Bạn có chắc muốn XÓA TOÀN BỘ danh sách xác nhận?\nHành động này không thể hoàn tác!');
   }
+
+  function confirmImport() {
+    return confirm('⚠️ Import sẽ XÓA TOÀN BỘ lời chúc và xác nhận cũ, sau đó ghi đè bằng dữ liệu từ file.\nBạn có chắc chắn?');
+  }
 </script>
+
+<!-- Import Modal -->
+<div class="modal-backdrop" id="import-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal-box">
+    <h3>📥 Import từ Excel / CSV</h3>
+    <p>
+      Chọn file <strong>.xlsx</strong>, <strong>.csv</strong> hoặc <strong>.tsv</strong> xuất từ Google Sheets / Excel.<br>
+      Định dạng cột: <em>ID · Thời gian · Họ tên · Nhà · Số ĐT · Xác nhận · Đi cùng · Lời chúc</em><br>
+      <span style="color:#e65100;font-size:0.8rem;">💡 Nếu lỗi ext-zip: xuất CSV từ Google Sheets → File → Tải xuống → CSV (.csv)</span><br>
+      <strong style="color:#c62828;">⚠️ Toàn bộ lời chúc và xác nhận cũ sẽ bị xóa trước khi import!</strong>
+    </p>
+    <form method="POST" action="{{ route('admin.rsvp.import') }}" enctype="multipart/form-data" onsubmit="return confirmImport()">
+      @csrf
+      <input type="file" name="import_file" accept=".xlsx,.csv,.tsv,.txt" required />
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" onclick="document.getElementById('import-modal').classList.remove('open')">Hủy</button>
+        <button type="submit" class="btn-import-confirm">Import ngay</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 </body>
 </html>

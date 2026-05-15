@@ -30,6 +30,7 @@ Route::post('/admin/login', [RsvpController::class, 'adminLogin'])->name('admin.
 Route::post('/admin/logout', [RsvpController::class, 'adminLogout'])->name('admin.logout');
 Route::delete('/admin/rsvp/{rsvp}/wish', [RsvpController::class, 'deleteWish'])->name('admin.wish.delete');
 Route::delete('/admin/rsvp', [RsvpController::class, 'deleteAllRsvps'])->name('admin.rsvp.deleteAll');
+Route::post('/admin/rsvp/import', [RsvpController::class, 'importRsvp'])->name('admin.rsvp.import');
 Route::get('/admin/config', [RsvpController::class, 'adminConfig'])->name('admin.config');
 Route::post('/admin/config', [RsvpController::class, 'updateConfig'])->name('admin.config.update');
 Route::get('/admin/gallery', [RsvpController::class, 'adminGallery'])->name('admin.gallery');

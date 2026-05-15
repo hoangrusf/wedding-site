@@ -584,4 +584,136 @@ class RsvpController extends Controller
 
         return redirect()->route('admin.rsvp')->with('success', 'Đã xóa tất cả RSVP thành công!');
     }
+
+    /**
+     * Import RSVP từ file Excel (.xlsx) hoặc CSV.
+     * Xóa toàn bộ dữ liệu cũ trước khi import.
+     * URL: POST /admin/rsvp/import
+     *
+     * Định dạng cột (bỏ qua hàng tiêu đề):
+     *   A: ID (bỏ qua)
+     *   B: Thời gian (bỏ qua)
+     *   C: Họ tên
+     *   D: Nhà ("Nhà Gái" = 2, còn lại = 1)
+     *   E: Số ĐT
+     *   F: Xác nhận ("Tham dự" = attending, "Không tham dự" = not attending, "Lời chúc" = wish only)
+     *   G: Đi cùng (số người)
+     *   H: Lời chúc
+     */
+    public function importRsvp(Request $request)
+    {
+        if (!$request->session()->get('admin_auth')) {
+            abort(403);
+        }
+
+        $request->validate([
+            'import_file' => ['required', 'file', 'mimes:xlsx,csv,txt,tsv', 'max:5120'],
+        ]);
+
+        $file      = $request->file('import_file');
+        $extension = strtolower($file->getClientOriginalExtension());
+        $rows      = [];
+
+        try {
+            if ($extension === 'xlsx') {
+                if (!class_exists('ZipArchive')) {
+                    return back()->with('error',
+                        'Máy chủ thiếu PHP extension ext-zip nên không đọc được file .xlsx. ' .
+                        'Vui lòng xuất file dưới dạng CSV từ Google Sheets (File → Tải xuống → CSV) rồi import lại.'
+                    );
+                }
+                $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file->getPathname());
+                $sheet       = $spreadsheet->getActiveSheet();
+                foreach ($sheet->getRowIterator() as $row) {
+                    $cells = [];
+                    foreach ($row->getCellIterator('A', 'H') as $cell) {
+                        $cells[] = trim((string) $cell->getValue());
+                    }
+                    $rows[] = $cells;
+                }
+            } else {
+                // CSV / TSV / txt — tự nhận delimiter
+                if (($handle = fopen($file->getPathname(), 'r')) !== false) {
+                    // Đọc dòng đầu để nhận dạng delimiter (tab, comma, semicolon)
+                    $firstLine = fgets($handle);
+                    rewind($handle);
+                    $delimiter = "\t";
+                    if ($firstLine !== false) {
+                        $tabs      = substr_count($firstLine, "\t");
+                        $commas    = substr_count($firstLine, ',');
+                        $semicols  = substr_count($firstLine, ';');
+                        if ($commas >= $tabs && $commas >= $semicols) {
+                            $delimiter = ',';
+                        } elseif ($semicols > $tabs) {
+                            $delimiter = ';';
+                        }
+                    }
+                    while (($data = fgetcsv($handle, 0, $delimiter)) !== false) {
+                        $rows[] = array_map('trim', $data);
+                    }
+                    fclose($handle);
+                }
+            }
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Không thể đọc file: ' . $e->getMessage());
+        }
+
+        if (empty($rows)) {
+            return back()->with('error', 'File trống hoặc không đọc được.');
+        }
+
+        // Bỏ qua hàng tiêu đề (hàng đầu có text "ID", "Họ tên", v.v.)
+        $firstRow = array_map('mb_strtolower', $rows[0]);
+        if (isset($firstRow[0]) && in_array($firstRow[0], ['id', '#', 'stt'], true)) {
+            array_shift($rows);
+        }
+
+        // Xóa toàn bộ dữ liệu cũ
+        Rsvp::truncate();
+
+        $imported = 0;
+        $skipped  = 0;
+
+        foreach ($rows as $row) {
+            // Cần ít nhất cột C (index 2 = tên)
+            $guestName = $row[2] ?? '';
+            if ($guestName === '') {
+                $skipped++;
+                continue;
+            }
+
+            $typeRaw      = $row[3] ?? '';
+            $type         = (mb_strpos($typeRaw, 'Gái') !== false || mb_strpos($typeRaw, 'gái') !== false) ? 2 : 1;
+
+            $phoneRaw     = $row[4] ?? '';
+            $phone        = $phoneRaw !== '' ? $phoneRaw : null;
+
+            $confirmRaw   = mb_strtolower($row[5] ?? '');
+            $isWishOnly   = mb_strpos($confirmRaw, 'chúc') !== false || mb_strpos($confirmRaw, 'chuc') !== false;
+            $isAttending  = !$isWishOnly && mb_strpos($confirmRaw, 'không') === false && mb_strpos($confirmRaw, 'khong') === false;
+
+            $companionRaw = $row[6] ?? '0';
+            $companion    = is_numeric($companionRaw) ? (int) $companionRaw : 0;
+
+            $wishes       = $row[7] ?? null;
+            if ($wishes === '') {
+                $wishes = null;
+            }
+
+            Rsvp::create([
+                'guest_name'      => $guestName,
+                'type'            => $type,
+                'phone_number'    => $phone,
+                'is_attending'    => $isAttending,
+                'companion_count' => $companion,
+                'wishes_message'  => $wishes,
+                'guest_id'        => null,
+            ]);
+
+            $imported++;
+        }
+
+        return redirect()->route('admin.rsvp')
+            ->with('success', "Import thành công: {$imported} bản ghi" . ($skipped > 0 ? ", bỏ qua {$skipped} dòng trống." : '.'));
+    }
 }
