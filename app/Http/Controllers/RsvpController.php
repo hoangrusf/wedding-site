@@ -627,7 +627,8 @@ class RsvpController extends Controller
                 foreach ($sheet->getRowIterator() as $row) {
                     $cells = [];
                     foreach ($row->getCellIterator('A', 'H') as $cell) {
-                        $cells[] = trim((string) $cell->getValue());
+                        // getFormattedValue() trả chuỗi đúng định dạng cho cả ngày/giờ
+                        $cells[] = trim((string) $cell->getFormattedValue());
                     }
                     $rows[] = $cells;
                 }
@@ -700,7 +701,25 @@ class RsvpController extends Controller
                 $wishes = null;
             }
 
-            Rsvp::create([
+            // Parse Thời gian từ cột B (định dạng "H:i d/m/Y" hoặc "d/m/Y H:i")
+            $timeRaw    = $row[1] ?? '';
+            $parsedDate = null;
+            if ($timeRaw !== '') {
+                foreach (['H:i d/m/Y', 'd/m/Y H:i', 'H:i d/m/y', 'd/m/y H:i', 'Y-m-d H:i:s', 'Y-m-d H:i'] as $fmt) {
+                    try {
+                        $parsedDate = \Carbon\Carbon::createFromFormat($fmt, $timeRaw);
+                        break;
+                    } catch (\Throwable $e) {
+                        // thử format tiếp
+                    }
+                }
+                if (!$parsedDate) {
+                    try { $parsedDate = \Carbon\Carbon::parse($timeRaw); } catch (\Throwable $e) {}
+                }
+            }
+            $parsedDate = $parsedDate ?? now();
+
+            $rsvp = new Rsvp([
                 'guest_name'      => $guestName,
                 'type'            => $type,
                 'phone_number'    => $phone,
@@ -709,6 +728,10 @@ class RsvpController extends Controller
                 'wishes_message'  => $wishes,
                 'guest_id'        => null,
             ]);
+            $rsvp->timestamps  = false;
+            $rsvp->created_at  = $parsedDate;
+            $rsvp->updated_at  = $parsedDate;
+            $rsvp->save();
 
             $imported++;
         }
