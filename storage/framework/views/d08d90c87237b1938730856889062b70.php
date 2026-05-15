@@ -169,6 +169,7 @@
   </div>
   <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;">
     <a href="<?php echo e(route('admin.rsvp')); ?>" class="btn-back">📋 Xác nhận tham dự</a>
+    <a href="<?php echo e(route('admin.link')); ?>" class="btn-back">🔗 Tạo link thiệp</a>
     <a href="<?php echo e(route('admin.config')); ?>" class="btn-back">⚙️ Cấu hình thiệp</a>
     <a href="<?php echo e(route('admin.gallery')); ?>" class="btn-back">🖼️ Album ảnh</a>
     <form method="POST" action="<?php echo e(route('admin.visits.deleteAll')); ?>" onsubmit="return confirm('Xóa toàn bộ lịch sử truy cập?')">

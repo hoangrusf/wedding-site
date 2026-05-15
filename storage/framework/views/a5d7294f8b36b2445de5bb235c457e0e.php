@@ -248,6 +248,7 @@
   </div>
   <div class="header-actions">
     <a href="<?php echo e(route('admin.rsvp')); ?>" class="btn-nav">📋 Danh sách RSVP</a>
+    <a href="<?php echo e(route('admin.link')); ?>" class="btn-nav">🔗 Tạo link thiệp</a>
     <a href="<?php echo e(route('admin.gallery')); ?>" class="btn-nav">🖼️ Album ảnh</a>
     <form method="POST" action="<?php echo e(route('admin.logout')); ?>">
       <?php echo csrf_field(); ?>
