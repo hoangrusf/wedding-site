@@ -288,6 +288,46 @@
       <img id="lightbox-img" src="" alt="Ảnh phóng to" />
     </div>
 
+    <?php
+      $weddingVideoUrl = $config->wedding_video_url ?? null;
+      $weddingVideoId = null;
+      $weddingVideoEmbed = null;
+      if ($weddingVideoUrl) {
+          preg_match('/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $weddingVideoUrl, $m);
+          if (!empty($m[1])) {
+              $weddingVideoId    = $m[1];
+              $weddingVideoEmbed = 'https://www.youtube-nocookie.com/embed/' . $m[1] . '?rel=0';
+          }
+      }
+    ?>
+
+    <?php if($weddingVideoEmbed): ?>
+    <!-- VIDEO CƯỚI -->
+    <section id="wedding-video" class="video-section">
+      <div class="section-header" data-aos="fade-up">
+        <p class="section-title">Video Cưới</p>
+        <div class="section-divider">✦</div>
+      </div>
+      <div class="video-wrapper" data-aos="fade-up" data-aos-delay="200">
+        <iframe
+          src="<?php echo e($weddingVideoEmbed); ?>"
+          title="Video cưới"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          loading="lazy"
+        ></iframe>
+        <iframe width="1413" height="795" src="https://www.youtube.com/embed/o2gx3loh4wQ" title="Wedding Hoàng Loan" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+      <div style="text-align:center; margin-top:0.8rem;" data-aos="fade-up">
+        <a href="https://www.youtube.com/watch?v=<?php echo e($weddingVideoId); ?>" target="_blank" rel="noopener noreferrer"
+           style="font-size:0.85rem; color:#9a7450; text-decoration:underline;">
+          ▶ Xem trên YouTube
+        </a>
+      </div>
+    </section>
+    <?php endif; ?>
+
     <!-- SỰ KIỆN & ĐỊA ĐIỂM -->
     <section id="event" class="event-section">
       <div class="section-header" data-aos="fade-up">

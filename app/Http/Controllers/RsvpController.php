@@ -427,6 +427,7 @@ class RsvpController extends Controller
             'bride_image_position'  => ['nullable', 'string', 'max:50'],
             'bride_image_scale'     => ['nullable', 'numeric', 'min:0.5', 'max:3'],
             'background_music_url'  => ['nullable', 'string', 'max:2000'],
+            'wedding_video_url'     => ['nullable', 'string', 'max:2000'],
             // Bank info fields
             'groom_bank_name'       => ['nullable', 'string', 'max:100'],
             'groom_account_no'      => ['nullable', 'string', 'max:50'],
@@ -482,6 +483,7 @@ class RsvpController extends Controller
             'bride_image_position' => $validated['bride_image_position'] ?? 'center center',
             'bride_image_scale'    => $validated['bride_image_scale'] ?? 1,
             'background_music_url' => $validated['background_music_url'],
+            'wedding_video_url'    => $validated['wedding_video_url'] ?? null,
             'bank_account_info'    => json_encode($bankInfo, JSON_UNESCAPED_UNICODE),
         ]);
 

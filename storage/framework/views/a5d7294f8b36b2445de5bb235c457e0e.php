@@ -337,6 +337,10 @@ unset($__errorArgs, $__bag); ?>
           <input type="text" name="background_music_url" value="<?php echo e(old('background_music_url', $config->background_music_url)); ?>" placeholder="ten_file.mp3 hoặc https://..." />
         </div>
         <div class="form-group">
+          <label>Video cưới <span class="field-hint">URL YouTube (youtube.com/watch?v=... hoặc youtu.be/...)</span></label>
+          <input type="text" name="wedding_video_url" value="<?php echo e(old('wedding_video_url', $config->wedding_video_url)); ?>" placeholder="https://www.youtube.com/watch?v=..." />
+        </div>
+        <div class="form-group">
           <label>Ảnh chú rể <span class="field-hint">URL hoặc tên file trong groom_image_url/</span></label>
           <input type="text" name="groom_image_url" value="<?php echo e(old('groom_image_url', $config->groom_image_url)); ?>" placeholder="ten_anh.jpg hoặc https://..." data-preview="preview-groom" data-folder="groom_image_url" />
           <input type="hidden" name="groom_image_position" id="pos-groom" value="<?php echo e(old('groom_image_position', $config->groom_image_position ?? 'center center')); ?>" />

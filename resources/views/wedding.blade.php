@@ -288,6 +288,39 @@
       <img id="lightbox-img" src="" alt="Ảnh phóng to" />
     </div>
 
+    @php
+      $weddingVideoUrl = $config->wedding_video_url ?? null;
+      $weddingVideoId = null;
+      $weddingVideoEmbed = null;
+      if ($weddingVideoUrl) {
+          preg_match('/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $weddingVideoUrl, $m);
+          if (!empty($m[1])) {
+              $weddingVideoId    = $m[1];
+              $weddingVideoEmbed = 'https://www.youtube-nocookie.com/embed/' . $m[1] . '?rel=0';
+          }
+      }
+    @endphp
+
+    @if($weddingVideoEmbed)
+    <!-- VIDEO CƯỚI -->
+    <section id="wedding-video" class="video-section">
+      <div class="section-header" data-aos="fade-up">
+        <p class="section-title">Video Cưới</p>
+        <div class="section-divider">✦</div>
+      </div>
+      <div class="video-wrapper" data-aos="fade-up" data-aos-delay="200">
+        <iframe
+          src="{{ $weddingVideoEmbed }}"
+          title="Video cưới"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          loading="lazy"
+        ></iframe>
+      </div>
+    </section>
+    @endif
+
     <!-- SỰ KIỆN & ĐỊA ĐIỂM -->
     <section id="event" class="event-section">
       <div class="section-header" data-aos="fade-up">

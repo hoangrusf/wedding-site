@@ -34,6 +34,7 @@ class WeddingConfig extends Model
         'bride_image_position',
         'bride_image_scale',
         'background_music_url',
+        'wedding_video_url',
     ];
 
     protected function casts(): array
